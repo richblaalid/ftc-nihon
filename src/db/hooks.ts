@@ -163,6 +163,7 @@ export function useNextActivity(): Activity | null | undefined {
 
 /**
  * Get the next activity with its transit segment
+ * Falls back to first upcoming activity if outside trip dates
  */
 export function useNextActivityWithTransit(): ActivityWithTransit | null | undefined {
   return useLiveQuery(async () => {
@@ -172,10 +173,11 @@ export function useNextActivityWithTransit(): ActivityWithTransit | null | undef
 
     if (!today) return null;
 
-    // Get next activity
+    let nextActivity: Activity | null = null;
+
+    // Try to find next activity today
     const todayActivities = await db.activities.where('date').equals(today).sortBy('sortOrder');
 
-    let nextActivity: Activity | null = null;
     for (const activity of todayActivities) {
       if (activity.startTime > currentTime) {
         nextActivity = activity;
@@ -183,19 +185,38 @@ export function useNextActivityWithTransit(): ActivityWithTransit | null | undef
       }
     }
 
+    // If nothing today, try tomorrow
     if (!nextActivity) {
       const tomorrow = new Date(now);
       tomorrow.setDate(tomorrow.getDate() + 1);
       const tomorrowStr = tomorrow.toISOString().split('T')[0] ?? '';
 
-      if (!tomorrowStr) return null;
+      if (tomorrowStr) {
+        const tomorrowActivities = await db.activities
+          .where('date')
+          .equals(tomorrowStr)
+          .sortBy('sortOrder');
 
-      const tomorrowActivities = await db.activities
-        .where('date')
-        .equals(tomorrowStr)
-        .sortBy('sortOrder');
+        nextActivity = tomorrowActivities[0] ?? null;
+      }
+    }
 
-      nextActivity = tomorrowActivities[0] ?? null;
+    // Fallback: get first future activity (useful when outside trip dates)
+    if (!nextActivity) {
+      const allActivities = await db.activities.orderBy('[date+sortOrder]').toArray();
+
+      // Find first activity that's in the future
+      for (const activity of allActivities) {
+        if (activity.date > today || (activity.date === today && activity.startTime > currentTime)) {
+          nextActivity = activity;
+          break;
+        }
+      }
+
+      // If still nothing (we're past the trip), show the first activity
+      if (!nextActivity && allActivities.length > 0) {
+        nextActivity = allActivities[0] ?? null;
+      }
     }
 
     if (!nextActivity) return null;
