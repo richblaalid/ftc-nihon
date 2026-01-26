@@ -6,7 +6,6 @@ import {
   NowWidget,
   NextWidget,
   WeatherWidget,
-  QuickActions,
   AlertBanner,
   DayIndicator,
 } from '@/components/dashboard';
@@ -74,9 +73,6 @@ export default function Home() {
 
       {/* Weather widget */}
       <WeatherWidget />
-
-      {/* Quick action buttons */}
-      <QuickActions />
     </DashboardLayout>
   );
 }
