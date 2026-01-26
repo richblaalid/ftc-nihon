@@ -11,9 +11,9 @@
 - Phase 1: [x] Complete — Playwright + axe-core Setup
 - Phase 2: [x] Complete — Design Token Audit
 - Phase 3: [x] Complete — Component Audit
-- Phase 4: [ ] Not Started — Page Flow Audit
+- Phase 4: [x] Complete — Page Flow Audit
 - Phase 5: [ ] Not Started — Report & Prioritization
-- **Audit Status:** In Progress (Phase 3 Complete)
+- **Audit Status:** In Progress (Phase 4 Complete)
 
 ---
 
@@ -305,7 +305,7 @@
 - [x] All components audited
 - [x] Issues categorized by severity
 - [x] Component-level findings in audit report
-- [ ] Commit: "docs: complete component-level UX audit"
+- [x] Commit: "docs: complete component-level UX audit"
 
 ---
 
@@ -313,82 +313,82 @@
 
 ### 4.1 Dashboard Page Flow
 
-- [ ] 4.1.1: Audit Dashboard first-load experience
+- [x] 4.1.1: Audit Dashboard first-load experience
   - Route: `/`
   - Check: Time to "Where should I be?" answer (<3 seconds), loading states
   - Output: Add findings to Docs/ux-audit-report.md
 
-- [ ] 4.1.2: Audit Dashboard information hierarchy
+- [x] 4.1.2: Audit Dashboard information hierarchy
   - Route: `/`
   - Check: NOW vs NEXT prominence, weather placement, quick actions
   - Output: Add findings to Docs/ux-audit-report.md
 
-- [ ] 4.1.3: Test Dashboard offline behavior
+- [x] 4.1.3: Test Dashboard offline behavior
   - Route: `/` (with network disabled)
   - Check: Cached data display, sync status, error handling
   - Output: Add findings to Docs/ux-audit-report.md
 
 ### 4.2 Schedule Page Flow
 
-- [ ] 4.2.1: Audit Schedule page navigation
+- [x] 4.2.1: Audit Schedule page navigation
   - Route: `/schedule`
   - Check: Day selection, URL state sync, transitions
   - Output: Add findings to Docs/ux-audit-report.md
 
-- [ ] 4.2.2: Audit Schedule current activity highlighting
+- [x] 4.2.2: Audit Schedule current activity highlighting
   - Route: `/schedule`
   - Check: Visual emphasis on current/next activity, auto-scroll
   - Output: Add findings to Docs/ux-audit-report.md
 
-- [ ] 4.2.3: Audit Activity Detail drill-down
+- [x] 4.2.3: Audit Activity Detail drill-down
   - Route: `/schedule/[id]`
   - Check: Back navigation, content display, action buttons
   - Output: Add findings to Docs/ux-audit-report.md
 
 ### 4.3 Map Page Flow
 
-- [ ] 4.3.1: Audit Map page initial state
+- [x] 4.3.1: Audit Map page initial state
   - Route: `/map`
   - Check: Initial zoom, user location, activity pins
   - Output: Add findings to Docs/ux-audit-report.md
 
-- [ ] 4.3.2: Audit Map pin interaction flow
+- [x] 4.3.2: Audit Map pin interaction flow
   - Route: `/map`
   - Check: Pin tap → info display → navigation action
   - Output: Add findings to Docs/ux-audit-report.md
 
-- [ ] 4.3.3: Audit Directions flow
+- [x] 4.3.3: Audit Directions flow
   - Route: `/map`
   - Check: Transit options, walking directions, ETA display
   - Output: Add findings to Docs/ux-audit-report.md
 
 ### 4.4 Reservations Page Flow
 
-- [ ] 4.4.1: Audit Reservations page layout
+- [x] 4.4.1: Audit Reservations page layout
   - Route: `/reservations`
   - Check: Accommodation list, date grouping, information density
   - Output: Add findings to Docs/ux-audit-report.md
 
-- [ ] 4.4.2: Audit Reservation detail access
+- [x] 4.4.2: Audit Reservation detail access
   - Route: `/reservations`
   - Check: PIN reveal, address copy, check-in time visibility
   - Output: Add findings to Docs/ux-audit-report.md
 
 ### 4.5 Cross-Page Navigation
 
-- [ ] 4.5.1: Audit Bottom Navigation usability
+- [x] 4.5.1: Audit Bottom Navigation usability
   - Check: Active states, transitions, touch feedback
   - Output: Add findings to Docs/ux-audit-report.md
 
-- [ ] 4.5.2: Audit page transition smoothness
+- [x] 4.5.2: Audit page transition smoothness
   - Check: Animation timing, skeleton loading, state preservation
   - Output: Add findings to Docs/ux-audit-report.md
 
 **Phase 4 Checkpoint:**
 
-- [ ] All page flows audited
-- [ ] User journey issues documented
-- [ ] Cross-cutting concerns identified
+- [x] All page flows audited
+- [x] User journey issues documented
+- [x] Cross-cutting concerns identified
 - [ ] Commit: "docs: complete page flow UX audit"
 
 ---
@@ -502,19 +502,19 @@
 | 3.4.1 | ✓         | -      | AccommodationCard: uses tertiary |
 | 3.5.1 | ✓         | -      | BottomNav: height 56px not 64px |
 | 3.5.2 | ✓         | -      | CategoryIcon: maps categories well |
-| 4.1.1 |           |        |       |
-| 4.1.2 |           |        |       |
-| 4.1.3 |           |        |       |
-| 4.2.1 |           |        |       |
-| 4.2.2 |           |        |       |
-| 4.2.3 |           |        |       |
-| 4.3.1 |           |        |       |
-| 4.3.2 |           |        |       |
-| 4.3.3 |           |        |       |
-| 4.4.1 |           |        |       |
-| 4.4.2 |           |        |       |
-| 4.5.1 |           |        |       |
-| 4.5.2 |           |        |       |
+| 4.1.1 | ✓         | -      | <3s answer to "where should I be?" |
+| 4.1.2 | ✓         | -      | Good hierarchy, NOW prominent |
+| 4.1.3 | ✓         | -      | Offline works, no sync error UI |
+| 4.2.1 | ✓         | -      | URL state sync working |
+| 4.2.2 | ✓         | -      | Auto-scroll, ring highlight |
+| 4.2.3 | ✓         | -      | Full detail with actions |
+| 4.3.1 | ✓         | -      | No auto-fit to pins |
+| 4.3.2 | ✓         | -      | Pin → Info → Directions flow |
+| 4.3.3 | ✓         | -      | Pre-calculated only |
+| 4.4.1 | ✓         | -      | Good expandable cards |
+| 4.4.2 | ✓         | -      | PIN visible, copy works |
+| 4.5.1 | ✓         | -      | Works but height 56px |
+| 4.5.2 | ✓         | -      | No page transitions |
 | 5.1.1 |           |        |       |
 | 5.1.2 |           |        |       |
 | 5.1.3 |           |        |       |

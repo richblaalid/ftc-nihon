@@ -545,4 +545,298 @@ npm run test:e2e:report
 
 ---
 
+## 11. Page-Level Flow Audit
+
+### 11.1 Dashboard Page Flow (`/`)
+
+#### 11.1.1 First-Load Experience
+
+| Metric | Target | Observed | Status |
+|--------|--------|----------|--------|
+| Time to "Where should I be?" | <3 seconds | ~1 second | ✅ Pass |
+| Initial render | Instant | Instant (SSR) | ✅ Pass |
+| Data hydration | Seamless | Uses Suspense | ✅ Pass |
+
+**Analysis:**
+- Dashboard uses `DashboardLayout` which renders header immediately
+- Widgets use `useLiveQuery` from Dexie for instant IndexedDB reads
+- Loading skeletons shown during data fetch
+- "NOW" widget answers the glanceable requirement well
+
+**Loading States:**
+- All widgets have proper skeleton animations (NowWidget, NextWidget, WeatherWidget)
+- Sync status shows "Syncing..." animation during background sync
+- Visual hierarchy maintained during loading
+
+#### 11.1.2 Information Hierarchy
+
+| Element | Position | Prominence | Status |
+|---------|----------|------------|--------|
+| NOW widget | Top | High (large heading) | ✅ Pass |
+| NEXT widget | Below NOW | Medium | ✅ Pass |
+| Weather | Below NEXT | Compact | ✅ Pass |
+| Quick Actions | Bottom | Grid of icons | ✅ Pass |
+| Alert Banner | Top (when present) | Prominent | ✅ Pass |
+
+**Analysis:**
+- Information hierarchy follows mobile-first UX principles
+- NOW widget is appropriately dominant
+- Day Indicator button provides context (Day N, Date, Location)
+- Sync status is subtle but visible in header
+
+**Issues Found:**
+- Alert Banner appears AFTER header, should be more prominent
+- No visual separation between NOW and NEXT (could benefit from subtle divider)
+
+#### 11.1.3 Offline Behavior
+
+| Feature | Status | Notes |
+|---------|--------|-------|
+| Data cached | ✅ | IndexedDB via Dexie |
+| Sync status indicator | ✅ | Shows "Offline" with yellow dot |
+| Stale data display | ✅ | Shows last synced data |
+| Error handling | ⚠️ | No explicit error UI for sync failures |
+
+**Analysis:**
+- Offline-first architecture works well
+- `useSyncStore` provides `isOnline`, `isSyncing`, `lastSyncedAt` states
+- Data reads from IndexedDB, not network
+- Sync status indicator is subtle but informative
+
+**Issues:**
+- No "last synced" timestamp shown to user
+- No explicit sync failure notification
+
+### 11.2 Schedule Page Flow (`/schedule`)
+
+#### 11.2.1 Page Navigation
+
+| Feature | Status | Notes |
+|---------|--------|-------|
+| URL state sync | ✅ Pass | `?day=N` param syncs with selected day |
+| Back navigation | ✅ Pass | Link to home with back arrow |
+| "Today" button | ✅ Pass | Appears when viewing non-current day |
+| Day transitions | ✅ Pass | Uses `useTransition` for smooth updates |
+
+**Analysis:**
+- URL is source of truth for day selection
+- `startTransition` provides non-blocking navigation
+- Pending state visually indicated with opacity
+- Deep linking to specific days works correctly
+
+#### 11.2.2 Current Activity Highlighting
+
+| Feature | Status | Notes |
+|---------|--------|-------|
+| Current activity | ✅ Pass | Ring border on current activity card |
+| Auto-scroll | ✅ Pass | `scrollIntoView` on current activity |
+| Completed activities | ✅ Pass | Reduced opacity |
+| Time-based highlighting | ✅ Pass | Uses real-time comparison |
+
+**Analysis:**
+- `Timeline.tsx` auto-scrolls to current activity on mount
+- Activity states (current/completed/upcoming) clearly distinguished
+- Morning/Afternoon/Evening groupings help orientation
+
+**Issues:**
+- No "current time" indicator line on timeline
+- Auto-scroll may be disorienting on day change
+
+#### 11.2.3 Activity Detail Drill-down (`/schedule/[id]`)
+
+| Feature | Status | Notes |
+|---------|--------|-------|
+| Back navigation | ✅ Pass | Returns to correct day via `?day=N` |
+| Content display | ✅ Pass | Full activity details with sections |
+| Loading state | ✅ Pass | Skeleton loader |
+| Not found state | ✅ Pass | 404 with link back to schedule |
+| Action buttons | ✅ Pass | Maps, website, directions |
+
+**Analysis:**
+- Detail page is comprehensive with all activity fields
+- Transit info prominently displayed with "Leave by" time
+- Japanese address shown with `lang="ja"` attribute
+- Good use of semantic sections (Location, Getting There, Tips)
+
+**Issues:**
+- Multiple `text-foreground-tertiary` usages (contrast issue)
+- Lines 119, 122, 125, 157, 195, 201, 209, 217: contrast failures
+
+### 11.3 Map Page Flow (`/map`)
+
+#### 11.3.1 Initial State
+
+| Feature | Status | Notes |
+|---------|--------|-------|
+| Initial zoom | ⚠️ Warn | Hardcoded to Tokyo center |
+| User location | ✅ Pass | Blue dot when tracking enabled |
+| Activity pins | ✅ Pass | Shows pins for selected day |
+| Day selector | ✅ Pass | Horizontal scrollable pills |
+
+**Analysis:**
+- Map centers on Tokyo area by default
+- User can enable location tracking with button
+- Pins use category colors for differentiation
+- Legend provided at bottom
+
+**Issues:**
+- No auto-fit to show all pins for the day
+- Initial zoom may not show all activities
+
+#### 11.3.2 Pin Interaction Flow
+
+| Step | Status | Notes |
+|------|--------|-------|
+| Pin tap | ✅ Pass | Shows PinInfo card |
+| Info display | ✅ Pass | Activity name, time, category |
+| Navigate action | ✅ Pass | Opens Directions panel |
+| Close | ✅ Pass | X button or tap elsewhere |
+
+**Analysis:**
+- Interaction flow is intuitive
+- PinInfo positioned at top of map
+- Directions panel scrollable for long routes
+- "Open in Google Maps" provides external fallback
+
+#### 11.3.3 Directions Flow
+
+| Feature | Status | Notes |
+|---------|--------|-------|
+| Transit options | ⚠️ Warn | Pre-calculated only, no live options |
+| Walking directions | ✅ Pass | Displayed in steps |
+| ETA display | ✅ Pass | Total time shown |
+| External link | ✅ Pass | Opens Google Maps |
+
+**Analysis:**
+- Uses pre-calculated transit data from database
+- Step-by-step display with transit mode icons
+- "Leave by" time prominently shown
+
+**Issues:**
+- No live transit recalculation option
+- `text-foreground-tertiary` contrast issues in Directions component
+
+### 11.4 Reservations Page Flow (`/reservations`)
+
+#### 11.4.1 Page Layout
+
+| Feature | Status | Notes |
+|---------|--------|-------|
+| Accommodation list | ✅ Pass | Chronological with expandable cards |
+| Current stay highlight | ✅ Pass | Ring border + "Current Stay" badge |
+| Summary | ✅ Pass | Shows total stays count |
+| Loading state | ✅ Pass | Skeleton cards |
+| Empty state | ✅ Pass | "No accommodations found" message |
+
+**Analysis:**
+- Good information density without overwhelming
+- Current accommodation automatically expanded
+- All stays visible at a glance
+
+#### 11.4.2 Reservation Detail Access
+
+| Feature | Status | Notes |
+|---------|--------|-------|
+| PIN reveal | ✅ Pass | Prominently displayed in primary color |
+| Address copy | ✅ Pass | Tap to copy with visual feedback |
+| Check-in/out times | ✅ Pass | Displayed in expandable section |
+| Action buttons | ✅ Pass | Call hotel, Directions |
+| Japanese address | ✅ Pass | With `lang="ja"` attribute |
+
+**Analysis:**
+- Copy functionality with toast feedback is excellent UX
+- PIN code displayed prominently (no reveal toggle needed since it's not sensitive)
+- External links (phone, maps) work correctly
+
+**Issues:**
+- Many `text-foreground-tertiary` usages for labels
+- Could benefit from "Copy PIN" button
+
+### 11.5 Cross-Page Navigation
+
+#### 11.5.1 Bottom Navigation Usability
+
+| Feature | Status | Notes |
+|---------|--------|-------|
+| Active states | ✅ Pass | Primary color + filled icon |
+| Transitions | ⚠️ | No explicit transition animation |
+| Touch feedback | ✅ Pass | Active scale effect |
+| Route matching | ✅ Pass | Nested routes handled |
+
+**Analysis:**
+- Navigation works correctly with proper route detection
+- Active state uses filled icon variant
+- Touch targets meet 44px minimum
+
+**Issues:**
+- Height 56px instead of 64px (Design System)
+- Inactive labels use low-contrast tertiary color
+- Label text 10px is very small
+
+#### 11.5.2 Page Transition Smoothness
+
+| Feature | Status | Notes |
+|---------|--------|-------|
+| Animation timing | ⚠️ | No explicit page transitions |
+| Skeleton loading | ✅ Pass | All pages have loading states |
+| State preservation | ⚠️ | URL state preserved, but no back-forward cache |
+| Scroll position | ⚠️ | Not preserved on back navigation |
+
+**Analysis:**
+- Pages load quickly due to IndexedDB-first architecture
+- Suspense boundaries prevent blank screens
+- No explicit animation between pages
+
+**Issues:**
+- No page transition animations
+- Scroll position lost on navigation
+
+---
+
+## 12. Page Flow Recommendations
+
+### Critical
+
+1. **Fix `text-foreground-tertiary` contrast** (affects all pages)
+   - 25+ locations across all pages
+   - Change from `#a89b91` to `#6b5d54`
+
+### High Priority
+
+2. **Add sync failure notification**
+   - File: `src/app/page.tsx` or sync store
+   - Show toast/banner when sync fails
+
+3. **Increase BottomNav height to 64px**
+   - File: `src/components/ui/BottomNav.tsx`
+   - Change `h-14` to `h-16`
+
+4. **Add scroll position preservation**
+   - Use Next.js scroll restoration or custom solution
+   - Preserve position on back navigation
+
+### Medium Priority
+
+5. **Add page transition animations**
+   - Consider `framer-motion` or CSS transitions
+   - Subtle fade or slide animations
+
+6. **Show "last synced" timestamp**
+   - File: `src/app/page.tsx`
+   - Show relative time (e.g., "Synced 5 min ago")
+
+7. **Map: Auto-fit to show all day's pins**
+   - File: `src/components/maps/Map.tsx`
+   - Calculate bounds from activity coordinates
+
+### Low Priority
+
+8. **Add current time indicator to schedule timeline**
+   - Visual line showing current time position
+
+9. **Consider smooth scroll for auto-scroll to current activity**
+   - `behavior: 'smooth'` option
+
+---
+
 *Report generated by Claude Code UX Audit*
