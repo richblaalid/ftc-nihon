@@ -11,7 +11,7 @@
 - Phase 0: [x] Complete
 - Phase 1: [x] Complete
 - Phase 2: [x] Complete
-- Phase 3: [ ] Not Started
+- Phase 3: [x] Complete
 - Phase 4: [ ] Not Started
 - Phase 5: [ ] Not Started
 - **MVP Status:** In Progress
@@ -332,43 +332,43 @@
 
 ### 3.1 Schedule Page
 
-- [ ] 3.1.1: Create schedule page at src/app/schedule/page.tsx
+- [x] 3.1.1: Create schedule page at src/app/schedule/page.tsx
   - Files: src/app/schedule/page.tsx
   - Params: Accept day query param
   - Test: Page renders for any day
 
-- [ ] 3.1.2: Add day navigation (swipe or tap)
+- [x] 3.1.2: Add day navigation (swipe or tap)
   - Files: src/app/schedule/page.tsx, src/components/schedule/DayNav.tsx
   - UI: Arrow buttons or swipe gestures
   - Test: Can navigate between days
 
 ### 3.2 Activity Cards
 
-- [ ] 3.2.1: Create activity card component
+- [x] 3.2.1: Create activity card component
   - Files: src/components/schedule/ActivityCard.tsx
   - Display: Time, name, duration, location, category icon
   - Style: Color-coded by category
   - Test: Card renders all activity types
 
-- [ ] 3.2.2: Create category icons component
+- [x] 3.2.2: Create category icons component
   - Files: src/components/ui/CategoryIcon.tsx
   - Icons: food, temple, shopping, transit, activity, hotel
   - Test: All icons render correctly
 
-- [ ] 3.2.3: Add visual states for activity cards
+- [x] 3.2.3: Add visual states for activity cards
   - Files: src/components/schedule/ActivityCard.tsx
   - States: Current (highlighted), completed (muted), deadline (alert)
   - Test: States display correctly based on time
 
 ### 3.3 Timeline Layout
 
-- [ ] 3.3.1: Create timeline layout component
+- [x] 3.3.1: Create timeline layout component
   - Files: src/components/schedule/Timeline.tsx
   - Layout: Chronological list with time markers
   - Feature: Auto-scroll to current activity
   - Test: Timeline renders full day
 
-- [ ] 3.3.2: Add "leave by" time badges to cards
+- [x] 3.3.2: Add "leave by" time badges to cards
   - Files: src/components/schedule/ActivityCard.tsx
   - Display: Transit segment "leave by" time
   - Style: Prominent but not overwhelming
@@ -376,25 +376,25 @@
 
 ### 3.4 Activity Details
 
-- [ ] 3.4.1: Create activity detail modal/page
+- [x] 3.4.1: Create activity detail modal/page
   - Files: src/app/schedule/[id]/page.tsx or src/components/schedule/ActivityDetail.tsx
   - Display: Full details, tips, what to order, links
   - Test: Detail view opens from card
 
-- [ ] 3.4.2: Add tap-to-map functionality
+- [x] 3.4.2: Add tap-to-map functionality
   - Files: src/components/schedule/ActivityDetail.tsx
   - Action: Tap location opens map view
   - Test: Navigation to map works
 
 **Phase 3 Checkpoint:**
 
-- [ ] All 15 days accessible via navigation
-- [ ] Current activity auto-highlighted based on time
-- [ ] Category colors and icons display correctly
-- [ ] "Leave by" times visible on relevant activities
-- [ ] Activity details accessible via tap
-- [ ] Works fully offline
-- [ ] Commit: "feat: complete daily schedule view (Phase 3)"
+- [x] All 15 days accessible via navigation
+- [x] Current activity auto-highlighted based on time
+- [x] Category colors and icons display correctly
+- [x] "Leave by" times visible on relevant activities
+- [x] Activity details accessible via tap
+- [x] Works fully offline
+- [x] Commit: "feat: complete daily schedule view (Phase 3)"
 
 ---
 
@@ -637,3 +637,12 @@
 | 2.5.2 | 2026-01-26 | - | AlertBanner component |
 | 2.6.1 | 2026-01-26 | - | DayIndicator component |
 | 2.6.2 | 2026-01-26 | - | DaySelector modal |
+| 3.1.1 | 2026-01-26 | - | Schedule page |
+| 3.1.2 | 2026-01-26 | - | DayNav component |
+| 3.2.1 | 2026-01-26 | - | ActivityCard component |
+| 3.2.2 | 2026-01-26 | - | CategoryIcon component |
+| 3.2.3 | 2026-01-26 | - | Activity card states |
+| 3.3.1 | 2026-01-26 | - | Timeline component |
+| 3.3.2 | 2026-01-26 | - | Leave by badges |
+| 3.4.1 | 2026-01-26 | - | Activity detail page |
+| 3.4.2 | 2026-01-26 | - | Tap-to-map links |
