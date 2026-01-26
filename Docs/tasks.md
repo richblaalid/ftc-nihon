@@ -14,7 +14,7 @@
 - Phase 3: [x] Complete
 - Phase 4: [x] Complete
 - Phase 5: [x] Complete
-- **MVP Status:** In Progress
+- **MVP Status:** Ready for User Testing
 
 ---
 
@@ -540,11 +540,11 @@
 
 ## MVP Checkpoint
 
-- [ ] All P1 features from PRD functional
-- [ ] Offline mode tested on all pages
-- [ ] PWA installable on iOS
-- [ ] Dashboard loads < 2 seconds
-- [ ] "Leave by" times display correctly
+- [x] All P1 features from PRD functional
+- [x] Offline mode tested on all pages
+- [x] PWA installable on iOS
+- [x] Dashboard loads < 2 seconds
+- [x] "Leave by" times display correctly
 - [ ] All 4 users can install and use app
 - [ ] Commit: "release: MVP complete - ready for testing"
 
