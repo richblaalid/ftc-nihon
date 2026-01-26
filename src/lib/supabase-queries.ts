@@ -1,4 +1,4 @@
-import { supabase, isSupabaseConfigured } from './supabase';
+import { getSupabaseClient, isSupabaseConfigured } from './supabase';
 import type {
   Activity,
   TransitSegment,
@@ -16,7 +16,9 @@ import type {
 function snakeToCamel<T>(obj: Record<string, unknown>): T {
   const result: Record<string, unknown> = {};
   for (const key in obj) {
-    const camelKey = key.replace(/_([a-z])/g, (_, letter: string) => letter.toUpperCase());
+    const camelKey = key.replace(/_([a-z])/g, (_, letter: string) =>
+      letter.toUpperCase()
+    );
     result[camelKey] = obj[key];
   }
   return result as T;
@@ -33,7 +35,10 @@ function convertRows<T>(rows: Record<string, unknown>[]): T[] {
  * Fetch all activities from Supabase
  */
 export async function fetchActivities(): Promise<Activity[]> {
-  if (!isSupabaseConfigured() || !supabase) return [];
+  if (!isSupabaseConfigured()) return [];
+
+  const supabase = getSupabaseClient();
+  if (!supabase) return [];
 
   const { data, error } = await supabase
     .from('activities')
@@ -53,7 +58,10 @@ export async function fetchActivities(): Promise<Activity[]> {
  * Fetch all transit segments from Supabase
  */
 export async function fetchTransitSegments(): Promise<TransitSegment[]> {
-  if (!isSupabaseConfigured() || !supabase) return [];
+  if (!isSupabaseConfigured()) return [];
+
+  const supabase = getSupabaseClient();
+  if (!supabase) return [];
 
   const { data, error } = await supabase.from('transit_segments').select('*');
 
@@ -69,7 +77,10 @@ export async function fetchTransitSegments(): Promise<TransitSegment[]> {
  * Fetch all accommodations from Supabase
  */
 export async function fetchAccommodations(): Promise<Accommodation[]> {
-  if (!isSupabaseConfigured() || !supabase) return [];
+  if (!isSupabaseConfigured()) return [];
+
+  const supabase = getSupabaseClient();
+  if (!supabase) return [];
 
   const { data, error } = await supabase
     .from('accommodations')
@@ -88,7 +99,10 @@ export async function fetchAccommodations(): Promise<Accommodation[]> {
  * Fetch all restaurants from Supabase
  */
 export async function fetchRestaurants(): Promise<Restaurant[]> {
-  if (!isSupabaseConfigured() || !supabase) return [];
+  if (!isSupabaseConfigured()) return [];
+
+  const supabase = getSupabaseClient();
+  if (!supabase) return [];
 
   const { data, error } = await supabase
     .from('restaurants')
@@ -108,7 +122,10 @@ export async function fetchRestaurants(): Promise<Restaurant[]> {
  * Fetch active alerts from Supabase
  */
 export async function fetchAlerts(): Promise<Alert[]> {
-  if (!isSupabaseConfigured() || !supabase) return [];
+  if (!isSupabaseConfigured()) return [];
+
+  const supabase = getSupabaseClient();
+  if (!supabase) return [];
 
   const { data, error } = await supabase
     .from('alerts')
@@ -128,7 +145,10 @@ export async function fetchAlerts(): Promise<Alert[]> {
  * Fetch all alerts (including inactive) for admin
  */
 export async function fetchAllAlerts(): Promise<Alert[]> {
-  if (!isSupabaseConfigured() || !supabase) return [];
+  if (!isSupabaseConfigured()) return [];
+
+  const supabase = getSupabaseClient();
+  if (!supabase) return [];
 
   const { data, error } = await supabase
     .from('alerts')
@@ -147,7 +167,10 @@ export async function fetchAllAlerts(): Promise<Alert[]> {
  * Fetch location shares from Supabase
  */
 export async function fetchLocationShares(): Promise<LocationShare[]> {
-  if (!isSupabaseConfigured() || !supabase) return [];
+  if (!isSupabaseConfigured()) return [];
+
+  const supabase = getSupabaseClient();
+  if (!supabase) return [];
 
   const { data, error } = await supabase
     .from('location_shares')
@@ -166,7 +189,10 @@ export async function fetchLocationShares(): Promise<LocationShare[]> {
  * Fetch AI cache entries from Supabase
  */
 export async function fetchAiCache(): Promise<AiCache[]> {
-  if (!isSupabaseConfigured() || !supabase) return [];
+  if (!isSupabaseConfigured()) return [];
+
+  const supabase = getSupabaseClient();
+  if (!supabase) return [];
 
   const { data, error } = await supabase.from('ai_cache').select('*');
 
@@ -182,7 +208,10 @@ export async function fetchAiCache(): Promise<AiCache[]> {
  * Fetch checklist items from Supabase
  */
 export async function fetchChecklistItems(): Promise<ChecklistItem[]> {
-  if (!isSupabaseConfigured() || !supabase) return [];
+  if (!isSupabaseConfigured()) return [];
+
+  const supabase = getSupabaseClient();
+  if (!supabase) return [];
 
   const { data, error } = await supabase
     .from('checklist_items')
@@ -251,7 +280,12 @@ export async function updateChecklistItemStatus(
   id: string,
   isCompleted: boolean
 ): Promise<void> {
-  if (!isSupabaseConfigured() || !supabase) {
+  if (!isSupabaseConfigured()) {
+    throw new Error('Supabase not configured');
+  }
+
+  const supabase = getSupabaseClient();
+  if (!supabase) {
     throw new Error('Supabase not configured');
   }
 
@@ -274,7 +308,12 @@ export async function updateLocationShare(
   lat: number,
   lng: number
 ): Promise<void> {
-  if (!isSupabaseConfigured() || !supabase) {
+  if (!isSupabaseConfigured()) {
+    throw new Error('Supabase not configured');
+  }
+
+  const supabase = getSupabaseClient();
+  if (!supabase) {
     throw new Error('Supabase not configured');
   }
 

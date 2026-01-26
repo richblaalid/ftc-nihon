@@ -1,5 +1,9 @@
 import { db } from '@/db/database';
-import { supabase, isSupabaseConfigured, checkSupabaseConnection } from './supabase';
+import {
+  getSupabaseClient,
+  isSupabaseConfigured,
+  checkSupabaseConnection,
+} from './supabase';
 import { fetchAllData } from './supabase-queries';
 import type { SyncableTable } from '@/db/types';
 import type {
@@ -166,6 +170,12 @@ export function subscribeToChanges(): () => void {
   if (activeChannel) {
     activeChannel.unsubscribe();
     activeChannel = null;
+  }
+
+  const supabase = getSupabaseClient();
+  if (!supabase) {
+    console.warn('[Sync] Supabase client not available');
+    return () => {};
   }
 
   const channel = supabase.channel('db-changes');

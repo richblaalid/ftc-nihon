@@ -1,42 +1,56 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
 /**
  * Check if Supabase is configured
+ * Uses a function to check at runtime rather than module load time
  */
 export function isSupabaseConfigured(): boolean {
-  return Boolean(supabaseUrl && supabaseAnonKey);
+  return Boolean(
+    process.env.NEXT_PUBLIC_SUPABASE_URL &&
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  );
 }
 
-// Only create client if credentials are available
+// Lazy-initialized client - only created when first accessed
 let supabaseClient: SupabaseClient | null = null;
+let clientInitialized = false;
 
-if (isSupabaseConfigured()) {
-  supabaseClient = createClient(supabaseUrl!, supabaseAnonKey!, {
-    auth: {
-      persistSession: true,
-      autoRefreshToken: true,
-    },
-    realtime: {
-      params: {
-        eventsPerSecond: 10,
-      },
-    },
-  });
-} else {
-  // Only warn in development/build, not on every page render
-  if (typeof window === 'undefined') {
-    console.warn(
-      'Supabase credentials not configured. App will work in offline-only mode. ' +
-        'Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in environment variables.'
-    );
+/**
+ * Get the Supabase client, creating it lazily on first access.
+ * This prevents errors during Next.js static generation when env vars aren't available.
+ *
+ * Returns null if Supabase is not configured.
+ */
+export function getSupabaseClient(): SupabaseClient | null {
+  // Return cached client if already initialized
+  if (clientInitialized) {
+    return supabaseClient;
   }
+
+  clientInitialized = true;
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (supabaseUrl && supabaseAnonKey) {
+    supabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+      },
+      realtime: {
+        params: {
+          eventsPerSecond: 10,
+        },
+      },
+    });
+  }
+
+  return supabaseClient;
 }
 
 /**
- * Supabase client for syncing data
+ * Supabase client for syncing data (lazy-loaded getter)
  *
  * Note: This is the SYNC layer, not the primary data source.
  * All reads should come from IndexedDB via Dexie.
@@ -46,18 +60,43 @@ if (isSupabaseConfigured()) {
  * - Admin writes (when authenticated)
  *
  * Returns null if Supabase is not configured - check with isSupabaseConfigured() first
+ *
+ * @deprecated Use getSupabaseClient() instead for explicit lazy loading
  */
-export const supabase = supabaseClient;
+export const supabase = new Proxy({} as SupabaseClient, {
+  get(_target, prop) {
+    const client = getSupabaseClient();
+    if (!client) {
+      // Return a no-op for common methods to prevent crashes
+      if (prop === 'from' || prop === 'channel') {
+        return () => ({
+          select: () => ({ data: null, error: new Error('Supabase not configured') }),
+          on: () => ({ subscribe: () => {} }),
+          subscribe: () => {},
+        });
+      }
+      return undefined;
+    }
+    const value = client[prop as keyof SupabaseClient];
+    if (typeof value === 'function') {
+      return value.bind(client);
+    }
+    return value;
+  },
+});
 
 /**
  * Check if we're currently online and can reach Supabase
  */
 export async function checkSupabaseConnection(): Promise<boolean> {
-  if (!isSupabaseConfigured() || !supabase) return false;
+  if (!isSupabaseConfigured()) return false;
+
+  const client = getSupabaseClient();
+  if (!client) return false;
 
   try {
     // Simple health check - fetch a single row from activities
-    const { error } = await supabase.from('activities').select('id').limit(1);
+    const { error } = await client.from('activities').select('id').limit(1);
     return !error;
   } catch {
     return false;
