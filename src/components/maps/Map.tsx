@@ -65,6 +65,9 @@ export function Map({
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Check config once (not in effect)
+  const isConfigured = isGoogleMapsConfigured();
+
   // Determine map center based on day or override
   const getMapCenter = useCallback(() => {
     if (center) return center;
@@ -79,11 +82,7 @@ export function Map({
 
   // Initialize map
   useEffect(() => {
-    if (!mapRef.current) return;
-    if (!isGoogleMapsConfigured()) {
-      setError('Google Maps API key not configured');
-      return;
-    }
+    if (!mapRef.current || !isConfigured) return;
 
     const initMap = async () => {
       try {
@@ -107,7 +106,7 @@ export function Map({
     };
 
     initMap();
-  }, [getMapCenter, zoom]);
+  }, [getMapCenter, zoom, isConfigured]);
 
   // Update activity pins
   useEffect(() => {
@@ -232,13 +231,14 @@ export function Map({
     });
   }, [isLoaded, userLocation]);
 
-  // Error state
-  if (error) {
+  // Error state (config error or runtime error)
+  const displayError = !isConfigured ? 'Google Maps API key not configured' : error;
+  if (displayError) {
     return (
       <div className={`flex items-center justify-center bg-background-secondary ${className}`}>
         <div className="text-center p-4">
           <span className="text-4xl">🗺️</span>
-          <p className="mt-2 text-foreground-secondary">{error}</p>
+          <p className="mt-2 text-foreground-secondary">{displayError}</p>
           <p className="mt-1 text-xs text-foreground-tertiary">
             Configure NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
           </p>

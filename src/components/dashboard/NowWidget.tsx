@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useCurrentActivity } from '@/db/hooks';
 import type { Activity } from '@/types/database';
 
@@ -73,26 +73,22 @@ function getCategoryColor(category: Activity['category']): string {
 
 export function NowWidget() {
   const currentActivity = useCurrentActivity();
-  const [timeRemaining, setTimeRemaining] = useState<{ minutes: number; text: string } | null>(
-    null
-  );
 
-  // Update time remaining every minute
+  // Tick counter to trigger recalculation every minute
+  const [tick, setTick] = useState(0);
+
   useEffect(() => {
-    if (!currentActivity) {
-      setTimeRemaining(null);
-      return;
-    }
-
-    const updateTime = () => {
-      setTimeRemaining(getTimeRemaining(currentActivity));
-    };
-
-    updateTime();
-    const interval = setInterval(updateTime, 60000); // Update every minute
-
+    const interval = setInterval(() => setTick((t) => t + 1), 60000);
     return () => clearInterval(interval);
-  }, [currentActivity]);
+  }, []);
+
+  // Derive time remaining from activity and current time (via tick)
+  const timeRemaining = useMemo(() => {
+    if (!currentActivity) return null;
+    // tick is used to force recalculation
+    void tick;
+    return getTimeRemaining(currentActivity);
+  }, [currentActivity, tick]);
 
   // Loading state
   if (currentActivity === undefined) {
