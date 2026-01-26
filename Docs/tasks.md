@@ -10,7 +10,7 @@
 
 - Phase 0: [x] Complete
 - Phase 1: [x] Complete
-- Phase 2: [ ] Not Started
+- Phase 2: [x] Complete
 - Phase 3: [ ] Not Started
 - Phase 4: [ ] Not Started
 - Phase 5: [ ] Not Started
@@ -234,25 +234,25 @@
 
 ### 2.1 Dashboard Layout
 
-- [ ] 2.1.1: Create dashboard page at src/app/page.tsx
+- [x] 2.1.1: Create dashboard page at src/app/page.tsx
   - Files: src/app/page.tsx
   - Layout: Full viewport, mobile-optimized, safe area padding
   - Test: Page renders
 
-- [ ] 2.1.2: Create dashboard grid layout component
+- [x] 2.1.2: Create dashboard grid layout component
   - Files: src/components/dashboard/DashboardLayout.tsx
   - Layout: Widget grid, responsive, single column mobile
   - Test: Layout renders correctly on mobile
 
 ### 2.2 NOW Widget
 
-- [ ] 2.2.1: Create NOW widget component
+- [x] 2.2.1: Create NOW widget component
   - Files: src/components/dashboard/NowWidget.tsx
   - Display: Current activity name, location, time remaining
   - Data: useCurrentActivity hook
   - Test: Shows current activity or "Free time" message
 
-- [ ] 2.2.2: Add time remaining countdown
+- [x] 2.2.2: Add time remaining countdown
   - Files: src/components/dashboard/NowWidget.tsx
   - Logic: Calculate remaining time, update every minute
   - Style: Large, readable, not anxiety-inducing (no seconds)
@@ -260,13 +260,13 @@
 
 ### 2.3 NEXT Widget
 
-- [ ] 2.3.1: Create NEXT widget component
+- [x] 2.3.1: Create NEXT widget component
   - Files: src/components/dashboard/NextWidget.tsx
   - Display: Next activity name, start time, "leave by" time
   - Data: useNextActivity hook
   - Test: Shows next activity with times
 
-- [ ] 2.3.2: Add "leave by" time display with transit preview
+- [x] 2.3.2: Add "leave by" time display with transit preview
   - Files: src/components/dashboard/NextWidget.tsx
   - Display: Walking time, train info summary
   - Style: Clear, prominent "leave by" time
@@ -274,13 +274,13 @@
 
 ### 2.4 Weather Widget
 
-- [ ] 2.4.1: Create weather service with caching
+- [x] 2.4.1: Create weather service with caching
   - Files: src/lib/weather.ts
   - Service: Fetch weather for current city, cache in IndexedDB
   - Fallback: Show cached data when offline
   - Test: Weather fetches and caches
 
-- [ ] 2.4.2: Create weather widget component
+- [x] 2.4.2: Create weather widget component
   - Files: src/components/dashboard/WeatherWidget.tsx
   - Display: Temperature, conditions, icon
   - Data: Current city from itinerary
@@ -288,13 +288,13 @@
 
 ### 2.5 Quick Actions & Alerts
 
-- [ ] 2.5.1: Create quick action buttons component
+- [x] 2.5.1: Create quick action buttons component
   - Files: src/components/dashboard/QuickActions.tsx
   - Buttons: Map, AI Assistant (P2), Reservations
   - Style: Large touch targets (44x44pt min)
   - Test: Buttons render and navigate
 
-- [ ] 2.5.2: Create alert banner component
+- [x] 2.5.2: Create alert banner component
   - Files: src/components/dashboard/AlertBanner.tsx
   - Display: Urgent alerts, hard deadlines within 2 hours
   - Style: Prominent, dismissible
@@ -303,13 +303,13 @@
 
 ### 2.6 Day Indicator
 
-- [ ] 2.6.1: Create date/day indicator component
+- [x] 2.6.1: Create date/day indicator component
   - Files: src/components/dashboard/DayIndicator.tsx
   - Display: "Day 3 - March 9" format
   - Feature: Tap to open day selector
   - Test: Shows correct date and day number
 
-- [ ] 2.6.2: Create day selector modal/sheet
+- [x] 2.6.2: Create day selector modal/sheet
   - Files: src/components/dashboard/DaySelector.tsx
   - UI: List of all 15 days, current day highlighted
   - Feature: Select day to view that day's schedule
@@ -317,14 +317,14 @@
 
 **Phase 2 Checkpoint:**
 
-- [ ] Dashboard loads in < 2 seconds with cached data
-- [ ] NOW widget shows current activity and time remaining
-- [ ] NEXT widget shows upcoming activity with "leave by" time
-- [ ] Weather displays with offline fallback
-- [ ] Quick actions navigate correctly
-- [ ] Alert banner shows for approaching deadlines
-- [ ] Day switching works
-- [ ] Commit: "feat: complete dashboard home screen (Phase 2)"
+- [x] Dashboard loads in < 2 seconds with cached data
+- [x] NOW widget shows current activity and time remaining
+- [x] NEXT widget shows upcoming activity with "leave by" time
+- [x] Weather displays with offline fallback
+- [x] Quick actions navigate correctly
+- [x] Alert banner shows for approaching deadlines
+- [x] Day switching works
+- [x] Commit: "feat: complete dashboard home screen (Phase 2)"
 
 ---
 
@@ -625,3 +625,15 @@
 | 1.4.3 | 2026-01-26 | - | useCurrentActivity hook |
 | 1.4.4 | 2026-01-26 | - | useNextActivity hook |
 | 1.4.5 | 2026-01-26 | - | useAlerts hook |
+| 2.1.1 | 2026-01-26 | - | Dashboard page |
+| 2.1.2 | 2026-01-26 | - | DashboardLayout component |
+| 2.2.1 | 2026-01-26 | - | NowWidget component |
+| 2.2.2 | 2026-01-26 | - | Time remaining countdown |
+| 2.3.1 | 2026-01-26 | - | NextWidget component |
+| 2.3.2 | 2026-01-26 | - | Leave by time display |
+| 2.4.1 | 2026-01-26 | - | Weather service + caching |
+| 2.4.2 | 2026-01-26 | - | WeatherWidget component |
+| 2.5.1 | 2026-01-26 | - | QuickActions component |
+| 2.5.2 | 2026-01-26 | - | AlertBanner component |
+| 2.6.1 | 2026-01-26 | - | DayIndicator component |
+| 2.6.2 | 2026-01-26 | - | DaySelector modal |

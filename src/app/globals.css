@@ -419,4 +419,24 @@ body {
   .bg-category-transit { background-color: var(--category-transit); }
   .bg-category-activity { background-color: var(--category-activity); }
   .bg-category-hotel { background-color: var(--category-hotel); }
+
+  /* Semantic color utilities */
+  .text-success { color: var(--success); }
+  .text-warning { color: var(--warning); }
+  .text-error { color: var(--error); }
+  .text-info { color: var(--info); }
+
+  .bg-success { background-color: var(--success); }
+  .bg-warning { background-color: var(--warning); }
+  .bg-error { background-color: var(--error); }
+  .bg-info { background-color: var(--info); }
+
+  .border-success { border-color: var(--success); }
+  .border-warning { border-color: var(--warning); }
+  .border-error { border-color: var(--error); }
+  .border-info { border-color: var(--info); }
+
+  /* Secondary color utility */
+  .text-secondary { color: var(--secondary); }
+  .bg-secondary { background-color: var(--secondary); }
 }
