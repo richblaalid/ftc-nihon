@@ -296,51 +296,58 @@ Changed `text-[10px]` to `text-xs` (12px).
 - CSS-only fade transitions
 - Next.js App Router built-in transitions
 
+**Status:** Deferred - requires additional dependency (framer-motion) or significant CSS work
+
 **Effort:** 1-2 hours
 
 ---
 
-### Task 14: Preserve Scroll Position on Back Navigation
+### Task 14: Preserve Scroll Position on Back Navigation ✅ ALREADY IMPLEMENTED
 
 **Issue:** Scroll position lost when navigating back
 
-**Solution:** Use Next.js scroll restoration or custom scroll position store
-
-**Effort:** 30 minutes
+**Status:** Next.js App Router has automatic scroll restoration built-in.
 
 ---
 
-### Task 15: Add Current Time Indicator to Timeline
+### Task 15: Add Current Time Indicator to Timeline ✅ COMPLETED
 
 **Issue:** No visual marker for current time on schedule
 
-**Design:** Horizontal line with time label positioned at current time
+**Files Modified:**
+- `src/components/schedule/Timeline.tsx`
 
-**Effort:** 1 hour
+**Changes Applied:**
+- Added `NowIndicator` component with pulsing dot, "Now" label, and current time
+- Indicator shows between activities when current time falls in that gap
+- Auto-updates every minute
+- Auto-scrolls to the indicator on mount
+- Accessible with proper aria-label
+
+**Completed:** January 26, 2026
 
 ---
 
-### Task 16: Map Auto-Fit to Show All Pins
+### Task 16: Map Auto-Fit to Show All Pins ✅ ALREADY IMPLEMENTED
 
 **Issue:** Initial map view may not show all activities for the day
 
-**Solution:** Calculate bounds from activity coordinates, use `fitBounds()`
-
-**Effort:** 30 minutes
+**Status:** Already implemented in `Map.tsx` - uses `fitBounds()` with padding when multiple markers are present.
 
 ---
 
 ## Verification Checklist
 
-After completing P0, P1, and P2 tasks:
+After completing all tasks:
 
-- [x] All Playwright tests pass (74/74 passing)
-- [x] No axe-core violations on any page
+- [x] All Playwright tests pass (148/148 - light + dark mode)
+- [x] No axe-core violations on any page (light + dark mode)
 - [x] VoiceOver can navigate all pages
 - [x] Keyboard navigation works throughout
 - [x] Design System compliance verified
 - [x] Touch targets meet 44x44 minimum
 - [x] ARIA roles properly implemented
+- [x] Dark mode fully supported with WCAG AA contrast
 
 ---
 
@@ -351,16 +358,16 @@ After completing P0, P1, and P2 tasks:
 | P0 (Critical) | 2 | ✅ Completed |
 | P1 (High) | 5 | ✅ Completed |
 | P2 (Medium) | 5 | ✅ Completed |
-| P3 (Low) | 4 | Pending |
+| P3 (Low) | 4 | ✅ 3/4 Complete (1 deferred) |
 
 **Completed:** January 26, 2026
 
-**Remaining:**
-- Tasks 13-16 (P3): Nice-to-have enhancements for post-launch
-  - Page transition animations
-  - Scroll position preservation
-  - Current time indicator on timeline
-  - Map auto-fit to show all pins
+**All Tasks Summary:**
+- Tasks 1-12: ✅ Completed
+- Task 13 (Page transitions): Deferred - requires additional dependency
+- Task 14 (Scroll restoration): ✅ Already implemented by Next.js
+- Task 15 (Time indicator): ✅ Completed
+- Task 16 (Map auto-fit): ✅ Already implemented
 
 ---
 
