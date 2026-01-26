@@ -9,7 +9,7 @@
 ## Progress Summary
 
 - Phase 1: [x] Complete — Playwright + axe-core Setup
-- Phase 2: [ ] Not Started — Design Token Audit
+- Phase 2: [x] Complete — Design Token Audit
 - Phase 3: [ ] Not Started — Component Audit
 - Phase 4: [ ] Not Started — Page Flow Audit
 - Phase 5: [ ] Not Started — Report & Prioritization
@@ -122,18 +122,18 @@
 
 ### 2.1 Color Token Extraction
 
-- [ ] 2.1.1: Extract color values from tailwind.config.ts
+- [x] 2.1.1: Extract color values from tailwind.config.ts
   - Files: Docs/design-token-diff.md (create)
   - Content: Table of current tailwind color definitions
   - Test: Token list extracted
 
-- [ ] 2.1.2: Compare colors to Design System specification
+- [x] 2.1.2: Compare colors to Design System specification
   - Files: Docs/design-token-diff.md
   - Content: Side-by-side comparison, flag discrepancies
   - Reference: Docs/product_docs/FTC_Nihon_Design_System.md Section 3
   - Test: Comparison documented
 
-- [ ] 2.1.3: Grep for hardcoded colors in components
+- [x] 2.1.3: Grep for hardcoded colors in components
   - Command: Search for `#[0-9A-Fa-f]{3,6}`, `rgb(`, `hsl(`
   - Files: Docs/design-token-diff.md
   - Content: List of hardcoded colors with file locations
@@ -141,54 +141,54 @@
 
 ### 2.2 Typography Token Audit
 
-- [ ] 2.2.1: Extract font configurations from tailwind.config.ts and globals.css
+- [x] 2.2.1: Extract font configurations from tailwind.config.ts and globals.css
   - Files: Docs/design-token-diff.md
   - Content: Current font-family, font-size, line-height settings
   - Test: Typography tokens extracted
 
-- [ ] 2.2.2: Compare typography to Design System specification
+- [x] 2.2.2: Compare typography to Design System specification
   - Files: Docs/design-token-diff.md
   - Reference: Docs/product_docs/FTC_Nihon_Design_System.md Section 4
   - Content: Verify Reggae One for display, Urbanist for body
   - Test: Comparison documented
 
-- [ ] 2.2.3: Audit Reggae One usage (display text only, ≥24px)
+- [x] 2.2.3: Audit Reggae One usage (display text only, ≥24px)
   - Files: Docs/design-token-diff.md
   - Content: All usages of font-display class, verify appropriateness
   - Test: Usage documented
 
 ### 2.3 Spacing & Layout Token Audit
 
-- [ ] 2.3.1: Verify 8px spacing grid compliance
+- [x] 2.3.1: Verify 8px spacing grid compliance
   - Files: Docs/design-token-diff.md
   - Content: Document any non-8px-grid spacing values
   - Test: Spacing documented
 
-- [ ] 2.3.2: Audit border radius usage
+- [x] 2.3.2: Audit border radius usage
   - Files: Docs/design-token-diff.md
   - Reference: Design System Section 5.2 (4/8/12/16/24px scale)
   - Test: Border radius audit complete
 
-- [ ] 2.3.3: Audit shadow usage per mode
+- [x] 2.3.3: Audit shadow usage per mode
   - Files: Docs/design-token-diff.md
   - Content: Verify light-mode vs dark-mode shadows
   - Test: Shadow audit complete
 
 ### 2.4 Component Style Audit
 
-- [ ] 2.4.1: Audit Button component styles
+- [x] 2.4.1: Audit Button component styles
   - Files: Docs/design-token-diff.md
   - Reference: Design System Section 7.1
   - Content: Compare primary/secondary/ghost button specs
   - Test: Button audit complete
 
-- [ ] 2.4.2: Audit Card component styles
+- [x] 2.4.2: Audit Card component styles
   - Files: Docs/design-token-diff.md
   - Reference: Design System Section 7.2
   - Content: Background, radius, padding, shadow, category accent bars
   - Test: Card audit complete
 
-- [ ] 2.4.3: Audit Navigation Bar styles
+- [x] 2.4.3: Audit Navigation Bar styles
   - Files: Docs/design-token-diff.md
   - Reference: Design System Section 7.5
   - Content: Height 64px + safe area, blur, border, icon sizes
@@ -196,9 +196,9 @@
 
 **Phase 2 Checkpoint:**
 
-- [ ] All design tokens extracted and documented
-- [ ] Discrepancies flagged with severity
-- [ ] Docs/design-token-diff.md complete
+- [x] All design tokens extracted and documented
+- [x] Discrepancies flagged with severity
+- [x] Docs/design-token-diff.md complete
 - [ ] Commit: "docs: complete design token audit"
 
 ---
