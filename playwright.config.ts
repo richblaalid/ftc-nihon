@@ -62,6 +62,20 @@ export default defineConfig({
         ...devices['Pixel 5'],
       },
     },
+    {
+      name: 'Mobile Safari Dark',
+      use: {
+        ...devices['iPhone 13 Pro'],
+        colorScheme: 'dark',
+      },
+    },
+    {
+      name: 'Mobile Chrome Dark',
+      use: {
+        ...devices['Pixel 5'],
+        colorScheme: 'dark',
+      },
+    },
   ],
 
   // Start dev server before tests
