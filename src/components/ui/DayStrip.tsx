@@ -10,13 +10,35 @@ interface DayStripProps {
   isPending?: boolean;
 }
 
-// City groupings for visual sections
-const CITY_SECTIONS = [
-  { city: 'Tokyo', days: [1, 2, 3, 4, 5, 6], color: 'coral' },
-  { city: 'Hakone', days: [7, 8], color: 'emerald' },
-  { city: 'Kyoto', days: [9, 10, 11], color: 'violet' },
-  { city: 'Osaka', days: [12, 13, 14, 15], color: 'amber' },
-] as const;
+// City data with colors
+const CITIES = {
+  Tokyo: { bgLight: 'bg-coral-500', bgMuted: 'bg-coral-100 dark:bg-coral-900/40', textMuted: 'text-coral-700 dark:text-coral-300' },
+  Hakone: { bgLight: 'bg-emerald-500', bgMuted: 'bg-emerald-100 dark:bg-emerald-900/40', textMuted: 'text-emerald-700 dark:text-emerald-300' },
+  Kyoto: { bgLight: 'bg-violet-500', bgMuted: 'bg-violet-100 dark:bg-violet-900/40', textMuted: 'text-violet-700 dark:text-violet-300' },
+  Osaka: { bgLight: 'bg-amber-500', bgMuted: 'bg-amber-100 dark:bg-amber-900/40', textMuted: 'text-amber-700 dark:text-amber-300' },
+} as const;
+
+type CityName = keyof typeof CITIES;
+
+// City segments with day ranges
+const CITY_SEGMENTS: { city: CityName; startDay: number; endDay: number }[] = [
+  { city: 'Tokyo', startDay: 1, endDay: 6 },
+  { city: 'Hakone', startDay: 7, endDay: 8 },
+  { city: 'Kyoto', startDay: 9, endDay: 11 },
+  { city: 'Osaka', startDay: 12, endDay: 15 },
+];
+
+// Map day number to city
+const DAY_TO_CITY: Record<number, CityName> = {
+  1: 'Tokyo', 2: 'Tokyo', 3: 'Tokyo', 4: 'Tokyo', 5: 'Tokyo', 6: 'Tokyo',
+  7: 'Hakone', 8: 'Hakone',
+  9: 'Kyoto', 10: 'Kyoto', 11: 'Kyoto',
+  12: 'Osaka', 13: 'Osaka', 14: 'Osaka', 15: 'Osaka',
+};
+
+// Day column width (w-11 = 44px) + gap (4px)
+const DAY_WIDTH = 44;
+const DAY_GAP = 4;
 
 /**
  * Get weekday abbreviation for a day number
@@ -42,7 +64,7 @@ export function DayStrip({ selectedDay, currentDay, onDayChange, isPending = fal
   const scrollRef = useRef<HTMLDivElement>(null);
   const selectedRef = useRef<HTMLButtonElement>(null);
 
-  // Scroll selected day into view on mount
+  // Scroll selected day into view on mount and when selection changes
   useEffect(() => {
     if (selectedRef.current && scrollRef.current) {
       const container = scrollRef.current;
@@ -56,40 +78,52 @@ export function DayStrip({ selectedDay, currentDay, onDayChange, isPending = fal
     }
   }, [selectedDay]);
 
-  return (
-    <div className="relative">
-      {/* Fade edges */}
-      <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-6 bg-gradient-to-r from-background to-transparent" />
-      <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-6 bg-gradient-to-l from-background to-transparent" />
+  const days = Array.from({ length: TRIP_DAYS }, (_, i) => i + 1);
 
+  // Calculate total content width
+  const totalWidth = TRIP_DAYS * DAY_WIDTH + (TRIP_DAYS - 1) * DAY_GAP;
+
+  return (
+    <div className="w-full">
       {/* Scrollable container */}
       <div
         ref={scrollRef}
-        className={`flex gap-1 overflow-x-auto scrollbar-hide px-4 py-2 snap-x snap-mandatory ${
+        className={`overflow-x-auto scrollbar-hide ${
           isPending ? 'opacity-70 pointer-events-none' : ''
         }`}
         role="listbox"
         aria-label="Trip days"
       >
-        {CITY_SECTIONS.map((section, sectionIndex) => (
-          <div key={section.city} className="flex items-center gap-1">
-            {/* City label pill - using darker text for WCAG AA contrast */}
-            <div
-              className={`sticky left-0 z-20 flex-shrink-0 rounded-full px-2 py-1 text-[10px] font-bold uppercase tracking-wider ${
-                section.color === 'coral' ? 'bg-coral-100 text-coral-800 dark:bg-coral-900/30 dark:text-coral-300' :
-                section.color === 'emerald' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300' :
-                section.color === 'violet' ? 'bg-violet-100 text-violet-800 dark:bg-violet-900/30 dark:text-violet-300' :
-                'bg-amber-100 text-amber-900 dark:bg-amber-900/30 dark:text-amber-300'
-              }`}
-            >
-              {section.city}
-            </div>
+        <div className="px-4 py-2" style={{ width: `${totalWidth + 32}px` }}>
+          {/* City bars row */}
+          <div className="flex mb-2" style={{ gap: `${DAY_GAP}px` }}>
+            {CITY_SEGMENTS.map((segment) => {
+              const dayCount = segment.endDay - segment.startDay + 1;
+              const barWidth = dayCount * DAY_WIDTH + (dayCount - 1) * DAY_GAP;
+              const cityData = CITIES[segment.city];
 
-            {/* Days in this section */}
-            {section.days.map((day) => {
+              return (
+                <div
+                  key={segment.city}
+                  className={`${cityData.bgLight} rounded-full flex items-center justify-center h-7`}
+                  style={{ width: `${barWidth}px` }}
+                >
+                  <span className="text-xs font-bold text-white tracking-wide">
+                    {segment.city}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Day buttons row */}
+          <div className="flex" style={{ gap: `${DAY_GAP}px` }}>
+            {days.map((day) => {
               const isSelected = day === selectedDay;
               const isCurrent = day === currentDay;
               const weekday = getWeekday(day);
+              const city = DAY_TO_CITY[day] ?? 'Tokyo';
+              const cityData = CITIES[city];
 
               return (
                 <button
@@ -99,45 +133,41 @@ export function DayStrip({ selectedDay, currentDay, onDayChange, isPending = fal
                   disabled={isPending}
                   role="option"
                   aria-selected={isSelected}
-                  aria-label={`Day ${day}, ${getDate(day)}${isCurrent ? ', Today' : ''}`}
+                  aria-label={`Day ${day}, ${getDate(day)}, ${city}${isCurrent ? ', Today' : ''}`}
                   className={`
-                    snap-center flex-shrink-0 flex flex-col items-center justify-center
-                    w-11 h-14 rounded-xl transition-all duration-fast
+                    flex-shrink-0 flex flex-col items-center justify-center
+                    h-14 rounded-xl transition-all duration-fast relative snap-center
                     ${isSelected
-                      ? 'bg-primary text-white scale-105 shadow-md'
+                      ? `${cityData.bgLight} text-white shadow-lg`
                       : isCurrent
-                        ? 'bg-background-secondary ring-2 ring-primary text-foreground'
-                        : 'bg-background-secondary text-foreground-secondary hover:bg-background-tertiary'
+                        ? `${cityData.bgMuted} ring-2 ring-primary ${cityData.textMuted}`
+                        : `${cityData.bgMuted} ${cityData.textMuted} hover:opacity-80`
                     }
                     ${isPending ? 'cursor-wait' : 'cursor-pointer active:scale-95'}
                   `}
+                  style={{ width: `${DAY_WIDTH}px` }}
                 >
                   {!isSelected && (
-                    <span className="text-[10px] font-semibold text-foreground-secondary">
+                    <span className="text-[10px] font-semibold opacity-70">
                       {weekday}
                     </span>
                   )}
                   <span className={`font-bold ${isSelected ? 'text-xl' : 'text-lg'}`}>{day}</span>
                   {isCurrent && !isSelected && (
-                    <span className="absolute -bottom-1 h-1 w-1 rounded-full bg-primary animate-pulse" />
+                    <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
                   )}
                 </button>
               );
             })}
-
-            {/* Divider between cities (except last) */}
-            {sectionIndex < CITY_SECTIONS.length - 1 && (
-              <div className="flex-shrink-0 w-px h-8 bg-border mx-1" aria-hidden="true" />
-            )}
           </div>
-        ))}
+        </div>
       </div>
 
       {/* Progress indicator */}
       <div className="mt-1 mx-4 h-1 rounded-full bg-background-secondary overflow-hidden">
         <div
           className="h-full bg-primary/60 transition-all duration-normal"
-          style={{ width: `${((selectedDay) / TRIP_DAYS) * 100}%` }}
+          style={{ width: `${(selectedDay / TRIP_DAYS) * 100}%` }}
           aria-hidden="true"
         />
       </div>
