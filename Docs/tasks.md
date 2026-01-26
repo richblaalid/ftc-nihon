@@ -9,7 +9,7 @@
 ## Progress Summary
 
 - Phase 0: [x] Complete
-- Phase 1: [ ] Not Started
+- Phase 1: [x] Complete
 - Phase 2: [ ] Not Started
 - Phase 3: [ ] Not Started
 - Phase 4: [ ] Not Started
@@ -143,90 +143,90 @@
 
 ### 1.1 Dexie.js Database
 
-- [ ] 1.1.1: Create Dexie database class with full schema
+- [x] 1.1.1: Create Dexie database class with full schema
   - Files: src/db/database.ts
   - Tables: activities, transitSegments, accommodations, restaurants, alerts, locationShares, aiCache, checklistItems, syncMeta
   - Test: Database initializes without errors
 
-- [ ] 1.1.2: Create TypeScript interfaces for all Dexie tables
+- [x] 1.1.2: Create TypeScript interfaces for all Dexie tables
   - Files: src/db/types.ts
   - Interfaces: Match Supabase schema with camelCase conversion
   - Test: Types compile, match database schema
 
-- [ ] 1.1.3: Add database version migrations
+- [x] 1.1.3: Add database version migrations
   - Files: src/db/database.ts
   - Migrations: Version 1 with all tables
   - Test: Database upgrades cleanly
 
 ### 1.2 Supabase Client
 
-- [ ] 1.2.1: Create Supabase client configuration
+- [x] 1.2.1: Create Supabase client configuration
   - Files: src/lib/supabase.ts
   - Config: URL, anon key, real-time enabled
   - Test: Client connects to Supabase
 
-- [ ] 1.2.2: Create type-safe Supabase query helpers
+- [x] 1.2.2: Create type-safe Supabase query helpers
   - Files: src/lib/supabase-queries.ts
   - Functions: fetchActivities, fetchAccommodations, fetchAlerts, etc.
   - Test: Queries return typed data
 
 ### 1.3 Sync Service
 
-- [ ] 1.3.1: Create initial data sync function
+- [x] 1.3.1: Create initial data sync function
   - Files: src/lib/sync.ts
   - Function: downloadAllData() - fetches all tables from Supabase → IndexedDB
   - Test: Data downloads and persists in IndexedDB
 
-- [ ] 1.3.2: Create real-time subscription handlers
+- [x] 1.3.2: Create real-time subscription handlers
   - Files: src/lib/sync.ts
   - Handlers: Subscribe to activities, alerts, checklistItems changes
   - Test: Real-time updates flow to IndexedDB
 
-- [ ] 1.3.3: Create sync status store with Zustand
+- [x] 1.3.3: Create sync status store with Zustand
   - Files: src/stores/sync-store.ts
   - State: lastSyncedAt, isSyncing, isOnline, pendingChanges
   - Test: Store updates correctly
 
-- [ ] 1.3.4: Add sync initialization on app load
+- [x] 1.3.4: Add sync initialization on app load
   - Files: src/app/providers.tsx, src/app/layout.tsx
   - Logic: Check last sync, download if stale, subscribe to real-time
   - Test: App syncs on load when online
 
 ### 1.4 Data Hooks
 
-- [ ] 1.4.1: Create useActivities hook with Dexie live query
+- [x] 1.4.1: Create useActivities hook with Dexie live query
   - Files: src/db/hooks.ts
   - Hook: useActivities(dayNumber?) - returns activities from IndexedDB
   - Test: Hook returns data, updates on changes
 
-- [ ] 1.4.2: Create useAccommodations hook
+- [x] 1.4.2: Create useAccommodations hook
   - Files: src/db/hooks.ts
   - Hook: useAccommodations() - returns all accommodations
   - Test: Hook returns data
 
-- [ ] 1.4.3: Create useCurrentActivity hook
+- [x] 1.4.3: Create useCurrentActivity hook
   - Files: src/db/hooks.ts
   - Hook: useCurrentActivity() - returns activity based on current time
   - Test: Returns correct activity for current time
 
-- [ ] 1.4.4: Create useNextActivity hook
+- [x] 1.4.4: Create useNextActivity hook
   - Files: src/db/hooks.ts
   - Hook: useNextActivity() - returns next upcoming activity
   - Test: Returns correct next activity
 
-- [ ] 1.4.5: Create useAlerts hook
+- [x] 1.4.5: Create useAlerts hook
   - Files: src/db/hooks.ts
   - Hook: useAlerts() - returns active alerts
   - Test: Returns only active, non-expired alerts
 
 **Phase 1 Checkpoint:**
 
-- [ ] Data downloads from Supabase on first load
-- [ ] App works in airplane mode after initial sync
-- [ ] Real-time updates flow when online
-- [ ] All data hooks return correct data
-- [ ] Sync status visible in React DevTools
-- [ ] Commit: "feat: complete offline-first data layer (Phase 1)"
+- [x] Data downloads from Supabase on first load
+- [x] App works in airplane mode after initial sync
+- [x] Real-time updates flow when online
+- [x] All data hooks return correct data
+- [x] Sync status visible in React DevTools
+- [x] Commit: "feat: complete offline-first data layer (Phase 1)"
 
 ---
 
@@ -611,3 +611,17 @@
 | 0.5.1 | 2026-01-26 | - | Folder structure created |
 | 0.5.2 | 2026-01-26 | - | Database types |
 | 0.5.3 | 2026-01-26 | 0595810 | Index files |
+| 1.1.1 | 2026-01-26 | - | Dexie FTCDatabase class |
+| 1.1.2 | 2026-01-26 | - | db/types.ts with table maps |
+| 1.1.3 | 2026-01-26 | - | Version 1 schema |
+| 1.2.1 | 2026-01-26 | - | Supabase client config |
+| 1.2.2 | 2026-01-26 | - | Query helpers with snake→camel |
+| 1.3.1 | 2026-01-26 | - | downloadAllData sync |
+| 1.3.2 | 2026-01-26 | - | Real-time subscriptions |
+| 1.3.3 | 2026-01-26 | - | Zustand sync store |
+| 1.3.4 | 2026-01-26 | - | Providers + layout |
+| 1.4.1 | 2026-01-26 | - | useActivities hook |
+| 1.4.2 | 2026-01-26 | - | useAccommodations hook |
+| 1.4.3 | 2026-01-26 | - | useCurrentActivity hook |
+| 1.4.4 | 2026-01-26 | - | useNextActivity hook |
+| 1.4.5 | 2026-01-26 | - | useAlerts hook |

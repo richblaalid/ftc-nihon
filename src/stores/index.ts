@@ -1,2 +1,2 @@
-// Store exports - will be populated in Phase 1
-// export { useSyncStore } from './sync-store';
+// Store exports
+export { useSyncStore, initOnlineListeners, formatLastSyncTime } from './sync-store';

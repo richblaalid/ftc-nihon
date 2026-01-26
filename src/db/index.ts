@@ -1,3 +1,4 @@
-// Database exports - will be populated in Phase 1
-// export { db } from './database';
-// export * from './hooks';
+// Database exports
+export { db, FTCDatabase } from './database';
+export * from './hooks';
+export * from './types';
