@@ -1,6 +1,6 @@
 /// <reference lib="webworker" />
 
-const CACHE_NAME = 'ftc-nihon-v1';
+const CACHE_NAME = 'ftc-nihon-v2';
 const STATIC_ASSETS = [
   '/',
   '/icon-192x192.png',
