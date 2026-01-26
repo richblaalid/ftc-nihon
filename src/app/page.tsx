@@ -6,6 +6,7 @@ import {
   NowWidget,
   NextWidget,
   WeatherWidget,
+  TimeWidget,
   AlertBanner,
 } from '@/components/dashboard';
 import { DayStrip } from '@/components/ui';
@@ -81,8 +82,9 @@ export default function Home() {
       {/* NEXT widget - upcoming activity with leave by time */}
       <NextWidget />
 
-      {/* Weather widget */}
+      {/* Weather and Time widgets */}
       <WeatherWidget />
+      <TimeWidget />
     </DashboardLayout>
   );
 }
