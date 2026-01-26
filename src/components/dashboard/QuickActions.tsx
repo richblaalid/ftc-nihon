@@ -15,9 +15,9 @@ function QuickAction({ href, icon, label, disabled }: QuickActionProps) {
 
   if (disabled) {
     return (
-      <div className={`${baseClasses} cursor-not-allowed bg-background-secondary opacity-50`}>
-        <span className="text-2xl">{icon}</span>
-        <span className="text-xs font-medium text-foreground-tertiary">{label}</span>
+      <div className={`${baseClasses} cursor-not-allowed bg-background-tertiary`}>
+        <span className="text-2xl opacity-50">{icon}</span>
+        <span className="text-xs font-medium text-foreground-secondary">{label}</span>
       </div>
     );
   }

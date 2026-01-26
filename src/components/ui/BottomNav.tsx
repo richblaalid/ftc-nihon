@@ -97,8 +97,8 @@ export function BottomNav() {
               href={item.href}
               className={`flex flex-col items-center justify-center min-w-touch min-h-touch px-3 py-1 transition-colors ${
                 active
-                  ? 'text-primary'
-                  : 'text-foreground-tertiary hover:text-foreground-secondary'
+                  ? 'text-coral-700 dark:text-vermillion-400'
+                  : 'text-foreground-secondary hover:text-foreground'
               }`}
             >
               {active && item.activeIcon ? item.activeIcon : item.icon}
