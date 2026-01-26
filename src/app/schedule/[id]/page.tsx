@@ -2,6 +2,7 @@
 
 import { use } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useActivityWithTransit } from '@/db/hooks';
 import { CategoryIcon, getCategoryPillClass } from '@/components/ui/CategoryIcon';
 
@@ -33,7 +34,19 @@ function formatDuration(minutes: number): string {
 
 export default function ActivityDetailPage({ params }: PageProps) {
   const { id } = use(params);
+  const router = useRouter();
   const activity = useActivityWithTransit(id);
+
+  // Handle back navigation - use browser history if available
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      router.back();
+    } else if (activity) {
+      router.push(`/schedule?day=${activity.dayNumber}`);
+    } else {
+      router.push('/schedule');
+    }
+  };
 
   // Loading state
   if (activity === undefined) {
@@ -79,12 +92,13 @@ export default function ActivityDetailPage({ params }: PageProps) {
       {/* Header */}
       <header className="sticky top-0 z-10 border-b border-background-secondary bg-background/95 px-4 pb-3 pt-safe backdrop-blur-sm">
         <div className="flex items-center gap-3 pt-2">
-          <Link
-            href={`/schedule?day=${activity.dayNumber}`}
+          <button
+            onClick={handleBack}
             className="flex min-h-touch min-w-touch items-center justify-center rounded-full text-foreground-secondary hover:bg-background-secondary"
+            aria-label="Go back"
           >
             <span className="text-xl">←</span>
-          </Link>
+          </button>
           <span className={getCategoryPillClass(activity.category)}>
             <CategoryIcon category={activity.category} size="sm" />
             <span className="ml-1 capitalize">{activity.category}</span>

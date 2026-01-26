@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useMemo } from 'react';
+import Link from 'next/link';
 import { useCurrentActivity } from '@/db/hooks';
 import type { Activity } from '@/types/database';
 
@@ -117,39 +118,47 @@ export function NowWidget() {
   }
 
   return (
-    <div className="card relative overflow-hidden">
+    <Link
+      href={`/schedule/${currentActivity.id}`}
+      className="card relative block overflow-hidden transition-all duration-fast active:scale-[0.98] hover:shadow-lg"
+    >
       {/* Category accent bar */}
       <div
         className={`absolute left-0 top-0 h-full w-1.5 ${getCategoryColor(currentActivity.category)}`}
       />
 
-      <div className="pl-3">
-        {/* Header with NOW label and time remaining */}
-        <div className="flex items-center justify-between">
-          <span className="text-xs font-medium uppercase tracking-wide text-foreground-tertiary">
-            Now
-          </span>
-          {timeRemaining && (
-            <span className="rounded-full bg-background-secondary px-2 py-0.5 text-xs font-medium text-foreground-secondary">
-              {timeRemaining.text}
+      <div className="flex items-start justify-between pl-3">
+        <div className="flex-1">
+          {/* Header with NOW label and time remaining */}
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-medium uppercase tracking-wide text-foreground-tertiary">
+              Now
             </span>
+            {timeRemaining && (
+              <span className="rounded-full bg-background-secondary px-2 py-0.5 text-xs font-medium text-foreground-secondary">
+                {timeRemaining.text}
+              </span>
+            )}
+          </div>
+
+          {/* Activity name */}
+          <h2 className="mt-1 text-2xl font-semibold text-foreground">{currentActivity.name}</h2>
+
+          {/* Location */}
+          {currentActivity.locationName && (
+            <p className="mt-1 text-foreground-secondary">{currentActivity.locationName}</p>
           )}
+
+          {/* Time */}
+          <p className="mt-2 text-sm text-foreground-tertiary">
+            Started at {currentActivity.startTime}
+            {currentActivity.durationMinutes && ` · ${currentActivity.durationMinutes}min`}
+          </p>
         </div>
 
-        {/* Activity name */}
-        <h2 className="mt-1 text-2xl font-semibold text-foreground">{currentActivity.name}</h2>
-
-        {/* Location */}
-        {currentActivity.locationName && (
-          <p className="mt-1 text-foreground-secondary">{currentActivity.locationName}</p>
-        )}
-
-        {/* Time */}
-        <p className="mt-2 text-sm text-foreground-tertiary">
-          Started at {currentActivity.startTime}
-          {currentActivity.durationMinutes && ` · ${currentActivity.durationMinutes}min`}
-        </p>
+        {/* Chevron indicator */}
+        <span className="text-foreground-tertiary" aria-hidden="true">›</span>
       </div>
-    </div>
+    </Link>
   );
 }
