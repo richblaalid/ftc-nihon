@@ -7,26 +7,32 @@ import {
   NextWidget,
   WeatherWidget,
   AlertBanner,
-  DayIndicator,
 } from '@/components/dashboard';
+import { DayStrip } from '@/components/ui';
+import { useCurrentDayNumber } from '@/db/hooks';
 import { useSyncStore, formatLastSyncTime } from '@/stores/sync-store';
 
 export default function Home() {
-  const [selectedDay, setSelectedDay] = useState<number | undefined>(undefined);
   const [hasMounted, setHasMounted] = useState(false);
   const { isSyncing, isOnline, lastSyncedAt } = useSyncStore();
+  const currentDayNumber = useCurrentDayNumber();
+
+  // Selected day - null means "follow current day"
+  const [selectedDay, setSelectedDay] = useState<number | null>(null);
+
+  // Effective day: user selection takes precedence, otherwise current day, otherwise day 1
+  const effectiveSelectedDay = selectedDay ?? currentDayNumber ?? 1;
 
   // Prevent hydration mismatch by only showing sync status after mount
-  useEffect(() => {
-    setHasMounted(true);
-  }, []);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional for hydration fix
+  useEffect(() => setHasMounted(true), []);
 
   return (
     <DashboardLayout
       header={
-        <div className="flex flex-col gap-3 pt-2">
+        <div className="flex flex-col gap-2 pt-2">
           {/* App title */}
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between px-4">
             <h1 className="font-display text-display-sm text-foreground">FTC: Nihon</h1>
 
             {/* Sync status indicator - only render after mount to avoid hydration mismatch */}
@@ -57,8 +63,12 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Day indicator */}
-          <DayIndicator selectedDay={selectedDay} onDayChange={setSelectedDay} />
+          {/* Day strip navigation */}
+          <DayStrip
+            selectedDay={effectiveSelectedDay}
+            currentDay={currentDayNumber}
+            onDayChange={setSelectedDay}
+          />
         </div>
       }
     >

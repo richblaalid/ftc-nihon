@@ -3,7 +3,7 @@
 import { Suspense, useTransition } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useActivitiesWithTransit, useCurrentActivity, useCurrentDayNumber } from '@/db/hooks';
-import { DayNav } from '@/components/schedule/DayNav';
+import { DayStrip } from '@/components/ui';
 import { Timeline } from '@/components/schedule/Timeline';
 import Link from 'next/link';
 
@@ -34,8 +34,8 @@ function ScheduleContent() {
   return (
     <div className="flex min-h-screen flex-col bg-background">
       {/* Header */}
-      <header className="sticky top-0 z-10 border-b border-background-secondary bg-background/95 px-4 pb-3 pt-safe backdrop-blur-sm">
-        <div className="flex items-center justify-between pt-2">
+      <header className="sticky top-0 z-10 border-b border-background-secondary bg-background/95 pb-2 pt-safe backdrop-blur-sm">
+        <div className="flex items-center justify-between px-4 pt-2">
           {/* Back button */}
           <Link
             href="/"
@@ -59,9 +59,14 @@ function ScheduleContent() {
           {(isToday || !currentDayNumber) && <div className="w-12" />}
         </div>
 
-        {/* Day navigation */}
-        <div className="mt-3">
-          <DayNav currentDay={selectedDay} onDayChange={handleDayChange} isPending={isPending} />
+        {/* Day strip navigation */}
+        <div className="mt-2">
+          <DayStrip
+            selectedDay={selectedDay}
+            currentDay={currentDayNumber}
+            onDayChange={handleDayChange}
+            isPending={isPending}
+          />
         </div>
       </header>
 
@@ -92,17 +97,20 @@ function ScheduleContent() {
 function ScheduleLoading() {
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <header className="sticky top-0 z-10 border-b border-background-secondary bg-background px-4 pb-3 pt-safe">
-        <div className="flex items-center justify-between pt-2">
+      <header className="sticky top-0 z-10 border-b border-background-secondary bg-background pb-2 pt-safe">
+        <div className="flex items-center justify-between px-4 pt-2">
           <div className="h-10 w-10 animate-pulse rounded-full bg-background-secondary" />
           <div className="h-6 w-24 animate-pulse rounded bg-background-secondary" />
           <div className="w-12" />
         </div>
-        <div className="mt-3 flex items-center justify-between">
-          <div className="h-10 w-10 animate-pulse rounded-full bg-background-secondary" />
-          <div className="h-12 w-32 animate-pulse rounded bg-background-secondary" />
-          <div className="h-10 w-10 animate-pulse rounded-full bg-background-secondary" />
+        {/* Day strip skeleton */}
+        <div className="mt-2 flex gap-2 overflow-hidden px-4 py-2">
+          <div className="h-5 w-12 animate-pulse rounded-full bg-background-secondary" />
+          {[1, 2, 3, 4, 5].map((i) => (
+            <div key={i} className="h-14 w-11 animate-pulse rounded-xl bg-background-secondary" />
+          ))}
         </div>
+        <div className="mx-4 mt-1 h-1 animate-pulse rounded-full bg-background-secondary" />
       </header>
       <main className="flex-1 p-4">
         <div className="flex flex-col gap-3">

@@ -3,6 +3,7 @@
 import { useState, useCallback, Suspense, useTransition } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Map, PinLegend, PinInfo, Directions } from '@/components/maps';
+import { DayStrip } from '@/components/ui';
 import { useGeolocation } from '@/lib/hooks/useGeolocation';
 import { useActivitiesWithTransit, useCurrentDayNumber } from '@/db/hooks';
 import type { ActivityWithTransit } from '@/types/database';
@@ -97,23 +98,14 @@ function MapContent() {
           </button>
         </div>
 
-        {/* Day selector */}
-        <div className={`flex items-center gap-2 mt-3 overflow-x-auto pb-1 scrollbar-hide ${isPending ? 'opacity-70' : ''}`}>
-          {Array.from({ length: 15 }, (_, i) => i + 1).map((day) => (
-            <button
-              key={day}
-              onClick={() => handleDayChange(day)}
-              disabled={isPending}
-              className={`flex-shrink-0 px-3 py-1.5 rounded-full text-sm font-medium transition-colors
-                ${day === selectedDay
-                  ? 'bg-primary text-white'
-                  : 'bg-background-secondary text-foreground-secondary hover:bg-background-tertiary'
-                }
-                ${isPending ? 'cursor-wait' : ''}`}
-            >
-              Day {day}
-            </button>
-          ))}
+        {/* Day strip navigation */}
+        <div className="mt-2 -mx-4">
+          <DayStrip
+            selectedDay={selectedDay}
+            currentDay={currentTripDay}
+            onDayChange={handleDayChange}
+            isPending={isPending}
+          />
         </div>
       </header>
 
@@ -173,9 +165,11 @@ function MapLoading() {
           <div className="w-9 h-9 bg-background-secondary rounded-lg animate-pulse" />
           <div className="w-32 h-6 bg-background-secondary rounded animate-pulse" />
         </div>
-        <div className="flex gap-2 mt-3">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="w-16 h-8 bg-background-secondary rounded-full animate-pulse" />
+        {/* Day strip skeleton */}
+        <div className="mt-2 -mx-4 flex gap-2 overflow-hidden px-4 py-2">
+          <div className="h-5 w-12 animate-pulse rounded-full bg-background-secondary" />
+          {[1, 2, 3, 4, 5].map((i) => (
+            <div key={i} className="h-14 w-11 animate-pulse rounded-xl bg-background-secondary" />
           ))}
         </div>
       </header>
