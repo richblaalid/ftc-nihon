@@ -133,23 +133,27 @@ Changed `text-[10px]` to `text-xs` (12px).
 
 ---
 
-### Task 7: Replace Hardcoded Colors in Map.tsx
+### Task 7: Replace Hardcoded Colors in Map.tsx ✅ COMPLETED
 
 **Issue:** Map component uses hardcoded hex colors instead of CSS variables
 
-**Files to Modify:**
+**Files Modified:**
 - `src/components/maps/Map.tsx`
 
-**Changes:**
-1. Category colors (lines 32-37) - extract to CSS variables or use Tailwind classes
-2. Info window colors (lines 175-176) - use theme-aware values
-3. User location marker (line 219) - use CSS variable
+**Changes Applied:**
+1. Added `getCategoryColor()` helper that reads `--category-*` CSS variables at runtime
+2. Added `getThemeColor()` helper for reading any CSS variable with fallback
+3. Pin markers now use theme-aware category colors (supports dark mode)
+4. Info window uses theme colors for text (`--foreground`, `--foreground-secondary`, `--foreground-tertiary`)
+5. Info window background uses `--background` for theme consistency
+6. User location marker uses `--primary` instead of hardcoded Google blue
 
 **Verification:**
-- [ ] Pin colors consistent with design system
-- [ ] Info window text readable in both light/dark mode
+- [x] Pin colors consistent with design system
+- [x] Info window text readable in both light/dark mode
+- [x] All map tests pass
 
-**Effort:** 30 minutes
+**Completed:** January 26, 2026
 
 ---
 
@@ -345,15 +349,18 @@ After completing P0, P1, and P2 tasks:
 | Priority | Tasks | Status |
 |----------|-------|--------|
 | P0 (Critical) | 2 | ✅ Completed |
-| P1 (High) | 5 | ✅ Completed (4/5, Task 7 pending) |
+| P1 (High) | 5 | ✅ Completed |
 | P2 (Medium) | 5 | ✅ Completed |
 | P3 (Low) | 4 | Pending |
 
 **Completed:** January 26, 2026
 
 **Remaining:**
-- Task 7 (P1): Replace hardcoded colors in Map.tsx - deferred for map styling review
 - Tasks 13-16 (P3): Nice-to-have enhancements for post-launch
+  - Page transition animations
+  - Scroll position preservation
+  - Current time indicator on timeline
+  - Map auto-fit to show all pins
 
 ---
 
