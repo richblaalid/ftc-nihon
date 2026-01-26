@@ -10,84 +10,224 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // FTC: Nihon color palette - warm, calm with playful accents
+        // Dynamic theme colors (set via CSS variables)
         background: 'var(--background)',
         foreground: 'var(--foreground)',
-        primary: {
-          DEFAULT: '#1a1a2e',
-          50: '#f5f5f7',
-          100: '#e8e8ed',
-          200: '#d1d1db',
-          300: '#a9a9bd',
-          400: '#7f7f9a',
-          500: '#5f5f7a',
-          600: '#4a4a61',
-          700: '#3d3d4f',
-          800: '#2d2d3d',
-          900: '#1a1a2e',
-          950: '#0f0f1a',
+        surface: 'var(--surface)',
+
+        // Light mode backgrounds - "Sunset Adventure"
+        cream: {
+          50: '#FFFBF7', // Background Primary
+          100: '#FFF5EC', // Background Secondary
+          200: '#FFEDE0', // Background Tertiary
         },
-        accent: {
-          DEFAULT: '#e94560',
-          50: '#fef2f3',
-          100: '#fde6e9',
-          200: '#fbd0d7',
-          300: '#f7aab8',
-          400: '#f17a92',
-          500: '#e94560',
-          600: '#d42a4c',
-          700: '#b21e3e',
-          800: '#941c39',
-          900: '#7d1c36',
-          950: '#450a18',
+
+        // Coral (Light mode primary accent)
+        coral: {
+          50: '#FFF5F3',
+          100: '#FFE8E4',
+          200: '#FFD4CC',
+          300: '#FFB5A8',
+          400: '#FF8C7A',
+          500: '#F46B55', // Primary
+          600: '#E04D35',
+          700: '#BC3A25',
+          800: '#9B3222',
+          900: '#812D21',
         },
-        warm: {
-          DEFAULT: '#f8f4f0',
-          50: '#fdfcfb',
-          100: '#f8f4f0',
-          200: '#f0e8e0',
-          300: '#e5d7c9',
-          400: '#d4bfa8',
-          500: '#c4a889',
-          600: '#b08f6a',
-          700: '#937456',
-          800: '#785f48',
-          900: '#634f3d',
-          950: '#352920',
+
+        // Amber (Light mode secondary)
+        amber: {
+          50: '#FFFCF0',
+          100: '#FFF7D9',
+          200: '#FFECB3',
+          300: '#FFDF80',
+          400: '#FFD24D',
+          500: '#F5B800', // Secondary
+          600: '#D99E00',
+          700: '#B38000',
+          800: '#8C6500',
+          900: '#664A00',
         },
-        // Category colors for activities
+
+        // Terracotta (Light mode accent)
+        terracotta: {
+          500: '#C45D3A',
+          600: '#A84B2E',
+          700: '#8B3D25',
+        },
+
+        // Dark mode backgrounds - "Bold & Spicy" (Deep Indigo Black)
+        indigo: {
+          950: '#0D1117', // Background Primary
+          900: '#161B25', // Background Secondary
+          800: '#1E2533', // Background Tertiary
+          700: '#252D3D', // Surface (cards)
+        },
+
+        // Vermillion (Dark mode primary accent)
+        vermillion: {
+          50: '#FFF5F5',
+          100: '#FFE0E0',
+          200: '#FFC7C7',
+          300: '#FFA3A3',
+          400: '#FF6B6B',
+          500: '#E53935', // Primary
+          600: '#C62828',
+          700: '#A51C1C',
+          800: '#871515',
+          900: '#6B1111',
+        },
+
+        // Burnt Orange (Dark mode secondary)
+        orange: {
+          50: '#FFF8F0',
+          100: '#FFECD9',
+          200: '#FFD9B3',
+          300: '#FFC080',
+          400: '#FFA54D',
+          500: '#F58220', // Secondary
+          600: '#D96A10',
+          700: '#B35408',
+          800: '#8C4106',
+          900: '#663005',
+        },
+
+        // Gold (Dark mode accent)
+        gold: {
+          500: '#FFD700',
+          600: '#E6C200',
+          700: '#CCAC00',
+        },
+
+        // Semantic colors
+        success: {
+          light: '#2E7D4A',
+          dark: '#4ADE80',
+        },
+        warning: {
+          light: '#D97706',
+          dark: '#FBBF24',
+        },
+        error: {
+          light: '#DC2626',
+          dark: '#F87171',
+        },
+        info: {
+          light: '#2563EB',
+          dark: '#60A5FA',
+        },
+
+        // Category colors (mode-aware via CSS variables recommended)
         category: {
-          food: '#f59e0b',
-          temple: '#8b5cf6',
-          shopping: '#10b981',
-          transit: '#3b82f6',
-          activity: '#ec4899',
-          hotel: '#6366f1',
+          food: {
+            light: '#F46B55',
+            dark: '#E53935',
+          },
+          temple: {
+            light: '#7C3AED',
+            dark: '#A78BFA',
+          },
+          shopping: {
+            light: '#F5B800',
+            dark: '#FFD700',
+          },
+          transit: {
+            light: '#2563EB',
+            dark: '#60A5FA',
+          },
+          activity: {
+            light: '#059669',
+            dark: '#34D399',
+          },
+          hotel: {
+            light: '#8B5CF6',
+            dark: '#C4B5FD',
+          },
         },
       },
+
       fontFamily: {
-        sans: ['var(--font-geist-sans)', 'system-ui', 'sans-serif'],
+        display: ['var(--font-reggae)', 'cursive'],
+        sans: ['var(--font-urbanist)', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
         mono: ['var(--font-geist-mono)', 'monospace'],
       },
+
+      fontSize: {
+        // Display - Reggae One
+        'display-lg': ['48px', { lineHeight: '1.1' }],
+        'display-md': ['36px', { lineHeight: '1.1' }],
+        'display-sm': ['28px', { lineHeight: '1.2' }],
+      },
+
       spacing: {
+        // 8px base spacing scale
+        0: '0px',
+        1: '4px',
+        2: '8px',
+        3: '12px',
+        4: '16px',
+        5: '20px',
+        6: '24px',
+        8: '32px',
+        10: '40px',
+        12: '48px',
+        16: '64px',
         // iOS safe area values
         'safe-top': 'env(safe-area-inset-top)',
         'safe-bottom': 'env(safe-area-inset-bottom)',
         'safe-left': 'env(safe-area-inset-left)',
         'safe-right': 'env(safe-area-inset-right)',
       },
+
+      borderRadius: {
+        sm: '4px',
+        md: '8px',
+        lg: '12px',
+        xl: '16px',
+        '2xl': '24px',
+        full: '9999px',
+      },
+
+      boxShadow: {
+        // Light mode shadows
+        'light-sm': '0 1px 2px rgba(45, 36, 32, 0.05)',
+        'light-md': '0 4px 6px rgba(45, 36, 32, 0.07), 0 2px 4px rgba(45, 36, 32, 0.05)',
+        'light-lg': '0 10px 15px rgba(45, 36, 32, 0.1), 0 4px 6px rgba(45, 36, 32, 0.05)',
+        'light-xl': '0 20px 25px rgba(45, 36, 32, 0.12), 0 10px 10px rgba(45, 36, 32, 0.04)',
+        // Dark mode shadows
+        'dark-sm': '0 1px 2px rgba(0, 0, 0, 0.3)',
+        'dark-md': '0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3)',
+        'dark-lg': '0 10px 15px rgba(0, 0, 0, 0.5), 0 4px 6px rgba(0, 0, 0, 0.3)',
+        'dark-xl': '0 20px 25px rgba(0, 0, 0, 0.6), 0 10px 10px rgba(0, 0, 0, 0.4)',
+      },
+
       minHeight: {
         touch: '44px', // iOS minimum touch target
       },
+
       minWidth: {
         touch: '44px', // iOS minimum touch target
       },
+
       screens: {
-        // Mobile-first breakpoints (default is mobile)
+        // Mobile-first breakpoints
         xs: '375px', // iPhone SE
         sm: '390px', // iPhone 13/14
         md: '428px', // iPhone 14 Plus / Pro Max
-        lg: '768px', // Tablet (unlikely for this app)
+        lg: '768px', // Tablet
+      },
+
+      transitionDuration: {
+        fast: '150ms',
+        normal: '250ms',
+        slow: '400ms',
+      },
+
+      transitionTimingFunction: {
+        'ease-out': 'cubic-bezier(0, 0, 0.2, 1)',
+        'ease-in': 'cubic-bezier(0.4, 0, 1, 1)',
+        'ease-in-out': 'cubic-bezier(0.4, 0, 0.2, 1)',
       },
     },
   },

@@ -1,14 +1,27 @@
 import type { Metadata, Viewport } from 'next';
+import { Urbanist } from 'next/font/google';
 import localFont from 'next/font/local';
 import './globals.css';
 import { ServiceWorkerRegistration } from '@/components/ServiceWorkerRegistration';
 
-const geistSans = localFont({
-  src: './fonts/GeistVF.woff',
-  variable: '--font-geist-sans',
-  weight: '100 900',
+// Primary body font - Urbanist
+const urbanist = Urbanist({
+  subsets: ['latin'],
+  variable: '--font-urbanist',
+  weight: ['300', '400', '500', '600', '700'],
+  display: 'swap',
 });
 
+// Display font - Reggae One (for headlines)
+// Note: Reggae One has Japanese character support which adds to the theme
+const reggaeOne = localFont({
+  src: './fonts/ReggaeOne-Regular.ttf',
+  variable: '--font-reggae',
+  display: 'swap',
+  preload: true,
+});
+
+// Keep Geist Mono for any code/monospace needs
 const geistMono = localFont({
   src: './fonts/GeistMonoVF.woff',
   variable: '--font-geist-mono',
@@ -35,8 +48,8 @@ export const viewport: Viewport = {
   userScalable: false,
   viewportFit: 'cover',
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
-    { media: '(prefers-color-scheme: dark)', color: '#1a1a2e' },
+    { media: '(prefers-color-scheme: light)', color: '#FFFBF7' }, // Cream background
+    { media: '(prefers-color-scheme: dark)', color: '#0D1117' }, // Indigo black
   ],
 };
 
@@ -53,7 +66,9 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="mobile-web-app-capable" content="yes" />
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body
+        className={`${urbanist.variable} ${reggaeOne.variable} ${geistMono.variable} font-sans antialiased`}
+      >
         <ServiceWorkerRegistration />
         {children}
       </body>

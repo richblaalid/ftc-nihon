@@ -2,33 +2,155 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================
+   FTC: Nihon Design System
+   See: Docs/product_docs/FTC_Nihon_Design_System.md
+   ============================================ */
+
+/* Light Mode - "Sunset Adventure" */
 :root {
-  --background: #f8f4f0;
-  --foreground: #1a1a2e;
+  /* Backgrounds */
+  --background: #FFFBF7;
+  --background-secondary: #FFF5EC;
+  --background-tertiary: #FFEDE0;
+  --surface: #FFFFFF;
+
+  /* Text */
+  --foreground: #2D2420;
+  --foreground-secondary: #6B5D54;
+  --foreground-tertiary: #A89B91;
+  --foreground-inverse: #FFFBF7;
+
+  /* Primary accent - Coral */
+  --primary: #F46B55;
+  --primary-hover: #E04D35;
+
+  /* Secondary accent - Amber */
+  --secondary: #F5B800;
+  --secondary-hover: #D99E00;
+
+  /* Accent - Terracotta */
+  --accent: #C45D3A;
+
+  /* Semantic */
+  --success: #2E7D4A;
+  --warning: #D97706;
+  --error: #DC2626;
+  --info: #2563EB;
+
+  /* Category colors */
+  --category-food: #F46B55;
+  --category-temple: #7C3AED;
+  --category-shopping: #F5B800;
+  --category-transit: #2563EB;
+  --category-activity: #059669;
+  --category-hotel: #8B5CF6;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(45, 36, 32, 0.05);
+  --shadow-md: 0 4px 6px rgba(45, 36, 32, 0.07), 0 2px 4px rgba(45, 36, 32, 0.05);
+  --shadow-lg: 0 10px 15px rgba(45, 36, 32, 0.1), 0 4px 6px rgba(45, 36, 32, 0.05);
 }
 
+/* Dark Mode - "Bold & Spicy" */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #1a1a2e;
-    --foreground: #f8f4f0;
+    /* Backgrounds - Deep Indigo Black */
+    --background: #0D1117;
+    --background-secondary: #161B25;
+    --background-tertiary: #1E2533;
+    --surface: #252D3D;
+
+    /* Text */
+    --foreground: #F5F5F5;
+    --foreground-secondary: #B0B8C4;
+    --foreground-tertiary: #6B7280;
+    --foreground-inverse: #0D1117;
+
+    /* Primary accent - Vermillion */
+    --primary: #E53935;
+    --primary-hover: #C62828;
+
+    /* Secondary accent - Burnt Orange */
+    --secondary: #F58220;
+    --secondary-hover: #D96A10;
+
+    /* Accent - Gold */
+    --accent: #FFD700;
+
+    /* Semantic */
+    --success: #4ADE80;
+    --warning: #FBBF24;
+    --error: #F87171;
+    --info: #60A5FA;
+
+    /* Category colors */
+    --category-food: #E53935;
+    --category-temple: #A78BFA;
+    --category-shopping: #FFD700;
+    --category-transit: #60A5FA;
+    --category-activity: #34D399;
+    --category-hotel: #C4B5FD;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5), 0 4px 6px rgba(0, 0, 0, 0.3);
   }
 }
 
 /* Dark mode class override */
 .dark {
-  --background: #1a1a2e;
-  --foreground: #f8f4f0;
+  --background: #0D1117;
+  --background-secondary: #161B25;
+  --background-tertiary: #1E2533;
+  --surface: #252D3D;
+  --foreground: #F5F5F5;
+  --foreground-secondary: #B0B8C4;
+  --foreground-tertiary: #6B7280;
+  --foreground-inverse: #0D1117;
+  --primary: #E53935;
+  --primary-hover: #C62828;
+  --secondary: #F58220;
+  --secondary-hover: #D96A10;
+  --accent: #FFD700;
+  --success: #4ADE80;
+  --warning: #FBBF24;
+  --error: #F87171;
+  --info: #60A5FA;
+  --category-food: #E53935;
+  --category-temple: #A78BFA;
+  --category-shopping: #FFD700;
+  --category-transit: #60A5FA;
+  --category-activity: #34D399;
+  --category-hotel: #C4B5FD;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5), 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
+/* Animation timing */
+:root {
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 400ms;
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================
+   Base Styles
+   ============================================ */
+
 html {
-  /* Ensure the app fills the viewport on iOS */
   height: -webkit-fill-available;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-family: var(--font-urbanist), -apple-system, BlinkMacSystemFont, sans-serif;
   min-height: 100vh;
   min-height: -webkit-fill-available;
 
@@ -40,6 +162,20 @@ body {
 
   /* Prevent pull-to-refresh on iOS PWA */
   overscroll-behavior-y: contain;
+
+  /* Smooth scrolling */
+  scroll-behavior: smooth;
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* Prevent text selection for app-like feel */
@@ -53,18 +189,167 @@ body {
   touch-action: pan-x;
 }
 
+/* ============================================
+   Base Layer
+   ============================================ */
+
 @layer base {
-  /* Ensure links are accessible */
+  /* Links */
   a {
-    @apply text-accent-600 underline-offset-4 hover:underline;
+    @apply text-coral-600 underline-offset-4 transition-colors duration-fast;
   }
 
-  /* Ensure buttons have minimum touch targets */
+  a:hover {
+    @apply text-coral-700 underline;
+  }
+
+  .dark a {
+    @apply text-vermillion-400;
+  }
+
+  .dark a:hover {
+    @apply text-vermillion-300;
+  }
+
+  /* Buttons - minimum touch targets */
   button,
   [role='button'] {
     @apply min-h-touch min-w-touch;
   }
+
+  /* Focus styles for accessibility */
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-coral-500;
+  }
+
+  .dark :focus-visible {
+    @apply outline-vermillion-400;
+  }
 }
+
+/* ============================================
+   Component Layer
+   ============================================ */
+
+@layer components {
+  /* Card component */
+  .card {
+    @apply rounded-lg bg-white p-4 shadow-light-md;
+  }
+
+  .dark .card {
+    @apply bg-indigo-700 shadow-dark-md;
+  }
+
+  /* Activity card with left accent bar */
+  .activity-card {
+    @apply card relative overflow-hidden pl-6;
+  }
+
+  .activity-card::before {
+    content: '';
+    @apply absolute left-0 top-0 h-full w-1;
+    background-color: var(--category-color, var(--primary));
+  }
+
+  /* Primary button */
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-md bg-coral-500 px-6 py-3 font-semibold text-white shadow-light-sm transition-all duration-fast;
+  }
+
+  .btn-primary:hover {
+    @apply bg-coral-600;
+  }
+
+  .btn-primary:active {
+    @apply bg-coral-700 scale-[0.98];
+  }
+
+  .dark .btn-primary {
+    @apply bg-vermillion-500 shadow-dark-sm;
+  }
+
+  .dark .btn-primary:hover {
+    @apply bg-vermillion-600;
+  }
+
+  /* Secondary button */
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-md border-2 border-coral-500 bg-transparent px-6 py-3 font-semibold text-coral-500 transition-all duration-fast;
+  }
+
+  .btn-secondary:hover {
+    @apply bg-coral-50;
+  }
+
+  .dark .btn-secondary {
+    @apply border-vermillion-500 text-vermillion-500;
+  }
+
+  .dark .btn-secondary:hover {
+    @apply bg-vermillion-500/10;
+  }
+
+  /* Ghost button */
+  .btn-ghost {
+    @apply inline-flex items-center justify-center rounded-md bg-transparent px-6 py-3 font-semibold text-foreground-secondary transition-all duration-fast;
+  }
+
+  .btn-ghost:hover {
+    background: var(--background-secondary);
+  }
+
+  /* Category pills */
+  .pill {
+    @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-medium;
+  }
+
+  .pill-food {
+    @apply bg-coral-100 text-coral-700;
+  }
+  .dark .pill-food {
+    @apply bg-vermillion-900/30 text-vermillion-300;
+  }
+
+  .pill-temple {
+    @apply bg-purple-100 text-purple-700;
+  }
+  .dark .pill-temple {
+    @apply bg-purple-900/30 text-purple-300;
+  }
+
+  .pill-shopping {
+    @apply bg-amber-100 text-amber-700;
+  }
+  .dark .pill-shopping {
+    @apply bg-gold-500/20 text-gold-500;
+  }
+
+  .pill-transit {
+    @apply bg-blue-100 text-blue-700;
+  }
+  .dark .pill-transit {
+    @apply bg-blue-900/30 text-blue-300;
+  }
+
+  .pill-activity {
+    @apply bg-emerald-100 text-emerald-700;
+  }
+  .dark .pill-activity {
+    @apply bg-emerald-900/30 text-emerald-300;
+  }
+
+  .pill-hotel {
+    @apply bg-violet-100 text-violet-700;
+  }
+  .dark .pill-hotel {
+    @apply bg-violet-900/30 text-violet-300;
+  }
+}
+
+/* ============================================
+   Utility Layer
+   ============================================ */
 
 @layer utilities {
   .text-balance {
@@ -85,8 +370,53 @@ body {
     padding-right: env(safe-area-inset-right);
   }
 
-  /* Bottom nav safe area */
   .mb-safe {
     margin-bottom: env(safe-area-inset-bottom);
   }
+
+  /* Display font utility */
+  .font-display {
+    font-family: var(--font-reggae), cursive;
+  }
+
+  /* Shadows that respect theme */
+  .shadow-theme-sm {
+    box-shadow: var(--shadow-sm);
+  }
+
+  .shadow-theme-md {
+    box-shadow: var(--shadow-md);
+  }
+
+  .shadow-theme-lg {
+    box-shadow: var(--shadow-lg);
+  }
+
+  /* Primary color utilities */
+  .text-primary {
+    color: var(--primary);
+  }
+
+  .bg-primary {
+    background-color: var(--primary);
+  }
+
+  .border-primary {
+    border-color: var(--primary);
+  }
+
+  /* Category color utilities */
+  .text-category-food { color: var(--category-food); }
+  .text-category-temple { color: var(--category-temple); }
+  .text-category-shopping { color: var(--category-shopping); }
+  .text-category-transit { color: var(--category-transit); }
+  .text-category-activity { color: var(--category-activity); }
+  .text-category-hotel { color: var(--category-hotel); }
+
+  .bg-category-food { background-color: var(--category-food); }
+  .bg-category-temple { background-color: var(--category-temple); }
+  .bg-category-shopping { background-color: var(--category-shopping); }
+  .bg-category-transit { background-color: var(--category-transit); }
+  .bg-category-activity { background-color: var(--category-activity); }
+  .bg-category-hotel { background-color: var(--category-hotel); }
 }

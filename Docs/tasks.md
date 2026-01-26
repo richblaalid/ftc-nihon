@@ -610,4 +610,4 @@
 | 0.4.4 | 2026-01-26 | - | .env.example, .env.local |
 | 0.5.1 | 2026-01-26 | - | Folder structure created |
 | 0.5.2 | 2026-01-26 | - | Database types |
-| 0.5.3 | 2026-01-26 | - | Index files |
+| 0.5.3 | 2026-01-26 | 0595810 | Index files |

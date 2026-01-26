@@ -12,6 +12,7 @@ FTC: Nihon is an offline-first Progressive Web App (PWA) serving as a travel con
 | [docs/tasks.md](docs/tasks.md) | Current task list and progress |
 | [Docs/product_docs/PRDs/FTC_Nihon_PRD.md](Docs/product_docs/PRDs/FTC_Nihon_PRD.md) | Product Requirements Document |
 | [Docs/product_docs/ADRs/FTC_Nihon_ADRs.md](Docs/product_docs/ADRs/FTC_Nihon_ADRs.md) | Architecture Decision Records (10 ADRs) |
+| [Docs/product_docs/FTC_Nihon_Design_System.md](Docs/product_docs/FTC_Nihon_Design_System.md) | Brand & Design System |
 | [Docs/product_docs/FTC_Nihon_Supabase_Schema.sql](Docs/product_docs/FTC_Nihon_Supabase_Schema.sql) | Supabase PostgreSQL schema (8 tables) |
 
 ## Technology Stack
@@ -93,6 +94,87 @@ supabase db reset  # Reset and seed database
 /execute 0.1.1     # Execute specific task
 ```
 
+## Design System
+
+**Full spec:** [Docs/product_docs/FTC_Nihon_Design_System.md](Docs/product_docs/FTC_Nihon_Design_System.md)
+
+### Brand Personality
+- Adventurous, Playful, Curious, Foodie
+- Balance point: 4/7 on playful ↔ polished scale
+- "Premium travel app with soul"
+
+### Color Themes
+
+**Light Mode - "Sunset Adventure"**
+- Background: `cream-50` (#FFFBF7) warm cream
+- Primary accent: `coral-500` (#F46B55)
+- Secondary: `amber-500` (#F5B800)
+- Text: `#2D2420` warm charcoal
+
+**Dark Mode - "Bold & Spicy"**
+- Background: `indigo-950` (#0D1117) deep indigo-black
+- Primary accent: `vermillion-500` (#E53935)
+- Secondary: `orange-500` (#F58220)
+- Accent: `gold-500` (#FFD700)
+- Text: `#F5F5F5` off-white
+
+### Typography
+
+| Use | Font | Example Class |
+|-----|------|---------------|
+| Display/Headlines | Reggae One | `font-display text-display-md` |
+| Body/UI | Urbanist | `font-sans` (default) |
+| Code | Geist Mono | `font-mono` |
+
+**Reggae One rules:**
+- Use sparingly - splash screen, day headers, location titles
+- Never for body text or UI
+- Minimum size: 24px
+- Always uppercase or title case
+
+### Category Colors
+
+| Category | Light | Dark | Usage |
+|----------|-------|------|-------|
+| Food | coral-500 | vermillion-500 | `.pill-food`, `.text-category-food` |
+| Temple | purple (#7C3AED) | light purple | `.pill-temple` |
+| Shopping | amber-500 | gold-500 | `.pill-shopping` |
+| Transit | blue (#2563EB) | light blue | `.pill-transit` |
+| Activity | teal (#059669) | light teal | `.pill-activity` |
+| Hotel | violet (#8B5CF6) | light violet | `.pill-hotel` |
+
+### Component Classes
+
+```css
+/* Cards */
+.card                   /* Base card with shadow */
+.activity-card          /* Card with left color bar */
+
+/* Buttons */
+.btn-primary            /* Coral/Vermillion filled */
+.btn-secondary          /* Outlined */
+.btn-ghost              /* Text only */
+
+/* Pills/Tags */
+.pill                   /* Base pill */
+.pill-food, .pill-temple, etc.  /* Category-colored */
+
+/* Shadows */
+.shadow-theme-sm/md/lg  /* Mode-aware shadows */
+```
+
+### Animation Guidelines
+- Duration: 150ms (fast), 250ms (normal), 400ms (slow)
+- Easing: ease-out for enter, ease-in for exit
+- Respect `prefers-reduced-motion`
+- Card press: scale 0.98 for 100ms
+
+### Accessibility
+- Min touch target: 44x44pt (`.min-h-touch .min-w-touch`)
+- Min body text: 16px
+- WCAG 2.1 AA contrast (4.5:1 normal, 3:1 large)
+- Never rely on color alone for meaning
+
 ## Design Principles
 
 1. **Offline-First** - Core features work with zero connectivity. Test in airplane mode.
@@ -151,8 +233,8 @@ Key decisions documented in ADRs:
 
 See [docs/tasks.md](docs/tasks.md) for current implementation status.
 
-**Current Phase:** Phase 0 (Project Foundation)
-**MVP Status:** Not Started
+**Current Phase:** Phase 1 (Data Layer & Sync)
+**MVP Status:** In Progress
 
 ## Session Protocol
 
