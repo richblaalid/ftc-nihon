@@ -13,7 +13,7 @@ interface DashboardLayoutProps {
  */
 export function DashboardLayout({ children, header }: DashboardLayoutProps) {
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="flex h-full flex-col bg-background">
       {/* Header area with safe area inset */}
       {header && (
         <header className="sticky top-0 z-10 bg-background/95 px-4 pb-2 pt-safe backdrop-blur-sm">

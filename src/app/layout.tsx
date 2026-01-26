@@ -74,8 +74,10 @@ export default function RootLayout({
       >
         <ServiceWorkerRegistration />
         <Providers>
-          <div className="pb-16">{children}</div>
-          <BottomNav />
+          <div className="flex h-[100dvh] flex-col overflow-hidden">
+            <div className="flex-1 overflow-y-auto pb-16">{children}</div>
+            <BottomNav />
+          </div>
         </Providers>
       </body>
     </html>
