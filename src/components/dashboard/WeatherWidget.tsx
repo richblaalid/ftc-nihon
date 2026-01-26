@@ -80,7 +80,7 @@ export function WeatherWidget() {
       <div className="flex-1">
         <p className="text-sm text-foreground-tertiary">{weather.city}</p>
         <div className="flex items-baseline gap-2">
-          <span className="text-2xl font-semibold text-foreground">{weather.temperature}°C</span>
+          <span className="text-2xl font-semibold text-foreground">{weather.temperature}°F</span>
           <span className="text-sm text-foreground-secondary">{weather.condition}</span>
         </div>
       </div>

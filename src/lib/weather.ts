@@ -134,7 +134,7 @@ export async function fetchWeather(city: string): Promise<WeatherData | null> {
   }
 
   try {
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${coords.lat}&longitude=${coords.lon}&current=temperature_2m,relative_humidity_2m,weather_code&timezone=Asia/Tokyo`;
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${coords.lat}&longitude=${coords.lon}&current=temperature_2m,relative_humidity_2m,weather_code&timezone=Asia/Tokyo&temperature_unit=fahrenheit`;
 
     const response = await fetch(url);
     if (!response.ok) {
