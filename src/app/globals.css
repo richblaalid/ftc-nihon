@@ -1,197 +1,751 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+
+  --color-cream-50: #fffbf7;
+  --color-cream-100: #fff5ec;
+  --color-cream-200: #ffede0;
+
+  --color-coral-50: #fff5f3;
+  --color-coral-100: #ffe8e4;
+  --color-coral-200: #ffd4cc;
+  --color-coral-300: #ffb5a8;
+  --color-coral-400: #ff8c7a;
+  --color-coral-500: #f46b55;
+  --color-coral-600: #e04d35;
+  --color-coral-700: #bc3a25;
+  --color-coral-800: #9b3222;
+  --color-coral-900: #812d21;
+
+  --color-amber-50: #fffcf0;
+  --color-amber-100: #fff7d9;
+  --color-amber-200: #ffecb3;
+  --color-amber-300: #ffdf80;
+  --color-amber-400: #ffd24d;
+  --color-amber-500: #f5b800;
+  --color-amber-600: #d99e00;
+  --color-amber-700: #b38000;
+  --color-amber-800: #8c6500;
+  --color-amber-900: #664a00;
+
+  --color-terracotta-500: #c45d3a;
+  --color-terracotta-600: #a84b2e;
+  --color-terracotta-700: #8b3d25;
+
+  --color-indigo-700: #252d3d;
+  --color-indigo-800: #1e2533;
+  --color-indigo-900: #161b25;
+  --color-indigo-950: #0d1117;
+
+  --color-vermillion-50: #fff5f5;
+  --color-vermillion-100: #ffe0e0;
+  --color-vermillion-200: #ffc7c7;
+  --color-vermillion-300: #ffa3a3;
+  --color-vermillion-400: #ff6b6b;
+  --color-vermillion-500: #e53935;
+  --color-vermillion-600: #c62828;
+  --color-vermillion-700: #a51c1c;
+  --color-vermillion-800: #871515;
+  --color-vermillion-900: #6b1111;
+
+  --color-orange-50: #fff8f0;
+  --color-orange-100: #ffecd9;
+  --color-orange-200: #ffd9b3;
+  --color-orange-300: #ffc080;
+  --color-orange-400: #ffa54d;
+  --color-orange-500: #f58220;
+  --color-orange-600: #d96a10;
+  --color-orange-700: #b35408;
+  --color-orange-800: #8c4106;
+  --color-orange-900: #663005;
+
+  --color-gold-500: #ffd700;
+  --color-gold-600: #e6c200;
+  --color-gold-700: #ccac00;
+
+  --color-success-light: #2e7d4a;
+  --color-success-dark: #4ade80;
+
+  --color-warning-light: #d97706;
+  --color-warning-dark: #fbbf24;
+
+  --color-error-light: #dc2626;
+  --color-error-dark: #f87171;
+
+  --color-info-light: #2563eb;
+  --color-info-dark: #60a5fa;
+
+  --color-category-food-light: #f46b55;
+  --color-category-food-dark: #e53935;
+
+  --color-category-temple-light: #7c3aed;
+  --color-category-temple-dark: #a78bfa;
+
+  --color-category-shopping-light: #f5b800;
+  --color-category-shopping-dark: #ffd700;
+
+  --color-category-transit-light: #2563eb;
+  --color-category-transit-dark: #60a5fa;
+
+  --color-category-activity-light: #059669;
+  --color-category-activity-dark: #34d399;
+
+  --color-category-hotel-light: #8b5cf6;
+  --color-category-hotel-dark: #c4b5fd;
+
+  --font-display: var(--font-reggae), cursive;
+  --font-sans:
+    var(--font-urbanist), -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: var(--font-geist-mono), monospace;
+
+  --text-display-lg: 48px;
+  --text-display-lg--line-height: 1.1;
+  --text-display-md: 36px;
+  --text-display-md--line-height: 1.1;
+  --text-display-sm: 28px;
+  --text-display-sm--line-height: 1.2;
+
+  --spacing-0: 0px;
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-5: 20px;
+  --spacing-6: 24px;
+  --spacing-8: 32px;
+  --spacing-10: 40px;
+  --spacing-12: 48px;
+  --spacing-16: 64px;
+  --spacing-safe-top: env(safe-area-inset-top);
+  --spacing-safe-bottom: env(safe-area-inset-bottom);
+  --spacing-safe-left: env(safe-area-inset-left);
+  --spacing-safe-right: env(safe-area-inset-right);
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 24px;
+  --radius-full: 9999px;
+
+  --shadow-light-sm: 0 1px 2px rgba(45, 36, 32, 0.05);
+  --shadow-light-md:
+    0 4px 6px rgba(45, 36, 32, 0.07), 0 2px 4px rgba(45, 36, 32, 0.05);
+  --shadow-light-lg:
+    0 10px 15px rgba(45, 36, 32, 0.1), 0 4px 6px rgba(45, 36, 32, 0.05);
+  --shadow-light-xl:
+    0 20px 25px rgba(45, 36, 32, 0.12), 0 10px 10px rgba(45, 36, 32, 0.04);
+  --shadow-dark-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-dark-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+  --shadow-dark-lg:
+    0 10px 15px rgba(0, 0, 0, 0.5), 0 4px 6px rgba(0, 0, 0, 0.3);
+  --shadow-dark-xl:
+    0 20px 25px rgba(0, 0, 0, 0.6), 0 10px 10px rgba(0, 0, 0, 0.4);
+
+  --min-height-touch: 44px;
+
+  --min-width-touch: 44px;
+
+  --breakpoint-xs: 375px;
+  --breakpoint-sm: 390px;
+  --breakpoint-md: 428px;
+  --breakpoint-lg: 768px;
+
+  --transition-duration-fast: 150ms;
+  --transition-duration-normal: 250ms;
+  --transition-duration-slow: 400ms;
+
+  --ease-ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
 
 /* ============================================
+   Component Layer
+   ============================================ */
+
+@utility card {
+  /* Card component */
+  @apply rounded-lg bg-white p-4 shadow-light-md;
+
+  .dark & {
+    @apply bg-indigo-700 shadow-dark-md;
+  }
+}
+
+@utility dark {
+  & .card {
+    @apply bg-indigo-700 shadow-dark-md;
+  }
+
+  & .btn-primary {
+    @apply bg-vermillion-500 shadow-dark-sm;
+  }
+
+  & .btn-primary:hover {
+    @apply bg-vermillion-600;
+  }
+
+  & .btn-secondary {
+    @apply border-vermillion-500 text-vermillion-500;
+  }
+
+  & .btn-secondary:hover {
+    @apply bg-vermillion-500/10;
+  }
+  & .pill-food {
+    @apply bg-vermillion-900/30 text-vermillion-300;
+  }
+  & .pill-temple {
+    @apply bg-purple-900/30 text-purple-300;
+  }
+  & .pill-shopping {
+    @apply bg-gold-500/20 text-gold-500;
+  }
+  & .pill-transit {
+    @apply bg-blue-900/30 text-blue-300;
+  }
+  & .pill-activity {
+    @apply bg-emerald-900/30 text-emerald-300;
+  }
+  & .pill-hotel {
+    @apply bg-violet-900/30 text-violet-300;
+  }
+}
+
+@utility activity-card {
+  /* Activity card with left accent bar */
+  @apply card relative overflow-hidden pl-6;
+
+  &::before {
+    content: '';
+    @apply absolute left-0 top-0 h-full w-1;
+    background-color: var(--category-color, var(--primary));
+  }
+}
+
+@utility btn-primary {
+  /* Primary button */
+  @apply inline-flex items-center justify-center rounded-md bg-coral-500 px-6 py-3 font-semibold text-white shadow-light-sm transition-all duration-fast;
+
+  &:hover {
+    @apply bg-coral-600;
+  }
+
+  &:active {
+    @apply bg-coral-700 scale-[0.98];
+  }
+
+  .dark & {
+    @apply bg-vermillion-500 shadow-dark-sm;
+  }
+
+  .dark &:hover {
+    @apply bg-vermillion-600;
+  }
+}
+
+@utility btn-secondary {
+  /* Secondary button */
+  @apply inline-flex items-center justify-center rounded-md border-2 border-coral-500 bg-transparent px-6 py-3 font-semibold text-coral-500 transition-all duration-fast;
+
+  &:hover {
+    @apply bg-coral-50;
+  }
+
+  .dark & {
+    @apply border-vermillion-500 text-vermillion-500;
+  }
+
+  .dark &:hover {
+    @apply bg-vermillion-500/10;
+  }
+}
+
+@utility btn-ghost {
+  /* Ghost button */
+  @apply inline-flex items-center justify-center rounded-md bg-transparent px-6 py-3 font-semibold text-foreground-secondary transition-all duration-fast;
+
+  &:hover {
+    background: var(--background-secondary);
+  }
+}
+
+@utility pill {
+  /* Category pills */
+  @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-medium;
+}
+
+@utility pill-food {
+  @apply bg-coral-100 text-coral-700;
+  .dark & {
+    @apply bg-vermillion-900/30 text-vermillion-300;
+  }
+}
+
+@utility pill-temple {
+  @apply bg-purple-100 text-purple-700;
+  .dark & {
+    @apply bg-purple-900/30 text-purple-300;
+  }
+}
+
+@utility pill-shopping {
+  @apply bg-amber-100 text-amber-700;
+  .dark & {
+    @apply bg-gold-500/20 text-gold-500;
+  }
+}
+
+@utility pill-transit {
+  @apply bg-blue-100 text-blue-700;
+  .dark & {
+    @apply bg-blue-900/30 text-blue-300;
+  }
+}
+
+@utility pill-activity {
+  @apply bg-emerald-100 text-emerald-700;
+  .dark & {
+    @apply bg-emerald-900/30 text-emerald-300;
+  }
+}
+
+@utility pill-hotel {
+  @apply bg-violet-100 text-violet-700;
+  .dark & {
+    @apply bg-violet-900/30 text-violet-300;
+  }
+}
+
+/* ============================================
+   Utility Layer
+   ============================================ */
+
+@utility text-balance {
+  text-wrap: balance;
+}
+
+@utility pt-safe {
+  /* Safe area padding utilities */
+  padding-top: env(safe-area-inset-top);
+}
+
+@utility pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+@utility px-safe {
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+@utility mb-safe {
+  margin-bottom: env(safe-area-inset-bottom);
+}
+
+@utility font-display {
+  /* Display font utility */
+  font-family: var(--font-reggae), cursive;
+}
+
+@utility shadow-theme-sm {
+  /* Shadows that respect theme */
+  box-shadow: var(--shadow-sm);
+}
+
+@utility shadow-theme-md {
+  box-shadow: var(--shadow-md);
+}
+
+@utility shadow-theme-lg {
+  box-shadow: var(--shadow-lg);
+}
+
+@utility text-primary {
+  /* Primary color utilities */
+  color: var(--primary);
+}
+
+@utility bg-primary {
+  background-color: var(--primary);
+}
+
+@utility border-primary {
+  border-color: var(--primary);
+}
+
+@utility text-category-food {
+  /* Category color utilities */
+  color: var(--category-food);
+}
+
+@utility text-category-temple {
+  color: var(--category-temple);
+}
+
+@utility text-category-shopping {
+  color: var(--category-shopping);
+}
+
+@utility text-category-transit {
+  color: var(--category-transit);
+}
+
+@utility text-category-activity {
+  color: var(--category-activity);
+}
+
+@utility text-category-hotel {
+  color: var(--category-hotel);
+}
+
+@utility bg-category-food {
+  background-color: var(--category-food);
+}
+
+@utility bg-category-temple {
+  background-color: var(--category-temple);
+}
+
+@utility bg-category-shopping {
+  background-color: var(--category-shopping);
+}
+
+@utility bg-category-transit {
+  background-color: var(--category-transit);
+}
+
+@utility bg-category-activity {
+  background-color: var(--category-activity);
+}
+
+@utility bg-category-hotel {
+  background-color: var(--category-hotel);
+}
+
+@utility text-success {
+  /* Semantic color utilities */
+  color: var(--success);
+}
+
+@utility text-warning {
+  color: var(--warning);
+}
+
+@utility text-error {
+  color: var(--error);
+}
+
+@utility text-info {
+  color: var(--info);
+}
+
+@utility bg-success {
+  background-color: var(--success);
+}
+
+@utility bg-warning {
+  background-color: var(--warning);
+}
+
+@utility bg-error {
+  background-color: var(--error);
+}
+
+@utility bg-info {
+  background-color: var(--info);
+}
+
+@utility border-success {
+  border-color: var(--success);
+}
+
+@utility border-warning {
+  border-color: var(--warning);
+}
+
+@utility border-error {
+  border-color: var(--error);
+}
+
+@utility border-info {
+  border-color: var(--info);
+}
+
+@utility text-secondary {
+  /* Secondary color utility */
+  color: var(--secondary);
+}
+
+@utility bg-secondary {
+  background-color: var(--secondary);
+}
+
+/* Theme-aware foreground utilities */
+@utility text-foreground {
+  color: var(--foreground);
+}
+
+@utility text-foreground-secondary {
+  color: var(--foreground-secondary);
+}
+
+@utility text-foreground-tertiary {
+  color: var(--foreground-tertiary);
+}
+
+@utility text-foreground-inverse {
+  color: var(--foreground-inverse);
+}
+
+/* Theme-aware background utilities */
+@utility bg-background {
+  background-color: var(--background);
+}
+
+@utility bg-background-secondary {
+  background-color: var(--background-secondary);
+}
+
+@utility bg-background-tertiary {
+  background-color: var(--background-tertiary);
+}
+
+@utility bg-surface {
+  background-color: var(--surface);
+}
+
+/* Border utilities */
+@utility border-border {
+  border-color: var(--border, var(--foreground-tertiary));
+}
+
+@utility border-background-secondary {
+  border-color: var(--background-secondary);
+}
+
+@layer utilities {
+  /* ============================================
    FTC: Nihon Design System
    See: Docs/product_docs/FTC_Nihon_Design_System.md
    ============================================ */
 
-/* Light Mode - "Sunset Adventure" */
-:root {
-  /* Backgrounds */
-  --background: #FFFBF7;
-  --background-secondary: #FFF5EC;
-  --background-tertiary: #FFEDE0;
-  --surface: #FFFFFF;
-
-  /* Text */
-  --foreground: #2D2420;
-  --foreground-secondary: #6B5D54;
-  --foreground-tertiary: #A89B91;
-  --foreground-inverse: #FFFBF7;
-
-  /* Primary accent - Coral */
-  --primary: #F46B55;
-  --primary-hover: #E04D35;
-
-  /* Secondary accent - Amber */
-  --secondary: #F5B800;
-  --secondary-hover: #D99E00;
-
-  /* Accent - Terracotta */
-  --accent: #C45D3A;
-
-  /* Semantic */
-  --success: #2E7D4A;
-  --warning: #D97706;
-  --error: #DC2626;
-  --info: #2563EB;
-
-  /* Category colors */
-  --category-food: #F46B55;
-  --category-temple: #7C3AED;
-  --category-shopping: #F5B800;
-  --category-transit: #2563EB;
-  --category-activity: #059669;
-  --category-hotel: #8B5CF6;
-
-  /* Shadows */
-  --shadow-sm: 0 1px 2px rgba(45, 36, 32, 0.05);
-  --shadow-md: 0 4px 6px rgba(45, 36, 32, 0.07), 0 2px 4px rgba(45, 36, 32, 0.05);
-  --shadow-lg: 0 10px 15px rgba(45, 36, 32, 0.1), 0 4px 6px rgba(45, 36, 32, 0.05);
-}
-
-/* Dark Mode - "Bold & Spicy" */
-@media (prefers-color-scheme: dark) {
+  /* Light Mode - "Sunset Adventure" */
   :root {
-    /* Backgrounds - Deep Indigo Black */
-    --background: #0D1117;
-    --background-secondary: #161B25;
-    --background-tertiary: #1E2533;
-    --surface: #252D3D;
+    /* Backgrounds */
+    --background: #fffbf7;
+    --background-secondary: #fff5ec;
+    --background-tertiary: #ffede0;
+    --surface: #ffffff;
 
     /* Text */
-    --foreground: #F5F5F5;
-    --foreground-secondary: #B0B8C4;
-    --foreground-tertiary: #6B7280;
-    --foreground-inverse: #0D1117;
+    --foreground: #2d2420;
+    --foreground-secondary: #6b5d54;
+    --foreground-tertiary: #a89b91;
+    --foreground-inverse: #fffbf7;
 
-    /* Primary accent - Vermillion */
-    --primary: #E53935;
-    --primary-hover: #C62828;
+    /* Primary accent - Coral */
+    --primary: #f46b55;
+    --primary-hover: #e04d35;
 
-    /* Secondary accent - Burnt Orange */
-    --secondary: #F58220;
-    --secondary-hover: #D96A10;
+    /* Secondary accent - Amber */
+    --secondary: #f5b800;
+    --secondary-hover: #d99e00;
 
-    /* Accent - Gold */
-    --accent: #FFD700;
+    /* Accent - Terracotta */
+    --accent: #c45d3a;
 
     /* Semantic */
-    --success: #4ADE80;
-    --warning: #FBBF24;
-    --error: #F87171;
-    --info: #60A5FA;
+    --success: #2e7d4a;
+    --warning: #d97706;
+    --error: #dc2626;
+    --info: #2563eb;
 
     /* Category colors */
-    --category-food: #E53935;
-    --category-temple: #A78BFA;
-    --category-shopping: #FFD700;
-    --category-transit: #60A5FA;
-    --category-activity: #34D399;
-    --category-hotel: #C4B5FD;
+    --category-food: #f46b55;
+    --category-temple: #7c3aed;
+    --category-shopping: #f5b800;
+    --category-transit: #2563eb;
+    --category-activity: #059669;
+    --category-hotel: #8b5cf6;
 
     /* Shadows */
+    --shadow-sm: 0 1px 2px rgba(45, 36, 32, 0.05);
+    --shadow-md:
+      0 4px 6px rgba(45, 36, 32, 0.07), 0 2px 4px rgba(45, 36, 32, 0.05);
+    --shadow-lg:
+      0 10px 15px rgba(45, 36, 32, 0.1), 0 4px 6px rgba(45, 36, 32, 0.05);
+  }
+
+  /* Dark Mode - "Bold & Spicy" */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      /* Backgrounds - Deep Indigo Black */
+      --background: #0d1117;
+      --background-secondary: #161b25;
+      --background-tertiary: #1e2533;
+      --surface: #252d3d;
+
+      /* Text */
+      --foreground: #f5f5f5;
+      --foreground-secondary: #b0b8c4;
+      --foreground-tertiary: #6b7280;
+      --foreground-inverse: #0d1117;
+
+      /* Primary accent - Vermillion */
+      --primary: #e53935;
+      --primary-hover: #c62828;
+
+      /* Secondary accent - Burnt Orange */
+      --secondary: #f58220;
+      --secondary-hover: #d96a10;
+
+      /* Accent - Gold */
+      --accent: #ffd700;
+
+      /* Semantic */
+      --success: #4ade80;
+      --warning: #fbbf24;
+      --error: #f87171;
+      --info: #60a5fa;
+
+      /* Category colors */
+      --category-food: #e53935;
+      --category-temple: #a78bfa;
+      --category-shopping: #ffd700;
+      --category-transit: #60a5fa;
+      --category-activity: #34d399;
+      --category-hotel: #c4b5fd;
+
+      /* Shadows */
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5), 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  /* Dark mode class override */
+  .dark {
+    --background: #0d1117;
+    --background-secondary: #161b25;
+    --background-tertiary: #1e2533;
+    --surface: #252d3d;
+    --foreground: #f5f5f5;
+    --foreground-secondary: #b0b8c4;
+    --foreground-tertiary: #6b7280;
+    --foreground-inverse: #0d1117;
+    --primary: #e53935;
+    --primary-hover: #c62828;
+    --secondary: #f58220;
+    --secondary-hover: #d96a10;
+    --accent: #ffd700;
+    --success: #4ade80;
+    --warning: #fbbf24;
+    --error: #f87171;
+    --info: #60a5fa;
+    --category-food: #e53935;
+    --category-temple: #a78bfa;
+    --category-shopping: #ffd700;
+    --category-transit: #60a5fa;
+    --category-activity: #34d399;
+    --category-hotel: #c4b5fd;
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
     --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
     --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5), 0 4px 6px rgba(0, 0, 0, 0.3);
   }
-}
 
-/* Dark mode class override */
-.dark {
-  --background: #0D1117;
-  --background-secondary: #161B25;
-  --background-tertiary: #1E2533;
-  --surface: #252D3D;
-  --foreground: #F5F5F5;
-  --foreground-secondary: #B0B8C4;
-  --foreground-tertiary: #6B7280;
-  --foreground-inverse: #0D1117;
-  --primary: #E53935;
-  --primary-hover: #C62828;
-  --secondary: #F58220;
-  --secondary-hover: #D96A10;
-  --accent: #FFD700;
-  --success: #4ADE80;
-  --warning: #FBBF24;
-  --error: #F87171;
-  --info: #60A5FA;
-  --category-food: #E53935;
-  --category-temple: #A78BFA;
-  --category-shopping: #FFD700;
-  --category-transit: #60A5FA;
-  --category-activity: #34D399;
-  --category-hotel: #C4B5FD;
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5), 0 4px 6px rgba(0, 0, 0, 0.3);
-}
+  /* Animation timing */
+  :root {
+    --duration-fast: 150ms;
+    --duration-normal: 250ms;
+    --duration-slow: 400ms;
+    --ease-out: cubic-bezier(0, 0, 0.2, 1);
+    --ease-in: cubic-bezier(0.4, 0, 1, 1);
+    --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  }
 
-/* Animation timing */
-:root {
-  --duration-fast: 150ms;
-  --duration-normal: 250ms;
-  --duration-slow: 400ms;
-  --ease-out: cubic-bezier(0, 0, 0.2, 1);
-  --ease-in: cubic-bezier(0.4, 0, 1, 1);
-  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* ============================================
+  /* ============================================
    Base Styles
    ============================================ */
 
-html {
-  height: -webkit-fill-available;
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: var(--font-urbanist), -apple-system, BlinkMacSystemFont, sans-serif;
-  min-height: 100vh;
-  min-height: -webkit-fill-available;
-
-  /* iOS safe area support */
-  padding-top: env(safe-area-inset-top);
-  padding-bottom: env(safe-area-inset-bottom);
-  padding-left: env(safe-area-inset-left);
-  padding-right: env(safe-area-inset-right);
-
-  /* Prevent pull-to-refresh on iOS PWA */
-  overscroll-behavior-y: contain;
-
-  /* Smooth scrolling */
-  scroll-behavior: smooth;
-}
-
-/* Reduce motion for accessibility */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+  html {
+    height: -webkit-fill-available;
   }
-}
 
-/* Prevent text selection for app-like feel */
-.no-select {
-  -webkit-user-select: none;
-  user-select: none;
-}
+  body {
+    color: var(--foreground);
+    background: var(--background);
+    font-family:
+      var(--font-urbanist),
+      -apple-system,
+      BlinkMacSystemFont,
+      sans-serif;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
 
-/* Touch action for swipeable elements */
-.swipeable {
-  touch-action: pan-x;
-}
+    /* iOS safe area support */
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
 
-/* ============================================
+    /* Prevent pull-to-refresh on iOS PWA */
+    overscroll-behavior-y: contain;
+
+    /* Smooth scrolling */
+    scroll-behavior: smooth;
+  }
+
+  /* Reduce motion for accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* Prevent text selection for app-like feel */
+  .no-select {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* Touch action for swipeable elements */
+  .swipeable {
+    touch-action: pan-x;
+  }
+
+  /* ============================================
    Base Layer
    ============================================ */
+}
 
 @layer base {
   /* Links */
@@ -225,218 +779,4 @@ body {
   .dark :focus-visible {
     @apply outline-vermillion-400;
   }
-}
-
-/* ============================================
-   Component Layer
-   ============================================ */
-
-@layer components {
-  /* Card component */
-  .card {
-    @apply rounded-lg bg-white p-4 shadow-light-md;
-  }
-
-  .dark .card {
-    @apply bg-indigo-700 shadow-dark-md;
-  }
-
-  /* Activity card with left accent bar */
-  .activity-card {
-    @apply card relative overflow-hidden pl-6;
-  }
-
-  .activity-card::before {
-    content: '';
-    @apply absolute left-0 top-0 h-full w-1;
-    background-color: var(--category-color, var(--primary));
-  }
-
-  /* Primary button */
-  .btn-primary {
-    @apply inline-flex items-center justify-center rounded-md bg-coral-500 px-6 py-3 font-semibold text-white shadow-light-sm transition-all duration-fast;
-  }
-
-  .btn-primary:hover {
-    @apply bg-coral-600;
-  }
-
-  .btn-primary:active {
-    @apply bg-coral-700 scale-[0.98];
-  }
-
-  .dark .btn-primary {
-    @apply bg-vermillion-500 shadow-dark-sm;
-  }
-
-  .dark .btn-primary:hover {
-    @apply bg-vermillion-600;
-  }
-
-  /* Secondary button */
-  .btn-secondary {
-    @apply inline-flex items-center justify-center rounded-md border-2 border-coral-500 bg-transparent px-6 py-3 font-semibold text-coral-500 transition-all duration-fast;
-  }
-
-  .btn-secondary:hover {
-    @apply bg-coral-50;
-  }
-
-  .dark .btn-secondary {
-    @apply border-vermillion-500 text-vermillion-500;
-  }
-
-  .dark .btn-secondary:hover {
-    @apply bg-vermillion-500/10;
-  }
-
-  /* Ghost button */
-  .btn-ghost {
-    @apply inline-flex items-center justify-center rounded-md bg-transparent px-6 py-3 font-semibold text-foreground-secondary transition-all duration-fast;
-  }
-
-  .btn-ghost:hover {
-    background: var(--background-secondary);
-  }
-
-  /* Category pills */
-  .pill {
-    @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-medium;
-  }
-
-  .pill-food {
-    @apply bg-coral-100 text-coral-700;
-  }
-  .dark .pill-food {
-    @apply bg-vermillion-900/30 text-vermillion-300;
-  }
-
-  .pill-temple {
-    @apply bg-purple-100 text-purple-700;
-  }
-  .dark .pill-temple {
-    @apply bg-purple-900/30 text-purple-300;
-  }
-
-  .pill-shopping {
-    @apply bg-amber-100 text-amber-700;
-  }
-  .dark .pill-shopping {
-    @apply bg-gold-500/20 text-gold-500;
-  }
-
-  .pill-transit {
-    @apply bg-blue-100 text-blue-700;
-  }
-  .dark .pill-transit {
-    @apply bg-blue-900/30 text-blue-300;
-  }
-
-  .pill-activity {
-    @apply bg-emerald-100 text-emerald-700;
-  }
-  .dark .pill-activity {
-    @apply bg-emerald-900/30 text-emerald-300;
-  }
-
-  .pill-hotel {
-    @apply bg-violet-100 text-violet-700;
-  }
-  .dark .pill-hotel {
-    @apply bg-violet-900/30 text-violet-300;
-  }
-}
-
-/* ============================================
-   Utility Layer
-   ============================================ */
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-
-  /* Safe area padding utilities */
-  .pt-safe {
-    padding-top: env(safe-area-inset-top);
-  }
-
-  .pb-safe {
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-
-  .px-safe {
-    padding-left: env(safe-area-inset-left);
-    padding-right: env(safe-area-inset-right);
-  }
-
-  .mb-safe {
-    margin-bottom: env(safe-area-inset-bottom);
-  }
-
-  /* Display font utility */
-  .font-display {
-    font-family: var(--font-reggae), cursive;
-  }
-
-  /* Shadows that respect theme */
-  .shadow-theme-sm {
-    box-shadow: var(--shadow-sm);
-  }
-
-  .shadow-theme-md {
-    box-shadow: var(--shadow-md);
-  }
-
-  .shadow-theme-lg {
-    box-shadow: var(--shadow-lg);
-  }
-
-  /* Primary color utilities */
-  .text-primary {
-    color: var(--primary);
-  }
-
-  .bg-primary {
-    background-color: var(--primary);
-  }
-
-  .border-primary {
-    border-color: var(--primary);
-  }
-
-  /* Category color utilities */
-  .text-category-food { color: var(--category-food); }
-  .text-category-temple { color: var(--category-temple); }
-  .text-category-shopping { color: var(--category-shopping); }
-  .text-category-transit { color: var(--category-transit); }
-  .text-category-activity { color: var(--category-activity); }
-  .text-category-hotel { color: var(--category-hotel); }
-
-  .bg-category-food { background-color: var(--category-food); }
-  .bg-category-temple { background-color: var(--category-temple); }
-  .bg-category-shopping { background-color: var(--category-shopping); }
-  .bg-category-transit { background-color: var(--category-transit); }
-  .bg-category-activity { background-color: var(--category-activity); }
-  .bg-category-hotel { background-color: var(--category-hotel); }
-
-  /* Semantic color utilities */
-  .text-success { color: var(--success); }
-  .text-warning { color: var(--warning); }
-  .text-error { color: var(--error); }
-  .text-info { color: var(--info); }
-
-  .bg-success { background-color: var(--success); }
-  .bg-warning { background-color: var(--warning); }
-  .bg-error { background-color: var(--error); }
-  .bg-info { background-color: var(--info); }
-
-  .border-success { border-color: var(--success); }
-  .border-warning { border-color: var(--warning); }
-  .border-error { border-color: var(--error); }
-  .border-info { border-color: var(--info); }
-
-  /* Secondary color utility */
-  .text-secondary { color: var(--secondary); }
-  .bg-secondary { background-color: var(--secondary); }
 }
