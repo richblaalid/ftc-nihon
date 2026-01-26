@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect, Suspense, useTransition } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useActivitiesWithTransit, useCurrentActivity, useCurrentDayNumber } from '@/db/hooks';
 import { DayNav } from '@/components/schedule/DayNav';
@@ -16,11 +16,14 @@ function ScheduleContent() {
   const dayParam = searchParams.get('day');
   const initialDay = dayParam ? parseInt(dayParam, 10) : (currentDayNumber ?? 1);
   const [selectedDay, setSelectedDay] = useState(initialDay);
+  const [isPending, startTransition] = useTransition();
 
-  // Update URL when day changes
+  // Update URL when day changes with non-blocking transition
   const handleDayChange = (day: number) => {
-    setSelectedDay(day);
-    router.push(`/schedule?day=${day}`, { scroll: false });
+    startTransition(() => {
+      setSelectedDay(day);
+      router.push(`/schedule?day=${day}`, { scroll: false });
+    });
   };
 
   // Sync with URL changes
@@ -59,7 +62,8 @@ function ScheduleContent() {
           {!isToday && currentDayNumber && (
             <button
               onClick={() => handleDayChange(currentDayNumber)}
-              className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary"
+              disabled={isPending}
+              className={`rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary ${isPending ? 'opacity-70 cursor-wait' : ''}`}
             >
               Today
             </button>
@@ -69,7 +73,7 @@ function ScheduleContent() {
 
         {/* Day navigation */}
         <div className="mt-3">
-          <DayNav currentDay={selectedDay} onDayChange={handleDayChange} />
+          <DayNav currentDay={selectedDay} onDayChange={handleDayChange} isPending={isPending} />
         </div>
       </header>
 

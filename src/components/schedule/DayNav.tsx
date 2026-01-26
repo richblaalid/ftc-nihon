@@ -5,6 +5,7 @@ import { TRIP_START_DATE, TRIP_DAYS, DAY_CITIES } from '@/types/database';
 interface DayNavProps {
   currentDay: number;
   onDayChange: (day: number) => void;
+  isPending?: boolean;
 }
 
 /**
@@ -22,13 +23,13 @@ function formatDate(dayNumber: number): string {
   });
 }
 
-export function DayNav({ currentDay, onDayChange }: DayNavProps) {
+export function DayNav({ currentDay, onDayChange, isPending = false }: DayNavProps) {
   const city = DAY_CITIES[currentDay] ?? 'Japan';
-  const canGoPrev = currentDay > 1;
-  const canGoNext = currentDay < TRIP_DAYS;
+  const canGoPrev = currentDay > 1 && !isPending;
+  const canGoNext = currentDay < TRIP_DAYS && !isPending;
 
   return (
-    <div className="flex items-center justify-between">
+    <div className={`flex items-center justify-between ${isPending ? 'opacity-70' : ''}`}>
       {/* Previous day button */}
       <button
         onClick={() => canGoPrev && onDayChange(currentDay - 1)}
@@ -37,7 +38,7 @@ export function DayNav({ currentDay, onDayChange }: DayNavProps) {
           canGoPrev
             ? 'bg-background-secondary text-foreground hover:bg-background-tertiary active:scale-95'
             : 'text-foreground-tertiary opacity-30'
-        }`}
+        } ${isPending ? 'cursor-wait' : ''}`}
         aria-label="Previous day"
       >
         <span className="text-xl">←</span>
@@ -64,7 +65,7 @@ export function DayNav({ currentDay, onDayChange }: DayNavProps) {
           canGoNext
             ? 'bg-background-secondary text-foreground hover:bg-background-tertiary active:scale-95'
             : 'text-foreground-tertiary opacity-30'
-        }`}
+        } ${isPending ? 'cursor-wait' : ''}`}
         aria-label="Next day"
       >
         <span className="text-xl">→</span>

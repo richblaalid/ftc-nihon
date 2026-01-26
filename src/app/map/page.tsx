@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, Suspense } from 'react';
+import { useState, useCallback, Suspense, useTransition } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Map, PinLegend, PinInfo, Directions } from '@/components/maps';
 import { useGeolocation } from '@/lib/hooks/useGeolocation';
@@ -19,6 +19,7 @@ function MapContent() {
 
   const [selectedActivity, setSelectedActivity] = useState<ActivityWithTransit | null>(null);
   const [showDirections, setShowDirections] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   // Get user location
   const { lat, lng, isTracking, startTracking, error: geoError } = useGeolocation();
@@ -60,11 +61,13 @@ function MapContent() {
     setShowDirections(false);
   }, []);
 
-  // Change day
+  // Change day with non-blocking transition
   const handleDayChange = (newDay: number) => {
-    router.push(`/map?day=${newDay}`);
-    setSelectedActivity(null);
-    setShowDirections(false);
+    startTransition(() => {
+      router.push(`/map?day=${newDay}`);
+      setSelectedActivity(null);
+      setShowDirections(false);
+    });
   };
 
   return (
@@ -94,16 +97,18 @@ function MapContent() {
         </div>
 
         {/* Day selector */}
-        <div className="flex items-center gap-2 mt-3 overflow-x-auto pb-1 scrollbar-hide">
+        <div className={`flex items-center gap-2 mt-3 overflow-x-auto pb-1 scrollbar-hide ${isPending ? 'opacity-70' : ''}`}>
           {Array.from({ length: 15 }, (_, i) => i + 1).map((day) => (
             <button
               key={day}
               onClick={() => handleDayChange(day)}
+              disabled={isPending}
               className={`flex-shrink-0 px-3 py-1.5 rounded-full text-sm font-medium transition-colors
                 ${day === selectedDay
                   ? 'bg-primary text-white'
                   : 'bg-background-secondary text-foreground-secondary hover:bg-background-tertiary'
-                }`}
+                }
+                ${isPending ? 'cursor-wait' : ''}`}
             >
               Day {day}
             </button>
