@@ -287,18 +287,21 @@ Changed `text-[10px]` to `text-xs` (12px).
 
 ## P3: Low Priority
 
-### Task 13: Add Page Transition Animations
+### Task 13: Add Page Transition Animations ✅ COMPLETED
 
 **Issue:** No animations between page navigations
 
-**Options:**
-- Use `framer-motion` for page transitions
-- CSS-only fade transitions
-- Next.js App Router built-in transitions
+**Files Added:**
+- `src/components/ui/PageTransition.tsx` - Motion-based transition wrapper
+- `src/app/template.tsx` - Template applying transitions to all pages
 
-**Status:** Deferred - requires additional dependency (framer-motion) or significant CSS work
+**Changes Applied:**
+- Installed `motion` library (modern framer-motion)
+- Created PageTransition component with AnimatePresence
+- Added fade + slide animation (150ms, ease-out)
+- Applied via Next.js template.tsx to all pages
 
-**Effort:** 1-2 hours
+**Completed:** January 26, 2026
 
 ---
 
@@ -358,13 +361,13 @@ After completing all tasks:
 | P0 (Critical) | 2 | ✅ Completed |
 | P1 (High) | 5 | ✅ Completed |
 | P2 (Medium) | 5 | ✅ Completed |
-| P3 (Low) | 4 | ✅ 3/4 Complete (1 deferred) |
+| P3 (Low) | 4 | ✅ All Complete |
 
 **Completed:** January 26, 2026
 
 **All Tasks Summary:**
 - Tasks 1-12: ✅ Completed
-- Task 13 (Page transitions): Deferred - requires additional dependency
+- Task 13 (Page transitions): ✅ Completed with motion library
 - Task 14 (Scroll restoration): ✅ Already implemented by Next.js
 - Task 15 (Time indicator): ✅ Completed
 - Task 16 (Map auto-fit): ✅ Already implemented
