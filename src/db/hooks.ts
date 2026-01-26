@@ -9,6 +9,7 @@ import type {
   ChecklistItem,
 } from '@/types/database';
 import { TRIP_START_DATE } from '@/types/database';
+import { getCurrentDate } from '@/lib/utils';
 
 /**
  * Get activities for a specific day, with optional transit data
@@ -53,7 +54,7 @@ export function useAccommodations(): Accommodation[] | undefined {
  * Get current accommodation based on date
  */
 export function useCurrentAccommodation(date?: string): Accommodation | undefined {
-  const targetDate = date ?? new Date().toISOString().split('T')[0] ?? '';
+  const targetDate = date ?? getCurrentDate().toISOString().split('T')[0] ?? '';
 
   return useLiveQuery(
     () =>
@@ -70,7 +71,7 @@ export function useCurrentAccommodation(date?: string): Accommodation | undefine
  */
 export function useCurrentActivity(): Activity | null | undefined {
   return useLiveQuery(async () => {
-    const now = new Date();
+    const now = getCurrentDate();
     const today = now.toISOString().split('T')[0] ?? '';
     const currentTime = now.toTimeString().slice(0, 5); // HH:MM
 
@@ -129,7 +130,7 @@ export function useCurrentActivity(): Activity | null | undefined {
  */
 export function useNextActivity(): Activity | null | undefined {
   return useLiveQuery(async () => {
-    const now = new Date();
+    const now = getCurrentDate();
     const today = now.toISOString().split('T')[0] ?? '';
     const currentTime = now.toTimeString().slice(0, 5); // HH:MM
 
@@ -165,7 +166,7 @@ export function useNextActivity(): Activity | null | undefined {
  */
 export function useNextActivityWithTransit(): ActivityWithTransit | null | undefined {
   return useLiveQuery(async () => {
-    const now = new Date();
+    const now = getCurrentDate();
     const today = now.toISOString().split('T')[0] ?? '';
     const currentTime = now.toTimeString().slice(0, 5);
 
@@ -211,7 +212,7 @@ export function useNextActivityWithTransit(): ActivityWithTransit | null | undef
  */
 export function useAlerts(): Alert[] | undefined {
   return useLiveQuery(async () => {
-    const now = new Date().toISOString();
+    const now = getCurrentDate().toISOString();
 
     const alerts = await db.alerts.where('active').equals(1).toArray();
 
@@ -225,7 +226,7 @@ export function useAlerts(): Alert[] | undefined {
  */
 export function useUrgentAlerts(withinHours: number = 2): Alert[] | undefined {
   return useLiveQuery(async () => {
-    const now = new Date();
+    const now = getCurrentDate();
     const threshold = new Date(now.getTime() + withinHours * 60 * 60 * 1000).toISOString();
 
     const alerts = await db.alerts.where('active').equals(1).toArray();
@@ -285,7 +286,7 @@ export function useIncompleteChecklist(): ChecklistItem[] | undefined {
  * Returns null if outside trip dates
  */
 export function useCurrentDayNumber(): number | null {
-  const now = new Date();
+  const now = getCurrentDate();
   const today = now.toISOString().split('T')[0];
 
   if (!today) return null;

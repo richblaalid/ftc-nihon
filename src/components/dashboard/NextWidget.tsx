@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useNextActivityWithTransit } from '@/db/hooks';
 import type { Activity } from '@/types/database';
 
@@ -91,55 +92,63 @@ export function NextWidget() {
   const hasTransit = nextActivity.transit && nextActivity.transit.leaveBy;
 
   return (
-    <div className="card relative overflow-hidden">
+    <Link
+      href={`/schedule/${nextActivity.id}`}
+      className="card relative block overflow-hidden transition-all duration-fast active:scale-[0.98] hover:shadow-lg"
+    >
       {/* Category accent bar */}
       <div
         className={`absolute left-0 top-0 h-full w-1.5 ${getCategoryColor(nextActivity.category)}`}
       />
 
-      <div className="pl-3">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <span className="text-xs font-medium uppercase tracking-wide text-foreground-tertiary">
-            Next
-          </span>
-          <span className="text-xs text-foreground-tertiary">{getTimeUntil(nextActivity.startTime)}</span>
+      <div className="flex items-start justify-between pl-3">
+        <div className="flex-1">
+          {/* Header */}
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-medium uppercase tracking-wide text-foreground-tertiary">
+              Next
+            </span>
+            <span className="text-xs text-foreground-tertiary">{getTimeUntil(nextActivity.startTime)}</span>
+          </div>
+
+          {/* Activity name */}
+          <h3 className="mt-1 text-xl font-semibold text-foreground">{nextActivity.name}</h3>
+
+          {/* Start time */}
+          <p className="mt-1 text-foreground-secondary">
+            {formatTime(nextActivity.startTime)}
+            {nextActivity.locationName && ` · ${nextActivity.locationName}`}
+          </p>
+
+          {/* Transit info - Leave By time */}
+          {hasTransit && nextActivity.transit && (
+            <div className="mt-3 rounded-lg bg-background-secondary p-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-foreground">Leave by</span>
+                <span className="text-lg font-bold text-primary">
+                  {formatTime(nextActivity.transit.leaveBy)}
+                </span>
+              </div>
+
+              {/* Transit summary */}
+              <div className="mt-2 flex flex-wrap gap-2 text-xs text-foreground-tertiary">
+                {nextActivity.transit.walkToStationMinutes && (
+                  <span>🚶 {nextActivity.transit.walkToStationMinutes}min walk</span>
+                )}
+                {nextActivity.transit.trainLine && (
+                  <span>🚃 {nextActivity.transit.trainLine}</span>
+                )}
+                {nextActivity.transit.travelMinutes && (
+                  <span>⏱ {nextActivity.transit.travelMinutes}min travel</span>
+                )}
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* Activity name */}
-        <h3 className="mt-1 text-xl font-semibold text-foreground">{nextActivity.name}</h3>
-
-        {/* Start time */}
-        <p className="mt-1 text-foreground-secondary">
-          {formatTime(nextActivity.startTime)}
-          {nextActivity.locationName && ` · ${nextActivity.locationName}`}
-        </p>
-
-        {/* Transit info - Leave By time */}
-        {hasTransit && nextActivity.transit && (
-          <div className="mt-3 rounded-lg bg-background-secondary p-3">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-foreground">Leave by</span>
-              <span className="text-lg font-bold text-primary">
-                {formatTime(nextActivity.transit.leaveBy)}
-              </span>
-            </div>
-
-            {/* Transit summary */}
-            <div className="mt-2 flex flex-wrap gap-2 text-xs text-foreground-tertiary">
-              {nextActivity.transit.walkToStationMinutes && (
-                <span>🚶 {nextActivity.transit.walkToStationMinutes}min walk</span>
-              )}
-              {nextActivity.transit.trainLine && (
-                <span>🚃 {nextActivity.transit.trainLine}</span>
-              )}
-              {nextActivity.transit.travelMinutes && (
-                <span>⏱ {nextActivity.transit.travelMinutes}min travel</span>
-              )}
-            </div>
-          </div>
-        )}
+        {/* Chevron indicator */}
+        <span className="text-foreground-tertiary" aria-hidden="true">›</span>
       </div>
-    </div>
+    </Link>
   );
 }
