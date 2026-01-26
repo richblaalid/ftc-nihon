@@ -10,7 +10,7 @@ import {
   AlertBanner,
   DayIndicator,
 } from '@/components/dashboard';
-import { useSyncStore } from '@/stores/sync-store';
+import { useSyncStore, formatLastSyncTime } from '@/stores/sync-store';
 
 export default function Home() {
   const [selectedDay, setSelectedDay] = useState<number | undefined>(undefined);
@@ -25,18 +25,24 @@ export default function Home() {
             <h1 className="font-display text-display-sm text-foreground">FTC: Nihon</h1>
 
             {/* Sync status indicator */}
-            <div className="flex items-center gap-2 text-xs text-foreground-tertiary">
+            <div
+              className="flex items-center gap-2 text-xs text-foreground-tertiary"
+              data-testid="sync-status"
+              aria-live="polite"
+            >
               {isSyncing ? (
                 <span className="animate-pulse">Syncing...</span>
               ) : !isOnline ? (
                 <span className="flex items-center gap-1">
-                  <span className="h-2 w-2 rounded-full bg-warning" />
+                  <span className="h-2 w-2 rounded-full bg-warning" aria-hidden="true" />
                   Offline
                 </span>
               ) : lastSyncedAt ? (
-                <span className="flex items-center gap-1">
-                  <span className="h-2 w-2 rounded-full bg-success" />
-                  Synced
+                <span className="flex items-center gap-1" title={`Last synced: ${new Date(lastSyncedAt).toLocaleString()}`}>
+                  <span className="h-2 w-2 rounded-full bg-success" aria-hidden="true" />
+                  <time dateTime={lastSyncedAt}>
+                    {formatLastSyncTime(lastSyncedAt)}
+                  </time>
                 </span>
               ) : null}
             </div>

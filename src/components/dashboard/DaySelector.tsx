@@ -54,14 +54,18 @@ export function DaySelector({ selectedDay, currentDay, onSelect, onClose }: DayS
     <div
       className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 backdrop-blur-sm"
       onClick={handleBackdropClick}
+      role="presentation"
     >
       <div
         ref={modalRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="day-selector-title"
         className="max-h-[70vh] w-full max-w-lg overflow-hidden rounded-t-2xl bg-surface pb-safe"
       >
         {/* Header */}
         <div className="sticky top-0 flex items-center justify-between border-b border-background-secondary bg-surface p-4">
-          <h2 className="text-lg font-semibold text-foreground">Select Day</h2>
+          <h2 id="day-selector-title" className="text-lg font-semibold text-foreground">Select Day</h2>
           <button
             onClick={onClose}
             className="min-h-touch min-w-touch rounded-full p-2 text-foreground-tertiary hover:bg-background-secondary"
@@ -72,7 +76,7 @@ export function DaySelector({ selectedDay, currentDay, onSelect, onClose }: DayS
         </div>
 
         {/* Day list */}
-        <div className="overflow-y-auto p-2">
+        <div className="overflow-y-auto p-2" role="listbox" aria-label="Trip days">
           {days.map((day) => {
             const { weekday, date } = formatDate(day);
             const city = DAY_CITIES[day] ?? 'Tokyo';
@@ -84,6 +88,9 @@ export function DaySelector({ selectedDay, currentDay, onSelect, onClose }: DayS
                 key={day}
                 ref={isSelected ? selectedRef : undefined}
                 onClick={() => onSelect(day)}
+                role="option"
+                aria-selected={isSelected}
+                data-testid={`day-option-${day}`}
                 className={`flex w-full items-center gap-3 rounded-lg p-3 transition-colors ${
                   isSelected
                     ? 'bg-primary/10'
