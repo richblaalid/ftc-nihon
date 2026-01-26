@@ -1,0 +1,11 @@
+A: City,B: Hotel / Accommodation Name,C: Type,D: Booking Status,E: Notes,F: Website
+Tokyo,&here Shinjuku,Hotel,TRUE,Prime location,[https://andherehotels-shinjuku.com/en/]
+Hakone,Takumino yado Yoshimatsu,Ryokan,TRUE,Traditional accommodation,[https://www.hakone.co.jp/]
+Kyoto,Fujinoma Machiya House,Machiya (Traditional House),TRUE,Local experience,[https://www.kyoto-machiya-inn.com/accommodations/fujinoma/]
+Osaka,Mimaru Osaka East,Apartment Hotel,TRUE,Family-friendly,[https://mimaruhotels.com/en/hotel/shinsaibashi-east/]
+,,,,,
+A: Event,B: Target Date,C: Venue / Link,D: Ticket Sale Start,E: Notes on Purchase,F: Success Tips
+Ghibli Museum Mitaka,3/11/2026,https://www.ghibli-museum.jp/en/tickets/,"Feb 10, 10:00 AM JST (Feb 9, 7:00 PM CST)",Highly competitive purchase window.,Use multiple devices; Call bank in advance about overseas purchase.
+Sumo Viewing,3/20/2026,https://sumo.pia.jp/en/sumo03.jsp,"Feb 7, 2026, 10:00 AM JST (Feb 6, 7:00 PM CST)",Target venue: Osaka Prefectural Gymnasium.,Mico can walk through the purchase process step-by-step.
+Cooking Class,3/10/2011,https://airkitchen.me/list/tokyo.php,N/A,Best options: March 10 (any time) or March 11 (6:00 PM - 8:00 PM) post-Ghibli.,Select a class from the provided link; send preferred link to Mico for timing consultation.
+Team Labs: Borderless,3/11/2026,https://www.teamlab.art/e/tokyo/,Purchased,12:00 - 12:30 entrance time,
