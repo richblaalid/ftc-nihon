@@ -138,9 +138,21 @@ export interface SyncMeta {
   lastSyncedAt: string; // ISO datetime string
 }
 
-// Activity with transit info joined
+// Activity with transit info joined (flattened for convenience)
 export interface ActivityWithTransit extends Activity {
   transit?: TransitSegment | null;
+  // Flattened transit fields for easy access
+  leaveBy?: string | null;
+  walkToStationMinutes?: number | null;
+  stationName?: string | null;
+  trainLine?: string | null;
+  suggestedDeparture?: string | null;
+  travelMinutes?: number | null;
+  transfers?: string | null;
+  arrivalStation?: string | null;
+  walkToDestinationMinutes?: number | null;
+  bufferMinutes?: number | null;
+  transitSteps?: TransitStep[] | null;
 }
 
 // Trip constants
