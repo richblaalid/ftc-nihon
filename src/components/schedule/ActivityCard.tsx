@@ -76,6 +76,7 @@ export function ActivityCard({
   return (
     <Link
       href={`/schedule/${activity.id}`}
+      data-testid="activity-card"
       className={`card relative block overflow-hidden transition-transform active:scale-[0.98] ${styles.card}`}
     >
       {/* Category accent bar */}

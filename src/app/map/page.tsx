@@ -76,8 +76,8 @@ function MapContent() {
       <header className="flex-shrink-0 px-4 py-3 bg-background border-b border-border safe-area-top">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Link href="/" className="p-2 -ml-2 rounded-lg hover:bg-background-secondary">
-              <svg className="w-5 h-5 text-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <Link href="/" aria-label="Back to home" className="p-2 -ml-2 rounded-lg hover:bg-background-secondary">
+              <svg className="w-5 h-5 text-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
             </Link>
@@ -87,9 +87,10 @@ function MapContent() {
           {/* Location toggle */}
           <button
             onClick={() => !isTracking && startTracking()}
+            aria-label={isTracking ? 'Location tracking enabled' : 'Enable location tracking'}
             className={`p-2 rounded-lg ${isTracking ? 'bg-primary/10 text-primary' : 'bg-background-secondary text-foreground-secondary'}`}
           >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>

@@ -88,7 +88,7 @@ export function BottomNav() {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-t border-border pb-safe">
-      <div className="flex items-center justify-around h-14">
+      <div className="flex items-center justify-around h-16">
         {navItems.map((item) => {
           const active = isActive(item.href);
           return (
@@ -97,12 +97,12 @@ export function BottomNav() {
               href={item.href}
               className={`flex flex-col items-center justify-center min-w-touch min-h-touch px-3 py-1 transition-colors ${
                 active
-                  ? 'text-primary'
-                  : 'text-foreground-tertiary hover:text-foreground-secondary'
+                  ? 'text-coral-700 dark:text-vermillion-400'
+                  : 'text-foreground-secondary hover:text-foreground'
               }`}
             >
               {active && item.activeIcon ? item.activeIcon : item.icon}
-              <span className={`text-[10px] mt-0.5 ${active ? 'font-medium' : ''}`}>
+              <span className={`text-xs mt-0.5 ${active ? 'font-medium' : ''}`}>
                 {item.label}
               </span>
             </Link>

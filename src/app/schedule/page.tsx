@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, Suspense, useTransition } from 'react';
+import { Suspense, useTransition } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useActivitiesWithTransit, useCurrentActivity, useCurrentDayNumber } from '@/db/hooks';
 import { DayNav } from '@/components/schedule/DayNav';
@@ -12,29 +12,17 @@ function ScheduleContent() {
   const searchParams = useSearchParams();
   const currentDayNumber = useCurrentDayNumber();
 
-  // Get day from URL or use current day
+  // Get day from URL or use current day (URL is source of truth)
   const dayParam = searchParams.get('day');
-  const initialDay = dayParam ? parseInt(dayParam, 10) : (currentDayNumber ?? 1);
-  const [selectedDay, setSelectedDay] = useState(initialDay);
+  const selectedDay = dayParam ? parseInt(dayParam, 10) : (currentDayNumber ?? 1);
   const [isPending, startTransition] = useTransition();
 
   // Update URL when day changes with non-blocking transition
   const handleDayChange = (day: number) => {
     startTransition(() => {
-      setSelectedDay(day);
       router.push(`/schedule?day=${day}`, { scroll: false });
     });
   };
-
-  // Sync with URL changes
-  useEffect(() => {
-    if (dayParam) {
-      const day = parseInt(dayParam, 10);
-      if (day >= 1 && day <= 15 && day !== selectedDay) {
-        setSelectedDay(day);
-      }
-    }
-  }, [dayParam, selectedDay]);
 
   // Fetch activities for selected day
   const activities = useActivitiesWithTransit(selectedDay);

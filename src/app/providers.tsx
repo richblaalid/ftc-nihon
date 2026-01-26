@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { initializeSync, subscribeToChanges } from '@/lib/sync';
 import { useSyncStore, initOnlineListeners } from '@/stores/sync-store';
+import { seedDatabase } from '@/db/seed';
 
 interface ProvidersProps {
   children: React.ReactNode;
@@ -25,8 +26,25 @@ export function Providers({ children }: ProvidersProps) {
     // Initialize online/offline listeners
     const cleanupOnlineListeners = initOnlineListeners();
 
+    // Seed database with trip data if empty (development/first load)
+    const seedIfNeeded = async () => {
+      try {
+        const result = await seedDatabase();
+        if (result.success) {
+          console.log('[Providers] Seed check:', result.message);
+        } else {
+          console.warn('[Providers] Seed failed:', result.message);
+        }
+      } catch (error) {
+        console.error('[Providers] Seed error:', error);
+      }
+    };
+
     // Initialize sync
     const runSync = async () => {
+      // First seed the database if needed
+      await seedIfNeeded();
+
       setIsSyncing(true);
       try {
         const result = await initializeSync();

@@ -46,8 +46,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
+  // Removed maximumScale and userScalable - WCAG 1.4.4 requires zoom capability
   viewportFit: 'cover',
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: '#FFFBF7' }, // Cream background
@@ -73,7 +72,7 @@ export default function RootLayout({
       >
         <ServiceWorkerRegistration />
         <Providers>
-          <div className="pb-14">{children}</div>
+          <div className="pb-16">{children}</div>
           <BottomNav />
         </Providers>
       </body>

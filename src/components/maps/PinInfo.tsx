@@ -45,10 +45,11 @@ export function PinInfo({ activity, onClose, onNavigate }: PinInfoProps) {
           {onClose && (
             <button
               onClick={onClose}
-              className="p-1 rounded-full hover:bg-background-secondary transition-colors"
-              aria-label="Close"
+              className="p-2 min-h-touch min-w-touch flex items-center justify-center rounded-full hover:bg-background-secondary transition-colors"
+              aria-label="Close activity info"
+              data-testid="pin-info-close"
             >
-              <svg className="w-5 h-5 text-foreground-tertiary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-5 h-5 text-foreground-tertiary" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>

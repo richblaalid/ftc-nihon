@@ -27,8 +27,8 @@ interface MapProps {
   className?: string;
 }
 
-// Category colors matching our design system
-const CATEGORY_COLORS: Record<ActivityCategory, string> = {
+// Fallback category colors (used if CSS variables unavailable)
+const CATEGORY_COLORS_FALLBACK: Record<ActivityCategory, string> = {
   food: '#F46B55',
   temple: '#7C3AED',
   shopping: '#F5B800',
@@ -36,6 +36,37 @@ const CATEGORY_COLORS: Record<ActivityCategory, string> = {
   activity: '#059669',
   hotel: '#8B5CF6',
 };
+
+// CSS variable names for category colors
+const CATEGORY_CSS_VARS: Record<ActivityCategory, string> = {
+  food: '--category-food',
+  temple: '--category-temple',
+  shopping: '--category-shopping',
+  transit: '--category-transit',
+  activity: '--category-activity',
+  hotel: '--category-hotel',
+};
+
+/**
+ * Get category color from CSS variable (theme-aware) with fallback
+ */
+function getCategoryColor(category: ActivityCategory): string {
+  if (typeof document === 'undefined') {
+    return CATEGORY_COLORS_FALLBACK[category];
+  }
+  const cssVar = CATEGORY_CSS_VARS[category];
+  const value = getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim();
+  return value || CATEGORY_COLORS_FALLBACK[category];
+}
+
+/**
+ * Get theme-aware color from CSS variable
+ */
+function getThemeColor(cssVar: string, fallback: string): string {
+  if (typeof document === 'undefined') return fallback;
+  const value = getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim();
+  return value || fallback;
+}
 
 // Category icons (using simpler glyphs for markers)
 const CATEGORY_GLYPHS: Record<ActivityCategory, string> = {
@@ -65,6 +96,9 @@ export function Map({
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Check config once (not in effect)
+  const isConfigured = isGoogleMapsConfigured();
+
   // Determine map center based on day or override
   const getMapCenter = useCallback(() => {
     if (center) return center;
@@ -79,11 +113,7 @@ export function Map({
 
   // Initialize map
   useEffect(() => {
-    if (!mapRef.current) return;
-    if (!isGoogleMapsConfigured()) {
-      setError('Google Maps API key not configured');
-      return;
-    }
+    if (!mapRef.current || !isConfigured) return;
 
     const initMap = async () => {
       try {
@@ -107,7 +137,7 @@ export function Map({
     };
 
     initMap();
-  }, [getMapCenter, zoom]);
+  }, [getMapCenter, zoom, isConfigured]);
 
   // Update activity pins
   useEffect(() => {
@@ -131,12 +161,13 @@ export function Map({
     validActivities.forEach((activity) => {
       if (activity.locationLat == null || activity.locationLng == null) return;
 
-      // Create custom pin element
+      // Create custom pin element with theme-aware colors
+      const pinColor = getCategoryColor(activity.category);
       const pinElement = document.createElement('div');
       pinElement.className = 'ftc-map-pin';
       pinElement.innerHTML = `
         <div style="
-          background-color: ${CATEGORY_COLORS[activity.category]};
+          background-color: ${pinColor};
           width: 36px;
           height: 36px;
           border-radius: 50% 50% 50% 0;
@@ -170,11 +201,17 @@ export function Map({
           infoWindowRef.current = new google.maps.InfoWindow();
         }
 
+        // Use theme-aware colors for info window text
+        const textSecondary = getThemeColor('--foreground-secondary', '#666');
+        const textTertiary = getThemeColor('--foreground-tertiary', '#888');
+        const bgColor = getThemeColor('--background', '#fff');
+        const textColor = getThemeColor('--foreground', '#1a1a1a');
+
         infoWindowRef.current.setContent(`
-          <div style="padding: 8px; max-width: 200px;">
-            <div style="font-weight: 600; margin-bottom: 4px;">${activity.name}</div>
-            <div style="font-size: 12px; color: #666;">${activity.startTime}</div>
-            ${activity.locationName ? `<div style="font-size: 12px; color: #888;">${activity.locationName}</div>` : ''}
+          <div style="padding: 8px; max-width: 200px; background-color: ${bgColor};">
+            <div style="font-weight: 600; margin-bottom: 4px; color: ${textColor};">${activity.name}</div>
+            <div style="font-size: 12px; color: ${textSecondary};">${activity.startTime}</div>
+            ${activity.locationName ? `<div style="font-size: 12px; color: ${textTertiary};">${activity.locationName}</div>` : ''}
           </div>
         `);
 
@@ -211,13 +248,14 @@ export function Map({
 
     if (!userLocation) return;
 
-    // Create blue dot marker for user location
+    // Create user location marker with theme-aware primary color
+    const primaryColor = getThemeColor('--primary', '#4285F4');
     const userPinElement = document.createElement('div');
     userPinElement.innerHTML = `
       <div style="
         width: 20px;
         height: 20px;
-        background-color: #4285F4;
+        background-color: ${primaryColor};
         border: 3px solid white;
         border-radius: 50%;
         box-shadow: 0 2px 6px rgba(0,0,0,0.3);
@@ -232,13 +270,14 @@ export function Map({
     });
   }, [isLoaded, userLocation]);
 
-  // Error state
-  if (error) {
+  // Error state (config error or runtime error)
+  const displayError = !isConfigured ? 'Google Maps API key not configured' : error;
+  if (displayError) {
     return (
       <div className={`flex items-center justify-center bg-background-secondary ${className}`}>
         <div className="text-center p-4">
           <span className="text-4xl">🗺️</span>
-          <p className="mt-2 text-foreground-secondary">{error}</p>
+          <p className="mt-2 text-foreground-secondary">{displayError}</p>
           <p className="mt-1 text-xs text-foreground-tertiary">
             Configure NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
           </p>

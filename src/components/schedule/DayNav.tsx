@@ -29,25 +29,30 @@ export function DayNav({ currentDay, onDayChange, isPending = false }: DayNavPro
   const canGoNext = currentDay < TRIP_DAYS && !isPending;
 
   return (
-    <div className={`flex items-center justify-between ${isPending ? 'opacity-70' : ''}`}>
+    <nav
+      aria-label="Day navigation"
+      data-testid="day-nav"
+      className={`flex items-center justify-between ${isPending ? 'opacity-70' : ''}`}
+    >
       {/* Previous day button */}
       <button
         onClick={() => canGoPrev && onDayChange(currentDay - 1)}
         disabled={!canGoPrev}
+        data-testid="day-nav-prev"
         className={`flex min-h-touch min-w-touch items-center justify-center rounded-full transition-colors ${
           canGoPrev
             ? 'bg-background-secondary text-foreground hover:bg-background-tertiary active:scale-95'
             : 'text-foreground-tertiary opacity-30'
         } ${isPending ? 'cursor-wait' : ''}`}
-        aria-label="Previous day"
+        aria-label={`Go to day ${currentDay - 1}`}
       >
-        <span className="text-xl">←</span>
+        <span className="text-xl" aria-hidden="true">←</span>
       </button>
 
       {/* Day info */}
-      <div className="text-center">
+      <div className="text-center" aria-live="polite" aria-atomic="true">
         <div className="flex items-center justify-center gap-2">
-          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-sm font-bold text-white">
+          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-sm font-bold text-white" aria-hidden="true">
             {currentDay}
           </span>
           <span className="text-lg font-semibold text-foreground">Day {currentDay}</span>
@@ -61,15 +66,16 @@ export function DayNav({ currentDay, onDayChange, isPending = false }: DayNavPro
       <button
         onClick={() => canGoNext && onDayChange(currentDay + 1)}
         disabled={!canGoNext}
+        data-testid="day-nav-next"
         className={`flex min-h-touch min-w-touch items-center justify-center rounded-full transition-colors ${
           canGoNext
             ? 'bg-background-secondary text-foreground hover:bg-background-tertiary active:scale-95'
             : 'text-foreground-tertiary opacity-30'
         } ${isPending ? 'cursor-wait' : ''}`}
-        aria-label="Next day"
+        aria-label={`Go to day ${currentDay + 1}`}
       >
-        <span className="text-xl">→</span>
+        <span className="text-xl" aria-hidden="true">→</span>
       </button>
-    </div>
+    </nav>
   );
 }
