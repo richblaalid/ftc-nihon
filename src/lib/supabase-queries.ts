@@ -33,7 +33,7 @@ function convertRows<T>(rows: Record<string, unknown>[]): T[] {
  * Fetch all activities from Supabase
  */
 export async function fetchActivities(): Promise<Activity[]> {
-  if (!isSupabaseConfigured()) return [];
+  if (!isSupabaseConfigured() || !supabase) return [];
 
   const { data, error } = await supabase
     .from('activities')
@@ -53,7 +53,7 @@ export async function fetchActivities(): Promise<Activity[]> {
  * Fetch all transit segments from Supabase
  */
 export async function fetchTransitSegments(): Promise<TransitSegment[]> {
-  if (!isSupabaseConfigured()) return [];
+  if (!isSupabaseConfigured() || !supabase) return [];
 
   const { data, error } = await supabase.from('transit_segments').select('*');
 
@@ -69,7 +69,7 @@ export async function fetchTransitSegments(): Promise<TransitSegment[]> {
  * Fetch all accommodations from Supabase
  */
 export async function fetchAccommodations(): Promise<Accommodation[]> {
-  if (!isSupabaseConfigured()) return [];
+  if (!isSupabaseConfigured() || !supabase) return [];
 
   const { data, error } = await supabase
     .from('accommodations')
@@ -88,7 +88,7 @@ export async function fetchAccommodations(): Promise<Accommodation[]> {
  * Fetch all restaurants from Supabase
  */
 export async function fetchRestaurants(): Promise<Restaurant[]> {
-  if (!isSupabaseConfigured()) return [];
+  if (!isSupabaseConfigured() || !supabase) return [];
 
   const { data, error } = await supabase
     .from('restaurants')
@@ -108,7 +108,7 @@ export async function fetchRestaurants(): Promise<Restaurant[]> {
  * Fetch active alerts from Supabase
  */
 export async function fetchAlerts(): Promise<Alert[]> {
-  if (!isSupabaseConfigured()) return [];
+  if (!isSupabaseConfigured() || !supabase) return [];
 
   const { data, error } = await supabase
     .from('alerts')
@@ -128,7 +128,7 @@ export async function fetchAlerts(): Promise<Alert[]> {
  * Fetch all alerts (including inactive) for admin
  */
 export async function fetchAllAlerts(): Promise<Alert[]> {
-  if (!isSupabaseConfigured()) return [];
+  if (!isSupabaseConfigured() || !supabase) return [];
 
   const { data, error } = await supabase
     .from('alerts')
@@ -147,7 +147,7 @@ export async function fetchAllAlerts(): Promise<Alert[]> {
  * Fetch location shares from Supabase
  */
 export async function fetchLocationShares(): Promise<LocationShare[]> {
-  if (!isSupabaseConfigured()) return [];
+  if (!isSupabaseConfigured() || !supabase) return [];
 
   const { data, error } = await supabase
     .from('location_shares')
@@ -166,7 +166,7 @@ export async function fetchLocationShares(): Promise<LocationShare[]> {
  * Fetch AI cache entries from Supabase
  */
 export async function fetchAiCache(): Promise<AiCache[]> {
-  if (!isSupabaseConfigured()) return [];
+  if (!isSupabaseConfigured() || !supabase) return [];
 
   const { data, error } = await supabase.from('ai_cache').select('*');
 
@@ -182,7 +182,7 @@ export async function fetchAiCache(): Promise<AiCache[]> {
  * Fetch checklist items from Supabase
  */
 export async function fetchChecklistItems(): Promise<ChecklistItem[]> {
-  if (!isSupabaseConfigured()) return [];
+  if (!isSupabaseConfigured() || !supabase) return [];
 
   const { data, error } = await supabase
     .from('checklist_items')
@@ -251,7 +251,7 @@ export async function updateChecklistItemStatus(
   id: string,
   isCompleted: boolean
 ): Promise<void> {
-  if (!isSupabaseConfigured()) {
+  if (!isSupabaseConfigured() || !supabase) {
     throw new Error('Supabase not configured');
   }
 
@@ -274,7 +274,7 @@ export async function updateLocationShare(
   lat: number,
   lng: number
 ): Promise<void> {
-  if (!isSupabaseConfigured()) {
+  if (!isSupabaseConfigured() || !supabase) {
     throw new Error('Supabase not configured');
   }
 
