@@ -1,6 +1,6 @@
 /// <reference lib="webworker" />
 
-const CACHE_NAME = 'ftc-nihon-v3';
+const CACHE_NAME = 'ftc-nihon-v4';
 const STATIC_ASSETS = [
   '/',
   '/icon-192x192.png',
@@ -35,7 +35,7 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Fetch event - serve from cache, fallback to network
+// Fetch event - network-first for HTML, stale-while-revalidate for assets
 self.addEventListener('fetch', (event) => {
   // Skip non-GET requests
   if (event.request.method !== 'GET') return;
@@ -43,27 +43,36 @@ self.addEventListener('fetch', (event) => {
   // Skip cross-origin requests
   if (!event.request.url.startsWith(self.location.origin)) return;
 
+  const isNavigationRequest = event.request.mode === 'navigate';
+  const isHTMLRequest = event.request.headers.get('accept')?.includes('text/html');
+
+  // Network-first for navigation/HTML requests (ensures fresh content)
+  if (isNavigationRequest || isHTMLRequest) {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          if (response.ok) {
+            const responseClone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, responseClone);
+            });
+          }
+          return response;
+        })
+        .catch(() => {
+          // Network failed, try cache
+          return caches.match(event.request).then((cached) => {
+            return cached || caches.match('/');
+          });
+        })
+    );
+    return;
+  }
+
+  // Stale-while-revalidate for other assets (JS, CSS, images)
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        // Return cached response and update cache in background
-        event.waitUntil(
-          fetch(event.request).then((response) => {
-            if (response.ok) {
-              caches.open(CACHE_NAME).then((cache) => {
-                cache.put(event.request, response);
-              });
-            }
-          }).catch(() => {
-            // Network failed, but we have cache - that's OK
-          })
-        );
-        return cachedResponse;
-      }
-
-      // No cache, fetch from network
-      return fetch(event.request).then((response) => {
-        // Cache successful responses
+      const fetchPromise = fetch(event.request).then((response) => {
         if (response.ok) {
           const responseClone = response.clone();
           caches.open(CACHE_NAME).then((cache) => {
@@ -72,6 +81,8 @@ self.addEventListener('fetch', (event) => {
         }
         return response;
       });
+
+      return cachedResponse || fetchPromise;
     })
   );
 });
