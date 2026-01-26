@@ -9,19 +9,49 @@
 
 ## Executive Summary
 
-This audit identified **25 accessibility and UX issues** across the FTC: Nihon PWA. The primary concerns are:
+This comprehensive UX audit of the FTC: Nihon PWA identified **35+ issues** across accessibility, brand alignment, and usability. The audit covered:
 
-1. **Color Contrast Violations** (Critical) — `text-foreground-tertiary` (#a89b91) fails WCAG 2.1 AA contrast requirements on multiple backgrounds
-2. **Viewport Zoom Restriction** (Moderate) — `user-scalable=no` disables pinch-to-zoom, a WCAG violation
-3. **Navigation Height** (Low) — Bottom nav is 57px instead of 64px minimum per Design System
-4. **Missing List Semantics** — Timeline doesn't use `<ul>` or `<ol>` for activity lists
+- **5 phases** of testing (Automated a11y, Design Tokens, Components, Page Flows, Prioritization)
+- **74 Playwright tests** (49 passing, 25 failing)
+- **17 components** audited
+- **4 pages** + cross-page navigation analyzed
+
+### Critical Issues (Must Fix Before Launch)
+
+| Issue | Impact | Effort | Files Affected |
+|-------|--------|--------|----------------|
+| Color contrast failures | WCAG violation | Low | 1 CSS file + 25 components |
+| Viewport zoom restriction | WCAG violation | Low | 1 file |
+
+### High Priority Issues
+
+| Issue | Impact | Effort | Files Affected |
+|-------|--------|--------|----------------|
+| Focus indicators missing | Keyboard users blocked | Low | 1 CSS file |
+| Timeline missing list semantics | Screen reader UX | Low | 1 component |
+| BottomNav height 56px (should be 64px) | Design System violation | Low | 1 component |
+| Map.tsx hardcoded colors | Theme inconsistency | Medium | 1 component |
 
 ### Quick Wins (High Impact, Low Effort)
 
-1. Change `text-foreground-tertiary` from `#a89b91` to `#6b5d54` (matches `text-foreground-secondary`)
-2. Remove `user-scalable=no` from viewport meta tag
-3. Add `role="list"` or use `<ul>` for schedule timeline
-4. Increase bottom nav height to 64px minimum
+1. **Fix tertiary text contrast** — Change `--foreground-tertiary` from `#a89b91` to `#6b5d54` in `globals.css`
+2. **Remove zoom restriction** — Remove `user-scalable=no` from viewport meta in `layout.tsx`
+3. **Add focus styles** — Add `:focus-visible` outline to `globals.css`
+4. **Fix timeline semantics** — Wrap activities in `<ol>` with `<li>` in `Timeline.tsx`
+5. **Increase nav height** — Change `h-14` to `h-16` in `BottomNav.tsx`
+6. **Increase nav label size** — Change `text-[10px]` to `text-xs` in `BottomNav.tsx`
+
+### Overall Assessment
+
+| Category | Status | Score |
+|----------|--------|-------|
+| Accessibility (WCAG 2.1 AA) | ❌ Failing | 65% |
+| Design System Compliance | ⚠️ Mostly | 85% |
+| Usability | ✅ Good | 90% |
+| Offline-First Architecture | ✅ Excellent | 95% |
+| Mobile Touch UX | ✅ Good | 90% |
+
+**Verdict:** The app has strong foundations (offline-first, mobile UX, information hierarchy) but needs accessibility fixes before launch. The critical issues are concentrated in one area (color contrast) making remediation straightforward.
 
 ---
 
@@ -192,55 +222,90 @@ See `Docs/design-token-diff.md` for detailed token comparison.
 
 ### Summary of Deviations
 
-| Category | Issue | Severity |
-|----------|-------|----------|
-| Colors | `text-foreground-tertiary` contrast too low | High |
-| Typography | Reggae One properly restricted to display | ✓ Pass |
-| Spacing | Generally follows 8px grid | ✓ Pass |
-| Nav Height | 57px instead of 64px | Medium |
-| Touch Targets | All ≥44px | ✓ Pass |
+| Category | Issue | Design System Reference | Severity |
+|----------|-------|------------------------|----------|
+| Colors | `text-foreground-tertiary` contrast too low | Section 3.2 (Text Colors) | Critical |
+| Colors | Hardcoded colors in Map.tsx | Section 3.5 (Category Colors) | High |
+| Nav Height | 57px instead of 64px | Section 7.5 (Navigation Bar) | Medium |
+| Typography | Reggae One properly restricted to display | Section 4 (Typography) | ✓ Pass |
+| Spacing | Generally follows 8px grid | Section 5.1 (Spacing Scale) | ✓ Pass |
+| Touch Targets | All ≥44px | Section 6 (Touch Targets) | ✓ Pass |
+| Shadows | Correct light/dark mode shadows | Section 5.3 (Shadows) | ✓ Pass |
+| Border Radius | Full scale implemented | Section 5.2 (Border Radius) | ✓ Pass |
+
+### Design System References
+
+For each issue, the corresponding Design System section:
+
+- **Color Contrast** → `Docs/product_docs/FTC_Nihon_Design_System.md` Section 3.2
+  - Specifies foreground colors must meet WCAG AA (4.5:1 for normal text)
+
+- **Navigation Bar** → `Docs/product_docs/FTC_Nihon_Design_System.md` Section 7.5
+  - Height: "64px content + safe area inset"
+  - Background: "Surface color with blur effect"
+
+- **Category Colors** → `Docs/product_docs/FTC_Nihon_Design_System.md` Section 3.5
+  - All category colors should use CSS variables, not hardcoded hex
 
 ---
 
-## 6. Recommendations by Priority
+## 6. Recommendations by Category
 
-### Critical (Fix Before Launch)
+### 6.1 Accessibility Recommendations
 
-1. **Fix color contrast for tertiary text**
-   - Files: `tailwind.config.ts`, all components using `text-foreground-tertiary`
-   - Change: `#a89b91` → `#6b5d54` or darker
+**Critical WCAG Violations:**
 
-2. **Remove viewport zoom restriction**
-   - File: `src/app/layout.tsx`
-   - Change: Remove `user-scalable=no` and `maximum-scale=1`
+| Issue | WCAG Criterion | Fix |
+|-------|---------------|-----|
+| Tertiary text contrast 2.6:1 | 1.4.3 Contrast (Minimum) | Change `#a89b91` → `#6b5d54` |
+| Zoom disabled | 1.4.4 Resize Text | Remove `user-scalable=no` |
+| No focus indicators | 2.4.7 Focus Visible | Add `:focus-visible` styles |
+| Timeline not a list | 1.3.1 Info and Relationships | Wrap in `<ol>/<li>` |
 
-### High Priority
+**Ongoing Testing Strategy:**
+1. Run `npm run test:e2e` before each release
+2. Manual VoiceOver testing on iOS before major updates
+3. Consider adding `pa11y-ci` to CI pipeline
+4. Test with keyboard-only navigation
 
-3. **Add focus indicators**
-   - File: `src/app/globals.css` or component styles
-   - Add visible `:focus-visible` styles
+### 6.2 Brand Alignment Recommendations
 
-4. **Add list semantics to timeline**
-   - File: `src/components/schedule/Timeline.tsx`
-   - Wrap in `<ul>` with `<li>` children
+**Token Updates Needed:**
 
-### Medium Priority
+| Token | Current | Recommended | Design System Section |
+|-------|---------|-------------|----------------------|
+| `--foreground-tertiary` | #a89b91 | #6b5d54 | 3.2 |
+| (none) | - | - | Other tokens correct |
 
-5. **Increase bottom nav height to 64px**
-   - File: `src/components/ui/BottomNav.tsx`
+**Component Refactors:**
 
-6. **Add semantic roles to day navigation**
-   - File: `src/components/schedule/DayNav.tsx`
-   - Add `role="tablist"`, `role="tab"`, `aria-selected`
+| Component | Issue | Refactor |
+|-----------|-------|----------|
+| Map.tsx | Hardcoded colors | Extract to CSS variables |
+| BottomNav | Height 56px | Change to 64px |
+| BottomNav | Label 10px | Change to 12px |
 
-7. **Add test IDs to components**
-   - QuickActions, DaySelector, ActivityCard
+### 6.3 UX Improvement Recommendations
 
-### Low Priority
+**User Flow Improvements:**
 
-8. **Ensure h1 is first heading on each page**
-9. **Add aria-labels to icon-only buttons**
-10. **Review dark mode contrast (not yet tested)**
+| Flow | Issue | Improvement |
+|------|-------|-------------|
+| Dashboard | No sync failure notification | Add toast on sync error |
+| Dashboard | No "last synced" time | Show relative timestamp |
+| Schedule | No current time indicator | Add time line on timeline |
+| Map | No auto-fit to pins | Calculate bounds on load |
+| Navigation | No page transitions | Add subtle animations |
+| Navigation | Scroll position lost | Preserve on back nav |
+
+**Interaction Pattern Improvements:**
+
+| Pattern | Current | Recommended |
+|---------|---------|-------------|
+| Modal dialogs | Missing ARIA roles | Add `role="dialog"`, `aria-modal` |
+| Tab navigation | Missing roles | Add `role="tablist"`, `role="tab"` |
+| Copy actions | Working well | No change needed |
+| Expandable cards | Working well | No change needed |
 
 ---
 
