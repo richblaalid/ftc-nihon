@@ -12,8 +12,8 @@
 - Phase 1: [x] Complete
 - Phase 2: [x] Complete
 - Phase 3: [x] Complete
-- Phase 4: [ ] Not Started
-- Phase 5: [ ] Not Started
+- Phase 4: [x] Complete
+- Phase 5: [x] Complete
 - **MVP Status:** In Progress
 
 ---
@@ -402,77 +402,77 @@
 
 ### 4.1 Google Maps Integration
 
-- [ ] 4.1.1: Add Google Maps API key to environment
+- [x] 4.1.1: Add Google Maps API key to environment
   - Files: .env.local, .env.example
   - Variable: NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
   - Test: Key configured
 
-- [ ] 4.1.2: Create Google Maps loader component
+- [x] 4.1.2: Create Google Maps loader component
   - Files: src/lib/google-maps.ts, src/components/maps/MapLoader.tsx
   - Loader: @googlemaps/js-api-loader
   - Test: Maps API loads
 
-- [ ] 4.1.3: Create base map component
+- [x] 4.1.3: Create base map component
   - Files: src/components/maps/Map.tsx
   - Features: Center on Tokyo, zoom controls, gesture handling
   - Test: Map renders
 
 ### 4.2 GPS Location
 
-- [ ] 4.2.1: Create geolocation hook
+- [x] 4.2.1: Create geolocation hook
   - Files: src/lib/hooks/useGeolocation.ts
   - Hook: useGeolocation() - returns lat/lng, updates on move
   - Test: Location updates in real-time
 
-- [ ] 4.2.2: Add current location marker to map
+- [x] 4.2.2: Add current location marker to map
   - Files: src/components/maps/Map.tsx
   - Marker: Blue dot for current position
   - Test: Location shows on map
 
 ### 4.3 Day Pins
 
-- [ ] 4.3.1: Create custom pin components by category
+- [x] 4.3.1: Create custom pin components by category
   - Files: src/components/maps/Pin.tsx
   - Pins: Different icons/colors for each category
   - Test: All pin types render
 
-- [ ] 4.3.2: Add day activities as pins on map
+- [x] 4.3.2: Add day activities as pins on map
   - Files: src/components/maps/Map.tsx
   - Data: Activities for selected day with lat/lng
   - Test: All day activities show as pins
 
-- [ ] 4.3.3: Create pin info popup on tap
+- [x] 4.3.3: Create pin info popup on tap
   - Files: src/components/maps/PinInfo.tsx
   - Display: Name, time, category, navigate button
   - Test: Popup shows on pin tap
 
 ### 4.4 Directions View
 
-- [ ] 4.4.1: Create directions page/component
+- [x] 4.4.1: Create directions page/component
   - Files: src/app/directions/page.tsx or src/components/maps/Directions.tsx
   - Display: Step-by-step transit/walking directions
   - Data: Transit segment steps
   - Test: Directions render
 
-- [ ] 4.4.2: Add walking route visualization
+- [x] 4.4.2: Add walking route visualization
   - Files: src/components/maps/Directions.tsx
   - Feature: Polyline on map for walking segments
   - Test: Route shows on map
 
-- [ ] 4.4.3: Add "Open in Google Maps" button
+- [x] 4.4.3: Add "Open in Google Maps" button
   - Files: src/components/maps/Directions.tsx
   - Action: Opens native Google Maps with directions
   - Test: External navigation works
 
 **Phase 4 Checkpoint:**
 
-- [ ] Map displays with correct region
-- [ ] GPS location shows and updates
-- [ ] Day pins display with correct categories
-- [ ] Pin tap shows info popup
-- [ ] Directions display step-by-step
-- [ ] "Open in Google Maps" works
-- [ ] Commit: "feat: complete maps and navigation (Phase 4)"
+- [x] Map displays with correct region
+- [x] GPS location shows and updates
+- [x] Day pins display with correct categories
+- [x] Pin tap shows info popup
+- [x] Directions display step-by-step
+- [x] "Open in Google Maps" works
+- [x] Commit: "feat: complete maps and navigation (Phase 4)"
 
 ---
 
@@ -480,12 +480,12 @@
 
 ### 5.1 Reservations Page
 
-- [ ] 5.1.1: Create reservations page
+- [x] 5.1.1: Create reservations page
   - Files: src/app/reservations/page.tsx
   - Layout: List of accommodations, current highlighted
   - Test: Page renders all accommodations
 
-- [ ] 5.1.2: Create accommodation card component
+- [x] 5.1.2: Create accommodation card component
   - Files: src/components/reservations/AccommodationCard.tsx
   - Display: Name, dates, address (EN + JP), confirmation number
   - Style: Card with expandable details
@@ -493,48 +493,48 @@
 
 ### 5.2 Accommodation Details
 
-- [ ] 5.2.1: Add Japanese address display with copy button
+- [x] 5.2.1: Add Japanese address display with copy button
   - Files: src/components/reservations/AccommodationCard.tsx
   - Feature: Show Japanese text, tap to copy for taxi
   - Test: Copy to clipboard works
 
-- [ ] 5.2.2: Add tap-to-call phone numbers
+- [x] 5.2.2: Add tap-to-call phone numbers
   - Files: src/components/reservations/AccommodationCard.tsx
   - Feature: tel: link for phone numbers
   - Test: Tap opens phone dialer
 
-- [ ] 5.2.3: Add Google Maps link
+- [x] 5.2.3: Add Google Maps link
   - Files: src/components/reservations/AccommodationCard.tsx
   - Feature: "Get Directions" button
   - Test: Opens Google Maps
 
-- [ ] 5.2.4: Add special instructions display
+- [x] 5.2.4: Add special instructions display
   - Files: src/components/reservations/AccommodationCard.tsx
   - Display: Check-in instructions, PIN codes, notes
   - Test: Instructions display correctly
 
 ### 5.3 Navigation
 
-- [ ] 5.3.1: Create bottom navigation bar
+- [x] 5.3.1: Create bottom navigation bar
   - Files: src/components/ui/BottomNav.tsx
   - Items: Home, Schedule, Map, Reservations, (Settings)
   - Style: iOS-like tab bar with safe area
   - Test: Navigation works between pages
 
-- [ ] 5.3.2: Add active state to nav items
+- [x] 5.3.2: Add active state to nav items
   - Files: src/components/ui/BottomNav.tsx
   - Feature: Highlight current page
   - Test: Active state shows correctly
 
 **Phase 5 Checkpoint:**
 
-- [ ] All 4 accommodations display with complete details
-- [ ] Japanese addresses copyable
-- [ ] Phone numbers tap-to-call
-- [ ] Google Maps links work
-- [ ] Bottom navigation functional
-- [ ] Works fully offline
-- [ ] Commit: "feat: complete reservations and navigation (Phase 5)"
+- [x] All 4 accommodations display with complete details
+- [x] Japanese addresses copyable
+- [x] Phone numbers tap-to-call
+- [x] Google Maps links work
+- [x] Bottom navigation functional
+- [x] Works fully offline
+- [x] Commit: "feat: complete reservations and navigation (Phase 5)"
 
 ---
 
@@ -646,3 +646,22 @@
 | 3.3.2 | 2026-01-26 | - | Leave by badges |
 | 3.4.1 | 2026-01-26 | - | Activity detail page |
 | 3.4.2 | 2026-01-26 | - | Tap-to-map links |
+| 4.1.1 | 2026-01-26 | 8d50526 | Google Maps API key |
+| 4.1.2 | 2026-01-26 | 8d50526 | Maps loader utility |
+| 4.1.3 | 2026-01-26 | 8d50526 | Map.tsx component |
+| 4.2.1 | 2026-01-26 | 8d50526 | useGeolocation hook |
+| 4.2.2 | 2026-01-26 | 8d50526 | User location marker |
+| 4.3.1 | 2026-01-26 | 8d50526 | Pin.tsx component |
+| 4.3.2 | 2026-01-26 | 8d50526 | Activity pins on map |
+| 4.3.3 | 2026-01-26 | 8d50526 | PinInfo popup |
+| 4.4.1 | 2026-01-26 | 8d50526 | Directions component |
+| 4.4.2 | 2026-01-26 | 8d50526 | Walking route in Directions |
+| 4.4.3 | 2026-01-26 | 8d50526 | Open in Google Maps button |
+| 5.1.1 | 2026-01-26 | - | Reservations page |
+| 5.1.2 | 2026-01-26 | - | AccommodationCard component |
+| 5.2.1 | 2026-01-26 | - | Japanese address copy |
+| 5.2.2 | 2026-01-26 | - | Tap-to-call phone |
+| 5.2.3 | 2026-01-26 | - | Google Maps link |
+| 5.2.4 | 2026-01-26 | - | Special instructions |
+| 5.3.1 | 2026-01-26 | - | BottomNav component |
+| 5.3.2 | 2026-01-26 | - | Active state nav items |

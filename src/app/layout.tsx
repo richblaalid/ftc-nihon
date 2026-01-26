@@ -3,6 +3,7 @@ import { Urbanist } from 'next/font/google';
 import localFont from 'next/font/local';
 import './globals.css';
 import { ServiceWorkerRegistration } from '@/components/ServiceWorkerRegistration';
+import { BottomNav } from '@/components/ui';
 import { Providers } from './providers';
 
 // Primary body font - Urbanist
@@ -71,7 +72,10 @@ export default function RootLayout({
         className={`${urbanist.variable} ${reggaeOne.variable} ${geistMono.variable} font-sans antialiased`}
       >
         <ServiceWorkerRegistration />
-        <Providers>{children}</Providers>
+        <Providers>
+          <div className="pb-14">{children}</div>
+          <BottomNav />
+        </Providers>
       </body>
     </html>
   );
