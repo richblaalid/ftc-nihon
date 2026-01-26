@@ -10,10 +10,10 @@
 
 - Phase 1: [x] Complete — Playwright + axe-core Setup
 - Phase 2: [x] Complete — Design Token Audit
-- Phase 3: [ ] Not Started — Component Audit
+- Phase 3: [x] Complete — Component Audit
 - Phase 4: [ ] Not Started — Page Flow Audit
 - Phase 5: [ ] Not Started — Report & Prioritization
-- **Audit Status:** In Progress (Phase 1 Complete)
+- **Audit Status:** In Progress (Phase 3 Complete)
 
 ---
 
@@ -207,104 +207,104 @@
 
 ### 3.1 Dashboard Components
 
-- [ ] 3.1.1: Audit NowWidget for brand alignment and UX
+- [x] 3.1.1: Audit NowWidget for brand alignment and UX
   - Files: src/components/dashboard/NowWidget.tsx
   - Check: Typography, colors, layout, "glanceable" requirement
   - Output: Add findings to Docs/ux-audit-report.md
 
-- [ ] 3.1.2: Audit NextWidget for brand alignment and UX
+- [x] 3.1.2: Audit NextWidget for brand alignment and UX
   - Files: src/components/dashboard/NextWidget.tsx
   - Check: Typography, colors, layout, information hierarchy
   - Output: Add findings to Docs/ux-audit-report.md
 
-- [ ] 3.1.3: Audit WeatherWidget for brand alignment and UX
+- [x] 3.1.3: Audit WeatherWidget for brand alignment and UX
   - Files: src/components/dashboard/WeatherWidget.tsx
   - Check: Icon style, data display, loading states
   - Output: Add findings to Docs/ux-audit-report.md
 
-- [ ] 3.1.4: Audit QuickActions for touch targets and brand
+- [x] 3.1.4: Audit QuickActions for touch targets and brand
   - Files: src/components/dashboard/QuickActions.tsx
   - Check: Button sizes, spacing, icons, labels
   - Output: Add findings to Docs/ux-audit-report.md
 
-- [ ] 3.1.5: Audit AlertBanner for visibility and urgency
+- [x] 3.1.5: Audit AlertBanner for visibility and urgency
   - Files: src/components/dashboard/AlertBanner.tsx
   - Check: Semantic colors, contrast, icon usage
   - Output: Add findings to Docs/ux-audit-report.md
 
-- [ ] 3.1.6: Audit DaySelector for usability
+- [x] 3.1.6: Audit DaySelector for usability
   - Files: src/components/dashboard/DaySelector.tsx
   - Check: Touch targets, active state, scroll behavior
   - Output: Add findings to Docs/ux-audit-report.md
 
-- [ ] 3.1.7: Audit DayIndicator for clarity
+- [x] 3.1.7: Audit DayIndicator for clarity
   - Files: src/components/dashboard/DayIndicator.tsx
   - Check: Typography, current day highlight
   - Output: Add findings to Docs/ux-audit-report.md
 
 ### 3.2 Schedule Components
 
-- [ ] 3.2.1: Audit ActivityCard for Design System compliance
+- [x] 3.2.1: Audit ActivityCard for Design System compliance
   - Files: src/components/schedule/ActivityCard.tsx
   - Check: Category accent bar, time prominence, icon placement
   - Output: Add findings to Docs/ux-audit-report.md
 
-- [ ] 3.2.2: Audit Timeline for visual clarity
+- [x] 3.2.2: Audit Timeline for visual clarity
   - Files: src/components/schedule/Timeline.tsx
   - Check: Time markers, current time indicator, spacing
   - Output: Add findings to Docs/ux-audit-report.md
 
-- [ ] 3.2.3: Audit DayNav for navigation clarity
+- [x] 3.2.3: Audit DayNav for navigation clarity
   - Files: src/components/schedule/DayNav.tsx
   - Check: Touch targets, state indicators, transitions
   - Output: Add findings to Docs/ux-audit-report.md
 
 ### 3.3 Map Components
 
-- [ ] 3.3.1: Audit Map component for usability
+- [x] 3.3.1: Audit Map component for usability
   - Files: src/components/maps/Map.tsx
   - Check: Loading states, error states, controls accessibility
   - Output: Add findings to Docs/ux-audit-report.md
 
-- [ ] 3.3.2: Audit Pin component for visibility
+- [x] 3.3.2: Audit Pin component for visibility
   - Files: src/components/maps/Pin.tsx
   - Check: Size, category colors, contrast on map
   - Output: Add findings to Docs/ux-audit-report.md
 
-- [ ] 3.3.3: Audit PinInfo component for readability
+- [x] 3.3.3: Audit PinInfo component for readability
   - Files: src/components/maps/PinInfo.tsx
   - Check: Text size, layout, action buttons
   - Output: Add findings to Docs/ux-audit-report.md
 
-- [ ] 3.3.4: Audit Directions component for clarity
+- [x] 3.3.4: Audit Directions component for clarity
   - Files: src/components/maps/Directions.tsx
   - Check: Step legibility, transit icons, time display
   - Output: Add findings to Docs/ux-audit-report.md
 
 ### 3.4 Reservation Components
 
-- [ ] 3.4.1: Audit AccommodationCard for information display
+- [x] 3.4.1: Audit AccommodationCard for information display
   - Files: src/components/reservations/AccommodationCard.tsx
   - Check: Address display, check-in/out times, PIN visibility, copy actions
   - Output: Add findings to Docs/ux-audit-report.md
 
 ### 3.5 Core UI Components
 
-- [ ] 3.5.1: Audit BottomNav for iOS compliance
+- [x] 3.5.1: Audit BottomNav for iOS compliance
   - Files: src/components/ui/BottomNav.tsx
   - Check: Safe area, height, touch targets, active states
   - Output: Add findings to Docs/ux-audit-report.md
 
-- [ ] 3.5.2: Audit CategoryIcon for consistency
+- [x] 3.5.2: Audit CategoryIcon for consistency
   - Files: src/components/ui/CategoryIcon.tsx
   - Check: Icon set consistency, category color application
   - Output: Add findings to Docs/ux-audit-report.md
 
 **Phase 3 Checkpoint:**
 
-- [ ] All components audited
-- [ ] Issues categorized by severity
-- [ ] Component-level findings in audit report
+- [x] All components audited
+- [x] Issues categorized by severity
+- [x] Component-level findings in audit report
 - [ ] Commit: "docs: complete component-level UX audit"
 
 ---
@@ -485,23 +485,23 @@
 | 2.4.1 |           |        |       |
 | 2.4.2 |           |        |       |
 | 2.4.3 |           |        |       |
-| 3.1.1 |           |        |       |
-| 3.1.2 |           |        |       |
-| 3.1.3 |           |        |       |
-| 3.1.4 |           |        |       |
-| 3.1.5 |           |        |       |
-| 3.1.6 |           |        |       |
-| 3.1.7 |           |        |       |
-| 3.2.1 |           |        |       |
-| 3.2.2 |           |        |       |
-| 3.2.3 |           |        |       |
-| 3.3.1 |           |        |       |
-| 3.3.2 |           |        |       |
-| 3.3.3 |           |        |       |
-| 3.3.4 |           |        |       |
-| 3.4.1 |           |        |       |
-| 3.5.1 |           |        |       |
-| 3.5.2 |           |        |       |
+| 3.1.1 | ✓         | -      | NowWidget: uses tertiary text, good layout |
+| 3.1.2 | ✓         | -      | NextWidget: uses tertiary text |
+| 3.1.3 | ✓         | -      | WeatherWidget: good but uses tertiary |
+| 3.1.4 | ✓         | -      | QuickActions: touch targets pass |
+| 3.1.5 | ✓         | -      | AlertBanner: semantic colors correct |
+| 3.1.6 | ✓         | -      | DaySelector: needs keyboard handling |
+| 3.1.7 | ✓         | -      | DayIndicator: typography correct |
+| 3.2.1 | ✓         | -      | ActivityCard: category bars good |
+| 3.2.2 | ✓         | -      | Timeline: missing list semantics |
+| 3.2.3 | ✓         | -      | DayNav: uses tertiary, touch targets ok |
+| 3.3.1 | ✓         | -      | Map: hardcoded colors, good loading |
+| 3.3.2 | ✓         | -      | Pin: hardcoded colors bypass theme |
+| 3.3.3 | ✓         | -      | PinInfo: hardcoded grays |
+| 3.3.4 | ✓         | -      | Directions: no component exists |
+| 3.4.1 | ✓         | -      | AccommodationCard: uses tertiary |
+| 3.5.1 | ✓         | -      | BottomNav: height 56px not 64px |
+| 3.5.2 | ✓         | -      | CategoryIcon: maps categories well |
 | 4.1.1 |           |        |       |
 | 4.1.2 |           |        |       |
 | 4.1.3 |           |        |       |

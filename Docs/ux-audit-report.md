@@ -284,4 +284,265 @@ npm run test:e2e:report
 
 ---
 
+## 9. Component-Level Audit Findings
+
+### 9.1 Dashboard Components
+
+#### NowWidget (`src/components/dashboard/NowWidget.tsx`)
+| Aspect | Status | Notes |
+|--------|--------|-------|
+| Typography | ✅ Pass | Proper hierarchy (h2 for activity name) |
+| Colors | ❌ Fail | Uses `text-foreground-tertiary` with low contrast |
+| Layout | ✅ Pass | Category accent bar, good information hierarchy |
+| Glanceable | ✅ Pass | Activity name prominent, time remaining badge |
+| Loading State | ✅ Pass | Skeleton loader with proper animation |
+| Empty State | ✅ Pass | "Free Time" message for no activity |
+
+**Issues:**
+- Line 109, 129, 148: `text-foreground-tertiary` fails contrast
+
+#### NextWidget (`src/components/dashboard/NextWidget.tsx`)
+| Aspect | Status | Notes |
+|--------|--------|-------|
+| Typography | ✅ Pass | h3 for next activity, proper hierarchy |
+| Colors | ❌ Fail | Uses `text-foreground-tertiary` |
+| Transit Info | ✅ Pass | "Leave by" time prominent in primary color |
+| Loading State | ✅ Pass | Skeleton loader present |
+
+**Issues:**
+- Lines 82, 103, 106, 129: `text-foreground-tertiary` fails contrast
+
+#### WeatherWidget (`src/components/dashboard/WeatherWidget.tsx`)
+| Aspect | Status | Notes |
+|--------|--------|-------|
+| Layout | ✅ Pass | Good compact layout with icon + temp + humidity |
+| Typography | ✅ Pass | Temperature is prominent |
+| Colors | ❌ Fail | `text-foreground-tertiary` for city, humidity label |
+| Loading State | ✅ Pass | Animated skeleton |
+| Error State | ✅ Pass | "Weather unavailable" fallback |
+
+**Issues:**
+- Lines 67, 81, 90: `text-foreground-tertiary` fails contrast
+
+#### QuickActions (`src/components/dashboard/QuickActions.tsx`)
+| Aspect | Status | Notes |
+|--------|--------|-------|
+| Touch Targets | ✅ Pass | `min-h-touch min-w-touch` applied |
+| Layout | ✅ Pass | 4-column grid with appropriate gap |
+| Disabled State | ✅ Pass | Visual distinction for disabled AI button |
+| Typography | ❌ Fail | `text-foreground-tertiary` for labels |
+
+**Issues:**
+- Line 20, 31: `text-foreground-tertiary` fails contrast
+- Line 42: "AI" button disabled without clear path to enablement
+
+**Recommendations:**
+- Add `data-testid="quick-actions"` for testing
+- Consider tooltip explaining why AI is disabled
+
+#### AlertBanner (`src/components/dashboard/AlertBanner.tsx`)
+| Aspect | Status | Notes |
+|--------|--------|-------|
+| Semantic Colors | ✅ Pass | Uses `bg-error/10`, `text-error` appropriately |
+| Dismiss Button | ✅ Pass | Has `aria-label="Dismiss alert"` |
+| Touch Target | ✅ Pass | `min-h-touch min-w-touch` on dismiss |
+
+**Good Patterns:**
+- Proper semantic color usage for urgency levels
+- Accessible dismiss button with aria-label
+
+#### DaySelector (`src/components/dashboard/DaySelector.tsx`)
+| Aspect | Status | Notes |
+|--------|--------|-------|
+| Modal Pattern | ✅ Pass | Backdrop click to close, Escape key support |
+| Touch Targets | ✅ Pass | `min-h-touch min-w-touch` on buttons |
+| Active State | ✅ Pass | Clear visual distinction with primary color |
+| Scroll Behavior | ✅ Pass | Auto-scrolls to selected day |
+| Accessibility | ⚠️ Warn | Missing `role="dialog"`, `aria-modal` |
+
+**Issues:**
+- Line 120: `text-foreground-tertiary` fails contrast
+- No `role="dialog"` or `aria-modal="true"` on modal
+
+#### DayIndicator (`src/components/dashboard/DayIndicator.tsx`)
+| Aspect | Status | Notes |
+|--------|--------|-------|
+| Touch Target | ✅ Pass | Full-width button is easily tappable |
+| Current Day | ✅ Pass | "Today" label when viewing current day |
+| Colors | ❌ Fail | `text-foreground-tertiary` for date |
+
+**Issues:**
+- Line 65: `text-foreground-tertiary` fails contrast
+
+### 9.2 Schedule Components
+
+#### ActivityCard (`src/components/schedule/ActivityCard.tsx`)
+| Aspect | Status | Notes |
+|--------|--------|-------|
+| Design System | ✅ Pass | Category accent bar, proper card styling |
+| State Styles | ✅ Pass | Current (ring), completed (opacity), upcoming |
+| Hard Deadline | ✅ Pass | Timed entry warning with semantic error color |
+| Transit Info | ✅ Pass | "Leave by" time prominent |
+| Interaction | ✅ Pass | Links to detail page, active:scale-[0.98] |
+
+**Good Patterns:**
+- Activity state clearly indicated (current has ring)
+- Hard deadline warning for timed entries
+
+#### Timeline (`src/components/schedule/Timeline.tsx`)
+| Aspect | Status | Notes |
+|--------|--------|-------|
+| Grouping | ✅ Pass | Morning/Afternoon/Evening sections |
+| Auto-scroll | ✅ Pass | Scrolls current activity into view |
+| Empty State | ✅ Pass | "No activities scheduled" message |
+| List Semantics | ❌ Fail | Uses divs instead of `<ul>/<li>` |
+
+**Issues:**
+- Line 98, 111: No list semantics (`<ul>`, `<ol>`) for screen readers
+- Line 106: `text-foreground-tertiary` fails contrast
+
+**Recommendation:**
+- Wrap in `<ul>` with `<li>` for each activity or add `role="list"`
+
+#### DayNav (`src/components/schedule/DayNav.tsx`)
+| Aspect | Status | Notes |
+|--------|--------|-------|
+| Touch Targets | ✅ Pass | `min-h-touch min-w-touch` on nav buttons |
+| Disabled State | ✅ Pass | Visual distinction + disabled behavior |
+| Pending State | ✅ Pass | Opacity change + cursor-wait |
+| Accessibility | ✅ Pass | `aria-label` on prev/next buttons |
+| Semantics | ⚠️ Warn | Missing `role="tablist"` for day nav |
+
+**Good Patterns:**
+- Good pending state for transitions
+- Clear aria-labels
+
+### 9.3 Map Components
+
+#### Map (`src/components/maps/Map.tsx`)
+| Aspect | Status | Notes |
+|--------|--------|-------|
+| Loading State | ✅ Pass | Spinner with "Loading map..." text |
+| Error State | ✅ Pass | Clear message with config instruction |
+| Pin Markers | ✅ Pass | Custom styled pins with category colors |
+| User Location | ✅ Pass | Blue dot marker for current location |
+| Hardcoded Colors | ❌ Fail | Uses hex values instead of CSS variables |
+
+**Issues:**
+- Lines 32-37: Hardcoded category colors (should use CSS vars)
+- Lines 175-176: Hardcoded `#666`, `#888` in info window
+- Line 219: Hardcoded `#4285F4` for user location
+
+**Recommendation:**
+- Create theme-aware info window content
+- Use CSS variables for all colors
+
+#### Pin (`src/components/maps/Pin.tsx`)
+| Aspect | Status | Notes |
+|--------|--------|-------|
+| Design System | ✅ Pass | Uses `bg-category-*` classes |
+| Size Variants | ✅ Pass | sm/md/lg sizes available |
+| Selected State | ✅ Pass | Ring indicator for selected |
+
+**Good Patterns:**
+- Uses CSS variables via Tailwind classes
+
+#### PinInfo (`src/components/maps/PinInfo.tsx`)
+| Aspect | Status | Notes |
+|--------|--------|-------|
+| Layout | ✅ Pass | Card with category accent bar |
+| Actions | ✅ Pass | View Details + Directions buttons |
+| Close Button | ✅ Pass | Has `aria-label="Close"` |
+| Touch Targets | ⚠️ Warn | Close button may be too small (p-1) |
+
+**Issues:**
+- Line 47: Close button padding `p-1` may be too small for touch
+
+#### Directions (`src/components/maps/Directions.tsx`)
+| Aspect | Status | Notes |
+|--------|--------|-------|
+| Step Display | ✅ Pass | Clear step-by-step with icons |
+| Expandable | ✅ Pass | Collapsible sections |
+| External Link | ✅ Pass | Google Maps integration |
+| Typography | ❌ Fail | `text-foreground-tertiary` for labels |
+
+**Issues:**
+- Lines 107, 125, 167, 189: `text-foreground-tertiary` fails contrast
+
+### 9.4 Reservation Components
+
+#### AccommodationCard (`src/components/reservations/AccommodationCard.tsx`)
+| Aspect | Status | Notes |
+|--------|--------|-------|
+| Expandable | ✅ Pass | Collapse/expand for details |
+| Current Stay | ✅ Pass | Ring indicator + badge |
+| Copy Function | ✅ Pass | Japanese address copy with feedback |
+| Actions | ✅ Pass | Call + Directions buttons |
+| Pin Display | ✅ Pass | PIN code prominent in primary color |
+| Language Attr | ✅ Pass | `lang="ja"` on Japanese address |
+
+**Issues:**
+- Lines 99, 105, 114, 122, 129, 137, 166: `text-foreground-tertiary` fails contrast
+
+**Good Patterns:**
+- Excellent copy functionality with visual feedback
+- Japanese address with proper `lang` attribute
+
+### 9.5 Core UI Components
+
+#### BottomNav (`src/components/ui/BottomNav.tsx`)
+| Aspect | Status | Notes |
+|--------|--------|-------|
+| Touch Targets | ✅ Pass | `min-w-touch min-h-touch` applied |
+| Active State | ✅ Pass | Primary color + filled icon |
+| Inactive Color | ❌ Fail | `text-foreground-tertiary` fails contrast |
+| Height | ❌ Fail | h-14 (56px) < 64px minimum |
+| Safe Area | ✅ Pass | `pb-safe` applied |
+| Blur | ✅ Pass | `backdrop-blur-sm` present |
+
+**Issues:**
+- Line 91: Height is `h-14` (56px), should be at least 64px
+- Line 101: `text-foreground-tertiary` fails contrast
+- Line 105: Label text `text-[10px]` is very small (7.5pt)
+
+#### CategoryIcon (`src/components/ui/CategoryIcon.tsx`)
+| Aspect | Status | Notes |
+|--------|--------|-------|
+| Accessibility | ✅ Pass | Has `role="img"` and `aria-label` |
+| Size Variants | ✅ Pass | sm/md/lg available |
+| Helper Functions | ✅ Pass | `getCategoryBgClass`, `getCategoryTextClass` |
+
+**Good Patterns:**
+- Proper accessibility attributes on emoji icons
+
+---
+
+## 10. Summary of Component Issues
+
+### Critical (WCAG Failures)
+
+| Component | Issue | Count |
+|-----------|-------|-------|
+| All using `text-foreground-tertiary` | Color contrast < 4.5:1 | 25+ locations |
+| Map.tsx | Hardcoded colors in info windows | 3 locations |
+
+### High Priority (UX Issues)
+
+| Component | Issue | Recommendation |
+|-----------|-------|----------------|
+| BottomNav | Height 56px < 64px | Change `h-14` to `h-16` |
+| BottomNav | Label text 10px too small | Increase to 12px |
+| Timeline | No list semantics | Add `<ul>/<li>` |
+| DaySelector | Missing dialog role | Add `role="dialog"` |
+
+### Medium Priority (Polish)
+
+| Component | Issue | Recommendation |
+|-----------|-------|----------------|
+| PinInfo | Close button small | Increase to `p-2` |
+| DayNav | Missing tablist role | Add ARIA roles |
+| QuickActions | No test ID | Add `data-testid` |
+
+---
+
 *Report generated by Claude Code UX Audit*
