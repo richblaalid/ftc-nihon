@@ -61,7 +61,7 @@ const PERIOD_LABELS = {
 };
 
 export function Timeline({ activities, currentActivityId }: TimelineProps) {
-  const currentRef = useRef<HTMLDivElement>(null);
+  const currentRef = useRef<HTMLLIElement>(null);
 
   // Auto-scroll to current activity on mount
   useEffect(() => {
@@ -107,22 +107,22 @@ export function Timeline({ activities, currentActivityId }: TimelineProps) {
               {PERIOD_LABELS[period]}
             </h3>
 
-            {/* Activities in this period */}
-            <div className="flex flex-col gap-3">
+            {/* Activities in this period - using ol for screen reader list semantics */}
+            <ol className="flex flex-col gap-3 list-none">
               {periodActivities.map((activity) => {
                 const state = getActivityState(activity, currentActivityId);
                 const isCurrent = state === 'current';
 
                 return (
-                  <div
+                  <li
                     key={activity.id}
                     ref={isCurrent ? currentRef : undefined}
                   >
                     <ActivityCard activity={activity} state={state} />
-                  </div>
+                  </li>
                 );
               })}
-            </div>
+            </ol>
           </div>
         );
       })}

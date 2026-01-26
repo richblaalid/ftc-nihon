@@ -448,7 +448,7 @@
 - [x] Docs/ux-remediation-tasks.md created
 - [x] Docs/design-token-diff.md finalized
 - [x] All issues prioritized and actionable
-- [ ] Commit: "docs: complete UX audit report and recommendations"
+- [x] Commit: "docs: complete UX audit report and recommendations"
 
 ---
 

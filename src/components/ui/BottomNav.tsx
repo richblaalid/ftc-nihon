@@ -88,7 +88,7 @@ export function BottomNav() {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-t border-border pb-safe">
-      <div className="flex items-center justify-around h-14">
+      <div className="flex items-center justify-around h-16">
         {navItems.map((item) => {
           const active = isActive(item.href);
           return (
@@ -102,7 +102,7 @@ export function BottomNav() {
               }`}
             >
               {active && item.activeIcon ? item.activeIcon : item.icon}
-              <span className={`text-[10px] mt-0.5 ${active ? 'font-medium' : ''}`}>
+              <span className={`text-xs mt-0.5 ${active ? 'font-medium' : ''}`}>
                 {item.label}
               </span>
             </Link>

@@ -547,7 +547,7 @@
     /* Text */
     --foreground: #2d2420;
     --foreground-secondary: #6b5d54;
-    --foreground-tertiary: #a89b91;
+    --foreground-tertiary: #6b5d54; /* Changed from #a89b91 - WCAG AA compliance (4.5:1 contrast) */
     --foreground-inverse: #fffbf7;
 
     /* Primary accent - Coral */
@@ -753,12 +753,13 @@
     @apply min-h-touch min-w-touch;
   }
 
-  /* Focus styles for accessibility */
+  /* Focus styles for accessibility - WCAG 2.4.7 */
   :focus-visible {
-    @apply outline-2 outline-offset-2 outline-coral-500;
+    outline: 2px solid var(--color-coral-500);
+    outline-offset: 2px;
   }
 
   .dark :focus-visible {
-    @apply outline-vermillion-400;
+    outline-color: var(--color-vermillion-400);
   }
 }
