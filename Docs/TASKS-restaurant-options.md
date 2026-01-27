@@ -11,7 +11,7 @@
 - Phase R.1: [x] Data Layer
 - Phase R.2: [x] Schedule Integration
 - Phase R.3: [x] Restaurant Options Page
-- Phase R.4: [ ] Restaurant Detail Page
+- Phase R.4: [x] Restaurant Detail Page
 - Phase R.5: [ ] Selection & Route Integration
 - Phase R.6: [ ] Polish & UX
 
@@ -252,37 +252,37 @@
 
 ### R.4.1 Create Detail Page Route
 
-- [ ] R.4.1.1: Create restaurant detail page
+- [x] R.4.1.1: Create restaurant detail page
   - Files: `src/app/restaurants/[meal]/[id]/page.tsx`
   - URL params: meal, id (restaurant ID)
   - Test: Page loads at `/restaurants/day-2-dinner/tsunahachi`
 
-- [ ] R.4.1.2: Add page header
+- [x] R.4.1.2: Add page header
   - Files: `src/app/restaurants/[meal]/[id]/page.tsx`
   - Back button, restaurant name
   - Test: Header displays correctly
 
 ### R.4.2 Create RestaurantDetail Component
 
-- [ ] R.4.2.1: Create RestaurantDetail component
+- [x] R.4.2.1: Create RestaurantDetail component
   - Files: `src/components/restaurants/RestaurantDetail.tsx`
   - Props: restaurant, isSelected, onSelect
   - Display: Full name (EN/JP), type, hours, price, notes
   - Test: Component renders all fields
 
-- [ ] R.4.2.2: Add map section
+- [x] R.4.2.2: Add map section
   - Files: `src/components/restaurants/RestaurantDetail.tsx`
   - Single pin map with restaurant location
   - "Open in Google Maps" button
   - Test: Map shows correct location
 
-- [ ] R.4.2.3: Add contact actions
+- [x] R.4.2.3: Add contact actions
   - Files: `src/components/restaurants/RestaurantDetail.tsx`
   - Tap-to-call phone number (tel: link)
   - Copy Japanese address button
   - Test: Phone call initiates, address copies
 
-- [ ] R.4.2.4: Add selection button
+- [x] R.4.2.4: Add selection button
   - Files: `src/components/restaurants/RestaurantDetail.tsx`
   - Button: "Select for [Meal]" or "Selected ✓"
   - Action: Call setMealSelection
@@ -290,26 +290,25 @@
 
 ### R.4.3 Create Selection Store
 
-- [ ] R.4.3.1: Create meal selection Zustand store
-  - Files: `src/stores/meal-selection-store.ts`
-  - State: { selections: Map<string, MealSelection> }
-  - Actions: setSelection, clearSelection, getSelection
-  - Persist: Sync to Dexie mealSelections table
+- [x] R.4.3.1: Create meal selection Zustand store
+  - Note: Simplified - using Dexie hooks directly instead of Zustand
+  - Hooks: useMealSelection, setMealSelection, clearMealSelection
+  - Persist: Directly to Dexie mealSelections table
   - Test: Store persists selections
 
-- [ ] R.4.3.2: Wire up selection to detail page
+- [x] R.4.3.2: Wire up selection to detail page
   - Files: `src/app/restaurants/[meal]/[id]/page.tsx`
-  - Use store actions for selection
+  - Use Dexie hooks for selection
   - Navigate back to options page after selection
   - Test: Full selection flow works
 
 **Phase R.4 Checkpoint:**
-- [ ] Detail page shows complete restaurant info
-- [ ] Map shows restaurant location
-- [ ] Tap-to-call works
-- [ ] Copy address works
-- [ ] Selection persists to IndexedDB
-- [ ] Commit: "feat(restaurants): add detail page with selection (R.4)"
+- [x] Detail page shows complete restaurant info
+- [x] Map shows restaurant location
+- [x] Tap-to-call works
+- [x] Copy address works
+- [x] Selection persists to IndexedDB
+- [x] Commit: "feat(restaurants): add detail page with selection (R.4)"
 
 ---
 
