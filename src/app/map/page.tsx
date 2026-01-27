@@ -88,46 +88,46 @@ function MapContent() {
   };
 
   return (
-    <>
-      <div className="flex flex-col bg-background" style={{ height: 'calc(100dvh - 4rem)' }}>
-        {/* Header */}
-        <header className="flex-shrink-0 px-4 py-3 bg-background border-b border-border safe-area-top">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Link href="/" aria-label="Back to home" className="p-2 -ml-2 rounded-lg hover:bg-background-secondary">
-                <svg className="w-5 h-5 text-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
-              </Link>
-              <h1 className="text-lg font-semibold text-foreground">Day {selectedDay} Map</h1>
-            </div>
-
-            {/* Location toggle */}
-            <button
-              onClick={() => !isTracking && startTracking()}
-              aria-label={isTracking ? 'Location tracking enabled' : 'Enable location tracking'}
-              className={`p-2 rounded-lg ${isTracking ? 'bg-primary/10 text-primary' : 'bg-background-secondary text-foreground-secondary'}`}
-            >
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+    <div className="flex flex-col bg-background overflow-hidden" style={{ height: 'calc(100dvh - 4rem - env(safe-area-inset-bottom))' }}>
+      {/* Header */}
+      <header className="flex-shrink-0 px-4 py-3 bg-background border-b border-border">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Link href="/" aria-label="Back to home" className="p-2 -ml-2 rounded-lg hover:bg-background-secondary">
+              <svg className="w-5 h-5 text-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
-            </button>
+            </Link>
+            <h1 className="text-lg font-semibold text-foreground">Day {selectedDay} Map</h1>
           </div>
 
-          {/* Day strip navigation */}
-          <div className="mt-2 -mx-4">
-            <DayStrip
-              selectedDay={selectedDay}
-              currentDay={currentTripDay}
-              onDayChange={handleDayChange}
-              isPending={isPending}
-            />
-          </div>
-        </header>
+          {/* Location toggle */}
+          <button
+            onClick={() => !isTracking && startTracking()}
+            aria-label={isTracking ? 'Location tracking enabled' : 'Enable location tracking'}
+            className={`p-2 rounded-lg ${isTracking ? 'bg-primary/10 text-primary' : 'bg-background-secondary text-foreground-secondary'}`}
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </button>
+        </div>
 
-        {/* Map */}
-        <div className="flex-1 relative min-h-0">
+        {/* Day strip navigation */}
+        <div className="mt-2 -mx-4">
+          <DayStrip
+            selectedDay={selectedDay}
+            currentDay={currentTripDay}
+            onDayChange={handleDayChange}
+            isPending={isPending}
+          />
+        </div>
+      </header>
+
+      {/* Map container - takes remaining space */}
+      <div className="flex-1 relative min-h-0 overflow-hidden">
+        <div className="absolute inset-0">
           <Map
             activities={activities}
             dayNumber={selectedDay}
@@ -135,50 +135,53 @@ function MapContent() {
             onPinClick={handlePinClick}
             className="h-full w-full"
           />
-
-          {/* Selected activity info */}
-          {selectedActivity && !showDirections && (
-            <div className="absolute top-4 left-4 right-4 z-10">
-              <PinInfo
-                activity={selectedActivity}
-                onClose={handleClose}
-                onNavigate={handleNavigate}
-              />
-            </div>
-          )}
-
-          {/* Directions panel */}
-          {selectedActivity && showDirections && (
-            <div className="absolute top-4 left-4 right-4 z-10 max-h-[60vh] overflow-y-auto">
-              <Directions
-                activity={selectedActivity}
-                userLocation={userLocation}
-                onClose={handleClose}
-              />
-            </div>
-          )}
-
-          {/* Geolocation error */}
-          {geoError && (
-            <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-error text-white px-4 py-2 rounded-lg text-sm shadow-lg">
-              {geoError}
-            </div>
-          )}
         </div>
-      </div>
 
-      {/* Legend - fixed above bottom nav */}
-      <div className="fixed bottom-16 left-2 right-2 z-40 bg-background/95 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg border border-border">
-        <PinLegend />
+        {/* Legend - positioned bottom-left to avoid map controls */}
+        <div
+          className="absolute left-2 z-10 bg-background/95 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg border border-border"
+          style={{ bottom: '0.5rem', maxWidth: 'calc(100% - 5rem)' }}
+        >
+          <PinLegend />
+        </div>
+
+        {/* Selected activity info */}
+        {selectedActivity && !showDirections && (
+          <div className="absolute top-4 left-4 right-4 z-10">
+            <PinInfo
+              activity={selectedActivity}
+              onClose={handleClose}
+              onNavigate={handleNavigate}
+            />
+          </div>
+        )}
+
+        {/* Directions panel */}
+        {selectedActivity && showDirections && (
+          <div className="absolute top-4 left-4 right-4 z-10 max-h-[60vh] overflow-y-auto">
+            <Directions
+              activity={selectedActivity}
+              userLocation={userLocation}
+              onClose={handleClose}
+            />
+          </div>
+        )}
+
+        {/* Geolocation error */}
+        {geoError && (
+          <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-error text-white px-4 py-2 rounded-lg text-sm shadow-lg">
+            {geoError}
+          </div>
+        )}
       </div>
-    </>
+    </div>
   );
 }
 
 function MapLoading() {
   return (
-    <div className="flex flex-col bg-background" style={{ height: 'calc(100dvh - 4rem)' }}>
-      <header className="flex-shrink-0 px-4 py-3 bg-background border-b border-border safe-area-top">
+    <div className="flex flex-col bg-background overflow-hidden" style={{ height: 'calc(100dvh - 4rem - env(safe-area-inset-bottom))' }}>
+      <header className="flex-shrink-0 px-4 py-3 bg-background border-b border-border">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 bg-background-secondary rounded-lg animate-pulse" />
           <div className="w-32 h-6 bg-background-secondary rounded animate-pulse" />
@@ -191,7 +194,7 @@ function MapLoading() {
           ))}
         </div>
       </header>
-      <div className="flex-1 flex items-center justify-center bg-background-secondary">
+      <div className="flex-1 flex items-center justify-center bg-background-secondary min-h-0">
         <div className="text-center">
           <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent mx-auto" />
           <p className="mt-2 text-sm text-foreground-secondary">Loading map...</p>
