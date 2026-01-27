@@ -9,7 +9,7 @@
 ## Progress Summary
 
 - Phase R.1: [x] Data Layer
-- Phase R.2: [ ] Schedule Integration
+- Phase R.2: [x] Schedule Integration
 - Phase R.3: [ ] Restaurant Options Page
 - Phase R.4: [ ] Restaurant Detail Page
 - Phase R.5: [ ] Selection & Route Integration
@@ -95,7 +95,7 @@
 - [x] MealSelection table exists in Dexie
 - [x] Restaurant data seeded from JSON (via seed-data.ts)
 - [x] Hooks return correct data
-- [ ] Commit: "feat(db): add restaurant options data layer (R.1)"
+- [x] Commit: "feat(db): add restaurant options data layer (R.1)"
 
 ---
 
@@ -103,33 +103,33 @@
 
 ### R.2.1 Create RestaurantOptionsCard Component
 
-- [ ] R.2.1.1: Create base RestaurantOptionsCard component
+- [x] R.2.1.1: Create base RestaurantOptionsCard component
   - Files: `src/components/restaurants/RestaurantOptionsCard.tsx`
   - Props: dayNumber, meal, options, selection
   - Display: Meal type header, selection status, primary recommendation
   - Style: Card with food category color, pill-food style
   - Test: Component renders with mock data
 
-- [ ] R.2.1.2: Add selection state display
+- [x] R.2.1.2: Add selection state display
   - Files: `src/components/restaurants/RestaurantOptionsCard.tsx`
   - States: "Choose a restaurant", "Selected: [name]", "Included with hotel"
   - Test: All states render correctly
 
-- [ ] R.2.1.3: Add navigation to options page
+- [x] R.2.1.3: Add navigation to options page
   - Files: `src/components/restaurants/RestaurantOptionsCard.tsx`
   - Link: Navigate to `/restaurants/day-{X}-{meal}`
   - Test: Click navigates correctly
 
 ### R.2.2 Create Meal Slot Logic
 
-- [ ] R.2.2.1: Create getMealSlotsForDay function
+- [x] R.2.2.1: Create getMealSlotsForDay function
   - Files: `src/lib/meal-slots.ts`
   - Input: dayNumber, activities
   - Output: Array of { meal, time, showOptions } slots
   - Logic: Determine meal times based on activity gaps
   - Test: Day 2 returns correct meal slots
 
-- [ ] R.2.2.2: Create shouldShowMealOptions function
+- [x] R.2.2.2: Create shouldShowMealOptions function
   - Files: `src/lib/meal-slots.ts`
   - Input: dayNumber, meal, mealPlan
   - Output: boolean (false for "hotel breakfast", Hakone included meals)
@@ -137,24 +137,24 @@
 
 ### R.2.3 Integrate into Schedule Timeline
 
-- [ ] R.2.3.1: Import and use meal slot logic in Timeline
+- [x] R.2.3.1: Import and use meal slot logic in Timeline
   - Files: `src/components/schedule/Timeline.tsx`
   - Get meal slots for current day
   - Insert RestaurantOptionsCard at appropriate positions
   - Test: Cards appear between activities
 
-- [ ] R.2.3.2: Handle included meals display
+- [x] R.2.3.2: Handle included meals display
   - Files: `src/components/schedule/Timeline.tsx`
   - Show "Included" variant for ryokan meals
   - Show "Hotel" note for breakfast-at-hotel
   - Test: Day 7-8 shows included meals correctly
 
 **Phase R.2 Checkpoint:**
-- [ ] RestaurantOptionsCard renders in schedule
-- [ ] Meal slots calculated correctly per day
-- [ ] Included meals handled appropriately
-- [ ] Card links to options page
-- [ ] Commit: "feat(schedule): integrate restaurant options cards (R.2)"
+- [x] RestaurantOptionsCard renders in schedule
+- [x] Meal slots calculated correctly per day
+- [x] Included meals handled appropriately
+- [x] Card links to options page
+- [x] Commit: "feat(schedule): integrate restaurant options cards (R.2)"
 
 ---
 
