@@ -77,25 +77,29 @@ export function UserLocationPin({ size = 'md', className = '' }: { size?: 'sm' |
 }
 
 /**
- * Pin legend showing all categories
+ * Pin legend showing all categories - compact single row
  */
 export function PinLegend() {
   const categories: ActivityCategory[] = ['food', 'temple', 'shopping', 'transit', 'activity', 'hotel'];
   const labels: Record<ActivityCategory, string> = {
     food: 'Food',
     temple: 'Temple',
-    shopping: 'Shopping',
-    transit: 'Transit',
+    shopping: 'Shop',
+    transit: 'Train',
     activity: 'Activity',
     hotel: 'Hotel',
   };
 
   return (
-    <div className="flex flex-wrap gap-3">
+    <div className="flex items-center justify-between gap-1">
       {categories.map((category) => (
-        <div key={category} className="flex items-center gap-1.5">
-          <Pin category={category} size="sm" />
-          <span className="text-xs text-foreground-secondary">{labels[category]}</span>
+        <div key={category} className="flex flex-col items-center gap-0.5">
+          <div
+            className={`w-6 h-6 flex items-center justify-center rounded-full border border-white/50 shadow-sm text-xs ${CATEGORY_COLORS[category]}`}
+          >
+            {CATEGORY_ICONS[category]}
+          </div>
+          <span className="text-[10px] text-foreground-secondary">{labels[category]}</span>
         </div>
       ))}
     </div>
