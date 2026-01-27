@@ -7,6 +7,15 @@ import type {
   Alert,
   Restaurant,
   ChecklistItem,
+  Flight,
+  FlightType,
+  Ticket,
+  TripInfo,
+  DayInfo,
+  Attraction,
+  ShoppingLocation,
+  Phrase,
+  TransportRoute,
 } from '@/types/database';
 import { TRIP_START_DATE } from '@/types/database';
 import { getCurrentDate } from '@/lib/utils';
@@ -327,6 +336,54 @@ export function useCurrentDayNumber(): number | null {
 }
 
 /**
+ * Get date string for a given day number (timezone-safe)
+ */
+function getDateForDay(dayNumber: number): string {
+  // Parse TRIP_START_DATE as local date to avoid timezone issues
+  const [year, month, day] = TRIP_START_DATE.split('-').map(Number);
+  if (!year || !month || !day) return '';
+
+  // Create date in local timezone (noon to avoid DST issues)
+  const tripStart = new Date(year, month - 1, day, 12, 0, 0);
+  const targetDate = new Date(tripStart);
+  targetDate.setDate(tripStart.getDate() + dayNumber - 1);
+
+  // Format as YYYY-MM-DD
+  const y = targetDate.getFullYear();
+  const m = String(targetDate.getMonth() + 1).padStart(2, '0');
+  const d = String(targetDate.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+
+/**
+ * Get accommodations relevant to a specific day
+ * Returns: { lastNight, tonight } - the hotel from the night before and tonight's hotel
+ */
+export function useAccommodationsForDay(dayNumber: number): { lastNight: Accommodation | null; tonight: Accommodation | null } | undefined {
+  return useLiveQuery(async () => {
+    const todayDate = getDateForDay(dayNumber);
+    const yesterdayDate = dayNumber > 1 ? getDateForDay(dayNumber - 1) : '';
+
+    const accommodations = await db.accommodations.toArray();
+
+    // Tonight's hotel: date falls within startDate-endDate
+    // Note: endDate is checkout day, so we check if todayDate < endDate (not <=)
+    const tonight = accommodations.find(
+      (acc) => acc.startDate <= todayDate && todayDate < acc.endDate
+    ) ?? null;
+
+    // Last night's hotel: yesterday's date falls within startDate-endDate
+    const lastNight = yesterdayDate
+      ? accommodations.find(
+          (acc) => acc.startDate <= yesterdayDate && yesterdayDate < acc.endDate
+        ) ?? null
+      : null;
+
+    return { lastNight, tonight };
+  }, [dayNumber]);
+}
+
+/**
  * Get a single activity by ID
  */
 export function useActivity(activityId: string | null): Activity | undefined {
@@ -350,4 +407,188 @@ export function useActivityWithTransit(activityId: string | null): ActivityWithT
 
     return { ...activity, transit: transit ?? null };
   }, [activityId]);
+}
+
+// ============================================================================
+// ENRICHED DATA HOOKS (v2)
+// ============================================================================
+
+/**
+ * Get trip info (guide contact, emergency numbers)
+ * Returns single record or undefined
+ */
+export function useTripInfo(): TripInfo | undefined {
+  return useLiveQuery(() => db.tripInfo.toCollection().first());
+}
+
+/**
+ * Get all flights
+ */
+export function useFlights(): Flight[] | undefined {
+  return useLiveQuery(() => db.flights.toArray());
+}
+
+/**
+ * Get a specific flight by type (outbound or return)
+ */
+export function useFlight(type: FlightType): Flight | undefined {
+  return useLiveQuery(() => db.flights.where('type').equals(type).first(), [type]);
+}
+
+/**
+ * Get all tickets (purchased and unpurchased)
+ */
+export function useTickets(): Ticket[] | undefined {
+  return useLiveQuery(() => db.tickets.orderBy('sortOrder').toArray());
+}
+
+/**
+ * Get a specific ticket by ID
+ */
+export function useTicket(ticketId: string | null): Ticket | undefined {
+  return useLiveQuery(
+    () => (ticketId ? db.tickets.get(ticketId) : undefined),
+    [ticketId]
+  );
+}
+
+/**
+ * Get tickets that need to be purchased (status = 'not_purchased')
+ */
+export function useUnpurchasedTickets(): Ticket[] | undefined {
+  return useLiveQuery(() =>
+    db.tickets.where('status').equals('not_purchased').sortBy('sortOrder')
+  );
+}
+
+/**
+ * Get day info for a specific day number
+ */
+export function useDayInfo(dayNumber: number): DayInfo | undefined {
+  return useLiveQuery(
+    () => db.dayInfo.where('dayNumber').equals(dayNumber).first(),
+    [dayNumber]
+  );
+}
+
+/**
+ * Get all day info records
+ */
+export function useAllDayInfo(): DayInfo[] | undefined {
+  return useLiveQuery(() => db.dayInfo.orderBy('dayNumber').toArray());
+}
+
+/**
+ * Get attractions, optionally filtered by city
+ */
+export function useAttractions(city?: string): Attraction[] | undefined {
+  return useLiveQuery(async () => {
+    if (city) {
+      return db.attractions.where('city').equals(city).toArray();
+    }
+    return db.attractions.toArray();
+  }, [city]);
+}
+
+/**
+ * Get a specific attraction by ID
+ */
+export function useAttraction(attractionId: string | null): Attraction | undefined {
+  return useLiveQuery(
+    () => (attractionId ? db.attractions.get(attractionId) : undefined),
+    [attractionId]
+  );
+}
+
+/**
+ * Get all shopping locations
+ */
+export function useShoppingLocations(): ShoppingLocation[] | undefined {
+  return useLiveQuery(() => db.shoppingLocations.toArray());
+}
+
+/**
+ * Get shopping locations by city
+ */
+export function useShoppingLocationsByCity(city: string): ShoppingLocation[] | undefined {
+  return useLiveQuery(
+    () => db.shoppingLocations.where('city').equals(city).toArray(),
+    [city]
+  );
+}
+
+/**
+ * Get all Japanese phrases
+ */
+export function usePhrases(): Phrase[] | undefined {
+  return useLiveQuery(() => db.phrases.orderBy('sortOrder').toArray());
+}
+
+/**
+ * Get phrases by category
+ */
+export function usePhrasesByCategory(category: string): Phrase[] | undefined {
+  return useLiveQuery(
+    () => db.phrases.where('category').equals(category).sortBy('sortOrder'),
+    [category]
+  );
+}
+
+/**
+ * Get all transport routes
+ */
+export function useTransportRoutes(): TransportRoute[] | undefined {
+  return useLiveQuery(() => db.transportRoutes.toArray());
+}
+
+/**
+ * Get restaurants by city
+ */
+export function useRestaurantsByCity(city: string): Restaurant[] | undefined {
+  return useLiveQuery(
+    () => db.restaurants.where('city').equals(city).toArray(),
+    [city]
+  );
+}
+
+/**
+ * Get pre-trip checklist items sorted by due date
+ */
+export function usePreTripChecklist(): ChecklistItem[] | undefined {
+  return useLiveQuery(() =>
+    db.checklistItems
+      .where('isPreTrip')
+      .equals(1) // Dexie stores booleans as 1/0 in indexes
+      .sortBy('sortOrder')
+  );
+}
+
+/**
+ * Get critical checklist items (due soon or overdue)
+ */
+export function useCriticalChecklist(daysAhead: number = 7): ChecklistItem[] | undefined {
+  return useLiveQuery(async () => {
+    const now = getCurrentDate();
+    const cutoff = new Date(now);
+    cutoff.setDate(cutoff.getDate() + daysAhead);
+    const cutoffStr = cutoff.toISOString().split('T')[0] ?? '';
+
+    const items = await db.checklistItems
+      .where('isCompleted')
+      .equals(0)
+      .toArray();
+
+    // Filter to items due within the threshold
+    return items.filter((item) => {
+      if (!item.dueDate) return false;
+      return item.dueDate <= cutoffStr;
+    }).sort((a, b) => {
+      // Sort by date, then by sortOrder
+      if (a.dueDate && b.dueDate) {
+        const dateCompare = a.dueDate.localeCompare(b.dueDate);
+        if (dateCompare !== 0) return dateCompare;
+      }
+      return (a.sortOrder ?? 0) - (b.sortOrder ?? 0);
+    });
+  }, [daysAhead]);
 }
