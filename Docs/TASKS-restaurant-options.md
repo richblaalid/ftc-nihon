@@ -10,7 +10,7 @@
 
 - Phase R.1: [x] Data Layer
 - Phase R.2: [x] Schedule Integration
-- Phase R.3: [ ] Restaurant Options Page
+- Phase R.3: [x] Restaurant Options Page
 - Phase R.4: [ ] Restaurant Detail Page
 - Phase R.5: [ ] Selection & Route Integration
 - Phase R.6: [ ] Polish & UX
@@ -162,26 +162,26 @@
 
 ### R.3.1 Create Options Page Route
 
-- [ ] R.3.1.1: Create restaurant options page
+- [x] R.3.1.1: Create restaurant options page
   - Files: `src/app/restaurants/[meal]/page.tsx`
   - URL params: meal (e.g., "day-2-dinner")
   - Parse params to get dayNumber and meal type
   - Test: Page loads at `/restaurants/day-2-dinner`
 
-- [ ] R.3.1.2: Add page header and navigation
+- [x] R.3.1.2: Add page header and navigation
   - Files: `src/app/restaurants/[meal]/page.tsx`
   - Back button, title ("Day 2 Dinner Options")
   - Test: Header displays correctly
 
 ### R.3.2 Create RestaurantList Component
 
-- [ ] R.3.2.1: Create RestaurantList component
+- [x] R.3.2.1: Create RestaurantList component
   - Files: `src/components/restaurants/RestaurantList.tsx`
   - Props: restaurants[], selectedId, onSelect
   - Layout: Scrollable list with primary highlighted
   - Test: Component renders restaurant cards
 
-- [ ] R.3.2.2: Add kid-friendly filter toggle
+- [x] R.3.2.2: Add kid-friendly filter toggle
   - Files: `src/components/restaurants/RestaurantList.tsx`
   - Toggle: "Show only kid-friendly"
   - Filter: Hide non-kid-friendly when enabled
@@ -189,62 +189,62 @@
 
 ### R.3.3 Create RestaurantCard Component
 
-- [ ] R.3.3.1: Create RestaurantCard component
+- [x] R.3.3.1: Create RestaurantCard component
   - Files: `src/components/restaurants/RestaurantCard.tsx`
   - Props: restaurant, isSelected, isPrimary, onClick
   - Display: Name, type, price range, kid-friendly badge
   - Style: Card with selection indicator
   - Test: Card renders with all variants
 
-- [ ] R.3.3.2: Add visual differentiation for primary
+- [x] R.3.3.2: Add visual differentiation for primary
   - Files: `src/components/restaurants/RestaurantCard.tsx`
   - Style: "Recommended" badge for primary option
   - Test: Primary card stands out visually
 
 ### R.3.4 Create RestaurantMap Component
 
-- [ ] R.3.4.1: Create RestaurantMap component
+- [x] R.3.4.1: Create RestaurantMap component
   - Files: `src/components/restaurants/RestaurantMap.tsx`
   - Props: restaurants[], selectedId, userLocation?, onPinClick
   - Display: Google Map with pins for each restaurant
   - Test: Map shows pins at correct locations
 
-- [ ] R.3.4.2: Add user location marker
+- [x] R.3.4.2: Add user location marker
   - Files: `src/components/restaurants/RestaurantMap.tsx`
   - Show blue dot for user's current position
   - Test: Location marker shows when available
 
-- [ ] R.3.4.3: Add selected pin highlighting
+- [x] R.3.4.3: Add selected pin highlighting
   - Files: `src/components/restaurants/RestaurantMap.tsx`
   - Larger/different pin for selected restaurant
   - Test: Selected pin visually distinct
 
 ### R.3.5 Wire Up Options Page
 
-- [ ] R.3.5.1: Connect page to data hooks
+- [x] R.3.5.1: Connect page to data hooks
   - Files: `src/app/restaurants/[meal]/page.tsx`
   - Use: useRestaurantOptionsForMeal, useMealSelection
   - Test: Page shows real data from IndexedDB
 
-- [ ] R.3.5.2: Add map/list layout
+- [x] R.3.5.2: Add map/list layout
   - Files: `src/app/restaurants/[meal]/page.tsx`
   - Layout: Map at top, scrollable list below
   - Mobile: Map takes ~40% height, list scrolls
   - Test: Layout works on mobile viewport
 
-- [ ] R.3.5.3: Connect pin click to list highlight
+- [x] R.3.5.3: Connect pin click to list highlight
   - Files: `src/app/restaurants/[meal]/page.tsx`
   - Click pin → scroll list to that card
   - Click card → highlight pin on map
   - Test: Map/list interaction works
 
 **Phase R.3 Checkpoint:**
-- [ ] Options page shows all restaurants for a meal
-- [ ] Map displays pins for each option
-- [ ] User location shows on map
-- [ ] List filters by kid-friendly
-- [ ] Map and list sync on selection
-- [ ] Commit: "feat(restaurants): add options page with map (R.3)"
+- [x] Options page shows all restaurants for a meal
+- [x] Map displays pins for each option
+- [x] User location shows on map
+- [x] List filters by kid-friendly
+- [x] Map and list sync on selection
+- [x] Commit: "feat(restaurants): add options page with map (R.3)"
 
 ---
 
