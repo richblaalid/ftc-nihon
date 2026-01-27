@@ -1,22 +1,38 @@
 'use client';
 
-import { useState, useCallback, Suspense, useTransition } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useState, useCallback, Suspense, useTransition, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Map, PinLegend, PinInfo, Directions } from '@/components/maps';
 import { DayStrip } from '@/components/ui';
 import { useGeolocation } from '@/lib/hooks/useGeolocation';
 import { useActivitiesWithTransit, useCurrentDayNumber } from '@/db/hooks';
+import { useAppStore } from '@/stores/app-store';
 import type { ActivityWithTransit } from '@/types/database';
 import Link from 'next/link';
 
 function MapContent() {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const dayParam = searchParams.get('day');
+
+  // Global day selection from store
+  const globalSelectedDay = useAppStore((state) => state.selectedDay);
+  const setGlobalSelectedDay = useAppStore((state) => state.setSelectedDay);
 
   // Default to current trip day or day 1
   const currentTripDay = useCurrentDayNumber();
-  const selectedDay = dayParam ? parseInt(dayParam, 10) : (currentTripDay || 1);
+
+  // On mount, check URL param and sync to store if present
+  useEffect(() => {
+    if (dayParam) {
+      const day = parseInt(dayParam, 10);
+      if (day >= 1 && day <= 15 && day !== globalSelectedDay) {
+        setGlobalSelectedDay(day);
+      }
+    }
+  }, [dayParam, globalSelectedDay, setGlobalSelectedDay]);
+
+  // Effective day: store value takes precedence, otherwise current day, otherwise day 1
+  const selectedDay = globalSelectedDay ?? currentTripDay ?? 1;
 
   const [selectedActivity, setSelectedActivity] = useState<ActivityWithTransit | null>(null);
   const [showDirections, setShowDirections] = useState(false);
@@ -65,7 +81,7 @@ function MapContent() {
   // Change day with non-blocking transition
   const handleDayChange = (newDay: number) => {
     startTransition(() => {
-      router.push(`/map?day=${newDay}`);
+      setGlobalSelectedDay(newDay);
       setSelectedActivity(null);
       setShowDirections(false);
     });

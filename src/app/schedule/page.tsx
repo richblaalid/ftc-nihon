@@ -1,26 +1,40 @@
 'use client';
 
-import { Suspense, useTransition } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { Suspense, useTransition, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useActivitiesWithTransit, useCurrentActivity, useCurrentDayNumber } from '@/db/hooks';
 import { DayStrip } from '@/components/ui';
 import { Timeline } from '@/components/schedule/Timeline';
+import { useAppStore } from '@/stores/app-store';
 import Link from 'next/link';
 
 function ScheduleContent() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const currentDayNumber = useCurrentDayNumber();
 
-  // Get day from URL or use current day (URL is source of truth)
+  // Global day selection from store
+  const globalSelectedDay = useAppStore((state) => state.selectedDay);
+  const setGlobalSelectedDay = useAppStore((state) => state.setSelectedDay);
+
+  // On mount, check URL param and sync to store if present
   const dayParam = searchParams.get('day');
-  const selectedDay = dayParam ? parseInt(dayParam, 10) : (currentDayNumber ?? 1);
+  useEffect(() => {
+    if (dayParam) {
+      const day = parseInt(dayParam, 10);
+      if (day >= 1 && day <= 15 && day !== globalSelectedDay) {
+        setGlobalSelectedDay(day);
+      }
+    }
+  }, [dayParam, globalSelectedDay, setGlobalSelectedDay]);
+
+  // Effective day: store value takes precedence, otherwise current day, otherwise day 1
+  const selectedDay = globalSelectedDay ?? currentDayNumber ?? 1;
   const [isPending, startTransition] = useTransition();
 
-  // Update URL when day changes with non-blocking transition
+  // Update store when day changes
   const handleDayChange = (day: number) => {
     startTransition(() => {
-      router.push(`/schedule?day=${day}`, { scroll: false });
+      setGlobalSelectedDay(day);
     });
   };
 

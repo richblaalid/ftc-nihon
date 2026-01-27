@@ -71,12 +71,22 @@ public/
 ### Development
 
 ```bash
-npm run dev        # Start dev server (localhost:3000)
+npm run dev        # Start dev server (localhost:4000)
 npm run build      # Production build
 npm run start      # Start production server
 npm run lint       # Run ESLint
 npm run format     # Format with Prettier
 ```
+
+### Dev Server Restart (Port-Specific)
+
+**IMPORTANT:** This project runs on port 4000. To restart the dev server without affecting other projects:
+
+```bash
+lsof -ti:4000 | xargs kill 2>/dev/null; npm run dev
+```
+
+Never use `pkill -f "next dev"` as it kills ALL Next.js dev servers on the machine.
 
 ### Database
 
