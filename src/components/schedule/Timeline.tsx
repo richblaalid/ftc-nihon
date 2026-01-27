@@ -12,33 +12,6 @@ import {
 } from '@/db/hooks';
 import { getMealSlotsForDay, type MealSlot } from '@/lib/meal-slots';
 
-/**
- * Format time for display (HH:MM to h:mm AM/PM)
- */
-function formatTimeDisplay(time: string): string {
-  const [hours, minutes] = time.split(':').map(Number);
-  if (hours === undefined || minutes === undefined) return time;
-  const suffix = hours >= 12 ? 'PM' : 'AM';
-  const displayHours = hours % 12 || 12;
-  return `${displayHours}:${minutes.toString().padStart(2, '0')} ${suffix}`;
-}
-
-/**
- * Current time indicator component
- */
-function NowIndicator({ time }: { time: string }) {
-  return (
-    <div className="relative flex items-center gap-2 py-2" aria-label={`Current time: ${formatTimeDisplay(time)}`}>
-      <div className="flex items-center gap-2 rounded-full bg-primary px-2 py-0.5">
-        <span className="h-2 w-2 animate-pulse rounded-full bg-white" aria-hidden="true" />
-        <span className="text-xs font-medium text-white">Now</span>
-      </div>
-      <div className="flex-1 h-px bg-primary" aria-hidden="true" />
-      <span className="text-xs font-medium text-primary">{formatTimeDisplay(time)}</span>
-    </div>
-  );
-}
-
 interface TimelineProps {
   activities: ActivityWithTransit[];
   currentActivityId?: string | null;
@@ -95,6 +68,22 @@ const PERIOD_LABELS = {
   evening: '🌙 Evening',
 };
 
+const MEAL_LABELS: Record<MealType, string> = {
+  breakfast: 'Breakfast',
+  lunch: 'Lunch',
+  dinner: 'Dinner',
+  snack: 'Snack',
+  afternoon: 'Afternoon Tea',
+};
+
+const MEAL_ICONS: Record<MealType, string> = {
+  breakfast: '🌅',
+  lunch: '☀️',
+  dinner: '🌙',
+  snack: '🍡',
+  afternoon: '🍵',
+};
+
 /**
  * Wrapper component for RestaurantOptionsCard that fetches its own data
  */
@@ -103,14 +92,36 @@ function MealSlotCard({ dayNumber, meal }: { dayNumber: number; meal: MealType }
   const selection = useMealSelection(dayNumber, meal);
   const selectedRestaurant = useSelectedRestaurant(dayNumber, meal);
 
-  // Loading state
+  // Loading state - show skeleton
   if (options === undefined) {
-    return null;
+    return (
+      <div className="card border-l-4 border-category-food/30 animate-pulse">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 bg-background-secondary rounded" />
+          <div className="flex-1">
+            <div className="h-4 w-20 bg-background-secondary rounded" />
+            <div className="h-3 w-32 mt-1 bg-background-secondary rounded" />
+          </div>
+        </div>
+      </div>
+    );
   }
 
-  // No options available for this meal
+  // No options available for this meal - still show the slot
   if (!options.primary && options.alternatives.length === 0 && !options.isIncluded) {
-    return null;
+    return (
+      <div className="card border-l-4 border-category-food/30 bg-category-food/5">
+        <div className="flex items-center gap-3">
+          <span className="text-xl" role="img" aria-label={MEAL_LABELS[meal]}>
+            {MEAL_ICONS[meal]}
+          </span>
+          <div>
+            <h4 className="font-medium text-foreground">{MEAL_LABELS[meal]}</h4>
+            <p className="text-sm text-foreground-tertiary">No restaurant options</p>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -125,45 +136,11 @@ function MealSlotCard({ dayNumber, meal }: { dayNumber: number; meal: MealType }
 }
 
 /**
- * Get activity end time based on start time and duration
- */
-function getActivityEndTime(activity: ActivityWithTransit): string {
-  if (!activity.durationMinutes) return activity.startTime;
-
-  const [hours, mins] = activity.startTime.split(':').map(Number);
-  if (hours === undefined || mins === undefined) return activity.startTime;
-
-  const endDate = new Date();
-  endDate.setHours(hours, mins + activity.durationMinutes, 0, 0);
-  return endDate.toTimeString().slice(0, 5);
-}
-
-/**
  * Parse time string to minutes since midnight
  */
 function timeToMinutes(time: string): number {
   const [hours, minutes] = time.split(':').map(Number);
   return (hours ?? 0) * 60 + (minutes ?? 0);
-}
-
-/**
- * Get meal slots that should appear in a specific period
- */
-function getMealSlotsForPeriod(
-  mealSlots: MealSlot[],
-  period: 'morning' | 'afternoon' | 'evening'
-): MealSlot[] {
-  const periodRanges = {
-    morning: { start: 0, end: 12 * 60 },
-    afternoon: { start: 12 * 60, end: 17 * 60 },
-    evening: { start: 17 * 60, end: 24 * 60 },
-  };
-
-  const range = periodRanges[period];
-  return mealSlots.filter((slot) => {
-    const minutes = timeToMinutes(slot.suggestedTime);
-    return minutes >= range.start && minutes < range.end;
-  });
 }
 
 export function Timeline({ activities, currentActivityId }: TimelineProps) {
@@ -228,14 +205,50 @@ export function Timeline({ activities, currentActivityId }: TimelineProps) {
     grouped[period].push(activity);
   }
 
+  // Create a combined list of activities and meal slots, sorted by time
+  type TimelineItem =
+    | { type: 'activity'; activity: ActivityWithTransit; state: 'current' | 'completed' | 'upcoming' }
+    | { type: 'meal'; slot: MealSlot };
+
+  const timelineItems: TimelineItem[] = [];
+
+  // Add all activities
+  for (const activity of activities) {
+    const state = getActivityState(activity, currentActivityId);
+    timelineItems.push({ type: 'activity', activity, state });
+  }
+
+  // Add all meal slots
+  for (const slot of mealSlots) {
+    timelineItems.push({ type: 'meal', slot });
+  }
+
+  // Sort by time
+  timelineItems.sort((a, b) => {
+    const timeA = a.type === 'activity' ? a.activity.startTime : a.slot.suggestedTime;
+    const timeB = b.type === 'activity' ? b.activity.startTime : b.slot.suggestedTime;
+    return timeToMinutes(timeA) - timeToMinutes(timeB);
+  });
+
+  // Group by period
+  const groupedItems: Record<'morning' | 'afternoon' | 'evening', TimelineItem[]> = {
+    morning: [],
+    afternoon: [],
+    evening: [],
+  };
+
+  for (const item of timelineItems) {
+    const time = item.type === 'activity' ? item.activity.startTime : item.slot.suggestedTime;
+    const period = getTimePeriod(time);
+    groupedItems[period].push(item);
+  }
+
   return (
     <div className="flex flex-col gap-6">
       {(['morning', 'afternoon', 'evening'] as const).map((period) => {
-        const periodActivities = grouped[period];
-        const periodMealSlots = getMealSlotsForPeriod(mealSlots, period);
+        const items = groupedItems[period];
 
-        // Skip periods with no activities and no meal slots
-        if (periodActivities.length === 0 && periodMealSlots.length === 0) return null;
+        if (items.length === 0) return null;
 
         return (
           <div key={period}>
@@ -244,88 +257,38 @@ export function Timeline({ activities, currentActivityId }: TimelineProps) {
               {PERIOD_LABELS[period]}
             </h3>
 
-            {/* Activities and meal slots in this period */}
+            {/* Timeline items */}
             <ol className="flex flex-col gap-3 list-none">
-              {periodActivities.map((activity, index) => {
-                const state = getActivityState(activity, currentActivityId);
-                const isCurrent = state === 'current';
+              {items.map((item) => {
+                if (item.type === 'activity') {
+                  const { activity, state } = item;
+                  const isCurrent = state === 'current';
 
-                // Check if we should show the "now" indicator before this activity
-                const prevActivity = periodActivities[index - 1];
-                const prevEndTime = prevActivity
-                  ? getActivityEndTime(prevActivity)
-                  : period === 'morning' ? '00:00' : period === 'afternoon' ? '12:00' : '17:00';
-
-                const showNowBefore =
-                  !currentActivityId && // Only show if no activity is current
-                  currentTime >= prevEndTime &&
-                  currentTime < activity.startTime;
-
-                // Check for meal slots that should appear before this activity
-                const activityStartMinutes = timeToMinutes(activity.startTime);
-                const prevEndMinutes = timeToMinutes(prevEndTime);
-                const mealSlotsBefore = periodMealSlots.filter((slot) => {
-                  const slotMinutes = timeToMinutes(slot.suggestedTime);
-                  return slotMinutes >= prevEndMinutes && slotMinutes < activityStartMinutes;
-                });
-
-                return (
-                  <li
-                    key={activity.id}
-                    ref={isCurrent ? currentRef : undefined}
-                  >
-                    {showNowBefore && (
-                      <div ref={nowRef} className="mb-3">
-                        <NowIndicator time={currentTime} />
-                      </div>
-                    )}
-                    {/* Meal slots before this activity */}
-                    {mealSlotsBefore.map((slot) => (
-                      <div key={`meal-${slot.meal}`} className="mb-3">
-                        {slot.showOptions ? (
-                          <MealSlotCard dayNumber={dayNumber} meal={slot.meal} />
-                        ) : (
-                          <div className="card border-l-4 border-category-food/30 bg-category-food/5">
-                            <p className="text-sm text-foreground-secondary">
-                              {slot.reason}
-                            </p>
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                    <ActivityCard activity={activity} state={state} />
-                  </li>
-                );
+                  return (
+                    <li
+                      key={activity.id}
+                      ref={isCurrent ? currentRef : undefined}
+                    >
+                      <ActivityCard activity={activity} state={state} />
+                    </li>
+                  );
+                } else {
+                  const { slot } = item;
+                  return (
+                    <li key={`meal-${slot.meal}`}>
+                      {slot.showOptions ? (
+                        <MealSlotCard dayNumber={dayNumber} meal={slot.meal} />
+                      ) : (
+                        <div className="card border-l-4 border-category-food/30 bg-category-food/5">
+                          <p className="text-sm text-foreground-secondary">
+                            {slot.reason}
+                          </p>
+                        </div>
+                      )}
+                    </li>
+                  );
+                }
               })}
-              {/* Meal slots after the last activity in this period */}
-              {(() => {
-                const lastActivity = periodActivities[periodActivities.length - 1];
-                const lastEndTime = lastActivity
-                  ? getActivityEndTime(lastActivity)
-                  : period === 'morning' ? '00:00' : period === 'afternoon' ? '12:00' : '17:00';
-                const lastEndMinutes = timeToMinutes(lastEndTime);
-                const periodEndMinutes =
-                  period === 'morning' ? 12 * 60 : period === 'afternoon' ? 17 * 60 : 24 * 60;
-
-                const mealSlotsAfter = periodMealSlots.filter((slot) => {
-                  const slotMinutes = timeToMinutes(slot.suggestedTime);
-                  return slotMinutes >= lastEndMinutes && slotMinutes < periodEndMinutes;
-                });
-
-                return mealSlotsAfter.map((slot) => (
-                  <li key={`meal-after-${slot.meal}`}>
-                    {slot.showOptions ? (
-                      <MealSlotCard dayNumber={dayNumber} meal={slot.meal} />
-                    ) : (
-                      <div className="card border-l-4 border-category-food/30 bg-category-food/5">
-                        <p className="text-sm text-foreground-secondary">
-                          {slot.reason}
-                        </p>
-                      </div>
-                    )}
-                  </li>
-                ));
-              })()}
             </ol>
           </div>
         );
