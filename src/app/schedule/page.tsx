@@ -2,11 +2,14 @@
 
 import { Suspense, useTransition, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { useActivitiesWithTransit, useCurrentActivity, useCurrentDayNumber } from '@/db/hooks';
+import { useActivitiesWithTransit, useCurrentActivity, useCurrentDayNumber, useDayInfo } from '@/db/hooks';
 import { DayStrip } from '@/components/ui';
 import { Timeline } from '@/components/schedule/Timeline';
 import { useAppStore } from '@/stores/app-store';
 import Link from 'next/link';
+import { DayHeader } from '@/components/ui/DayHeader';
+import { HardDeadlineList } from '@/components/ui/HardDeadlineAlert';
+import type { HardDeadline } from '@/types/database';
 
 function ScheduleContent() {
   const searchParams = useSearchParams();
@@ -41,6 +44,12 @@ function ScheduleContent() {
   // Fetch activities for selected day
   const activities = useActivitiesWithTransit(selectedDay);
   const currentActivity = useCurrentActivity();
+  const dayInfo = useDayInfo(selectedDay);
+
+  // Parse hard deadlines from day info
+  const hardDeadlines: HardDeadline[] = dayInfo?.hardDeadlines
+    ? JSON.parse(dayInfo.hardDeadlines)
+    : [];
 
   // Determine if we're viewing today
   const isToday = selectedDay === currentDayNumber;
@@ -98,10 +107,21 @@ function ScheduleContent() {
             ))}
           </div>
         ) : (
-          <Timeline
-            activities={activities}
-            currentActivityId={isToday ? currentActivity?.id : null}
-          />
+          <div className="flex flex-col gap-4">
+            {/* Day header with metadata */}
+            {dayInfo && <DayHeader dayInfo={dayInfo} />}
+
+            {/* Hard deadlines for this day */}
+            {hardDeadlines.length > 0 && (
+              <HardDeadlineList deadlines={hardDeadlines} />
+            )}
+
+            {/* Activity timeline */}
+            <Timeline
+              activities={activities}
+              currentActivityId={isToday ? currentActivity?.id : null}
+            />
+          </div>
         )}
       </main>
     </div>

@@ -11,14 +11,40 @@ import {
   AlertBanner,
 } from '@/components/dashboard';
 import { useSyncStore, formatLastSyncTime } from '@/stores/sync-store';
+import {
+  useTripInfo,
+  useFlight,
+  useUnpurchasedTickets,
+  useCurrentDayNumber,
+} from '@/db/hooks';
+import { FlightCard } from '@/components/ui/FlightCard';
+import { TicketCardCompact } from '@/components/ui/TicketCard';
+import { EmergencySheet, EmergencyButton, useEmergencySheet } from '@/components/ui/EmergencySheet';
 
 export default function Home() {
   const [hasMounted, setHasMounted] = useState(false);
   const { isSyncing, isOnline, lastSyncedAt } = useSyncStore();
 
+  // Enriched data hooks
+  const tripInfo = useTripInfo();
+  const currentDayNumber = useCurrentDayNumber();
+  const outboundFlight = useFlight('outbound');
+  const returnFlight = useFlight('return');
+  const unpurchasedTickets = useUnpurchasedTickets();
+
+  // Emergency sheet state
+  const emergencySheet = useEmergencySheet();
+
   // Prevent hydration mismatch by only showing sync status after mount
   // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional for hydration fix
   useEffect(() => setHasMounted(true), []);
+
+  // Determine which flight to show based on current day
+  // Day 1 (or before trip): show outbound, Day 15-16: show return
+  const isPreTrip = currentDayNumber === null || currentDayNumber < 1;
+  const isDepartureDay = currentDayNumber === 1;
+  const isReturnDay = currentDayNumber === 15 || currentDayNumber === 16;
+  const relevantFlight = isDepartureDay ? outboundFlight : isReturnDay ? returnFlight : isPreTrip ? outboundFlight : null;
 
   return (
     <DashboardLayout
@@ -71,15 +97,52 @@ export default function Home() {
       {/* Alert banner - shows urgent alerts and approaching deadlines */}
       <AlertBanner />
 
+      {/* Flight info on relevant days */}
+      {relevantFlight && (
+        <section aria-labelledby="flight-heading">
+          <h2 id="flight-heading" className="sr-only">
+            {isDepartureDay ? 'Departure Flight' : isReturnDay ? 'Return Flight' : 'Upcoming Flight'}
+          </h2>
+          <FlightCard flight={relevantFlight} />
+        </section>
+      )}
+
       {/* NOW widget - current activity */}
       <NowWidget />
 
       {/* NEXT widget - upcoming activity with leave by time */}
       <NextWidget />
 
+      {/* Unpurchased tickets reminder */}
+      {unpurchasedTickets && unpurchasedTickets.length > 0 && (
+        <section aria-labelledby="tickets-heading" className="card">
+          <h2 id="tickets-heading" className="text-sm font-semibold text-foreground-secondary uppercase tracking-wider mb-3 flex items-center gap-2">
+            <span className="text-amber-500">🎫</span>
+            Tickets to Purchase
+          </h2>
+          <div className="space-y-2">
+            {unpurchasedTickets.map((ticket) => (
+              <TicketCardCompact key={ticket.id} ticket={ticket} />
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* Weather and Time widgets */}
       <WeatherWidget />
       <TimeWidget />
+
+      {/* Emergency button - floating action */}
+      {tripInfo && <EmergencyButton onClick={emergencySheet.open} />}
+
+      {/* Emergency sheet */}
+      {tripInfo && (
+        <EmergencySheet
+          tripInfo={tripInfo}
+          isOpen={emergencySheet.isOpen}
+          onClose={emergencySheet.close}
+        />
+      )}
     </DashboardLayout>
   );
 }
