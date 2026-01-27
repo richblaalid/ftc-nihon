@@ -3,7 +3,8 @@
 
 export type ActivityCategory = 'food' | 'temple' | 'shopping' | 'transit' | 'activity' | 'hotel';
 export type AlertType = 'info' | 'warning' | 'urgent';
-export type MealType = 'breakfast' | 'lunch' | 'dinner' | 'snack';
+export type MealType = 'breakfast' | 'lunch' | 'dinner' | 'snack' | 'afternoon';
+export type MealPriority = 'primary' | 'alternative' | 'INCLUDED';
 export type FlightType = 'outbound' | 'return';
 export type TicketStatus = 'purchased' | 'not_purchased';
 export type DayType = 'travel' | 'self_guided' | 'guided_tour' | 'mixed';
@@ -82,18 +83,58 @@ export interface Accommodation {
   updatedAt: string;
 }
 
+/**
+ * Meal assignment linking a restaurant to a specific day and meal
+ */
+export interface MealAssignment {
+  day: number;
+  date: string; // ISO date YYYY-MM-DD
+  meal: MealType;
+  priority: MealPriority;
+}
+
+/**
+ * Restaurant with full metadata from enriched JSON
+ */
 export interface Restaurant {
   id: string;
   name: string;
+  nameJapanese: string | null;
+  type: string | null; // Cuisine type (Ramen, Tempura, etc.)
   address: string | null;
+  addressJapanese: string | null;
+  locationLat: number | null;
+  locationLng: number | null;
+  nearestStation: string | null;
+  phone: string | null;
+  hours: string | null;
+  priceRange: string | null;
+  isKidFriendly: boolean;
+  notes: string | null;
   googleMapsUrl: string | null;
   websiteUrl: string | null;
   whatToOrder: string | null;
   backupAlternative: string | null;
-  isKidFriendly: boolean;
+  city: string | null;
+  // Meal assignments - JSON serialized array of MealAssignment
+  assignedMeals: string | null;
+  // Legacy fields for backward compatibility
   dayNumber: number | null;
   meal: MealType | null;
-  city: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/**
+ * User's meal selection for a specific day and meal
+ * Stored in IndexedDB for offline-first operation
+ */
+export interface MealSelection {
+  id: string; // Format: `${dayNumber}-${meal}` e.g., "2-dinner"
+  dayNumber: number;
+  meal: MealType;
+  restaurantId: string;
+  selectedAt: string; // ISO datetime
   createdAt: string;
   updatedAt: string;
 }

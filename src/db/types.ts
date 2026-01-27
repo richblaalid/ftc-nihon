@@ -18,6 +18,9 @@ export type {
   AiCache,
   ChecklistItem,
   MealType,
+  MealPriority,
+  MealAssignment,
+  MealSelection,
   SyncMeta,
   ActivityWithTransit,
 } from '@/types/database';

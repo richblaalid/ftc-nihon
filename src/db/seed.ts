@@ -43,6 +43,7 @@ export async function seedDatabase(): Promise<{ success: boolean; message: strin
     console.log('[Seed] Starting database seed...');
 
     // Clear existing data (in case of partial seed)
+    // Note: mealSelections is NOT cleared - it preserves user selections
     await db.transaction(
       'rw',
       [

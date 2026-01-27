@@ -17,6 +17,7 @@ import type {
   ShoppingLocation,
   Phrase,
   TransportRoute,
+  MealSelection,
 } from '@/types/database';
 
 /**
@@ -44,11 +45,13 @@ export class FTCDatabase extends Dexie {
   shoppingLocations!: Table<ShoppingLocation, string>;
   phrases!: Table<Phrase, string>;
   transportRoutes!: Table<TransportRoute, string>;
+  // User selections (v3)
+  mealSelections!: Table<MealSelection, string>;
 
   constructor() {
     super('ftc-nihon');
 
-    this.version(2).stores({
+    this.version(3).stores({
       // Activities - main itinerary
       // Primary key: id, Indexes: dayNumber, date, sortOrder compound
       activities: 'id, dayNumber, date, [dayNumber+sortOrder]',
@@ -120,6 +123,14 @@ export class FTCDatabase extends Dexie {
       // Transport routes
       // Primary key: id
       transportRoutes: 'id',
+
+      // =====================================================
+      // User selections (v3)
+      // =====================================================
+
+      // Meal selections - user's restaurant choices per day/meal
+      // Primary key: id (format: "dayNumber-meal"), Indexes: dayNumber, restaurantId
+      mealSelections: 'id, dayNumber, restaurantId, [dayNumber+meal]',
     });
   }
 
@@ -207,6 +218,7 @@ export class FTCDatabase extends Dexie {
         this.shoppingLocations,
         this.phrases,
         this.transportRoutes,
+        this.mealSelections,
       ],
       async () => {
         await this.activities.clear();
@@ -226,6 +238,7 @@ export class FTCDatabase extends Dexie {
         await this.shoppingLocations.clear();
         await this.phrases.clear();
         await this.transportRoutes.clear();
+        await this.mealSelections.clear();
       }
     );
   }

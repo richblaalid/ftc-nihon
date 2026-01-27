@@ -16,6 +16,9 @@ import type {
   ShoppingLocation,
   Phrase,
   TransportRoute,
+  MealType,
+  MealAssignment,
+  MealSelection,
 } from '@/types/database';
 import { TRIP_START_DATE } from '@/types/database';
 import { getCurrentDate } from '@/lib/utils';
@@ -591,4 +594,206 @@ export function useCriticalChecklist(daysAhead: number = 7): ChecklistItem[] | u
       return (a.sortOrder ?? 0) - (b.sortOrder ?? 0);
     });
   }, [daysAhead]);
+}
+
+// ============================================================================
+// RESTAURANT OPTIONS HOOKS (v3)
+// ============================================================================
+
+/**
+ * Restaurant options for a meal with primary and alternatives
+ */
+export interface RestaurantOptions {
+  primary: Restaurant | null;
+  alternatives: Restaurant[];
+  isIncluded: boolean; // True if meal is included (e.g., ryokan)
+}
+
+/**
+ * Get restaurant options for a specific day and meal
+ * Returns primary recommendation and alternatives based on assignedMeals
+ */
+export function useRestaurantOptionsForMeal(
+  dayNumber: number,
+  meal: MealType
+): RestaurantOptions | undefined {
+  return useLiveQuery(async () => {
+    const allRestaurants = await db.restaurants.toArray();
+
+    let primary: Restaurant | null = null;
+    const alternatives: Restaurant[] = [];
+    let isIncluded = false;
+
+    for (const restaurant of allRestaurants) {
+      if (!restaurant.assignedMeals) continue;
+
+      try {
+        const assignments: MealAssignment[] = JSON.parse(restaurant.assignedMeals);
+
+        for (const assignment of assignments) {
+          if (assignment.day === dayNumber && assignment.meal === meal) {
+            if (assignment.priority === 'INCLUDED') {
+              primary = restaurant;
+              isIncluded = true;
+            } else if (assignment.priority === 'primary') {
+              primary = restaurant;
+            } else {
+              alternatives.push(restaurant);
+            }
+            break; // Only count once per restaurant
+          }
+        }
+      } catch {
+        // Skip invalid JSON
+        continue;
+      }
+    }
+
+    return { primary, alternatives, isIncluded };
+  }, [dayNumber, meal]);
+}
+
+/**
+ * Get all restaurant options for a day (all meals)
+ */
+export function useRestaurantOptionsForDay(
+  dayNumber: number
+): Map<MealType, RestaurantOptions> | undefined {
+  return useLiveQuery(async () => {
+    const allRestaurants = await db.restaurants.toArray();
+
+    const optionsByMeal = new Map<MealType, RestaurantOptions>();
+    const meals: MealType[] = ['breakfast', 'lunch', 'dinner', 'snack', 'afternoon'];
+
+    // Initialize empty options for all meals
+    for (const meal of meals) {
+      optionsByMeal.set(meal, { primary: null, alternatives: [], isIncluded: false });
+    }
+
+    for (const restaurant of allRestaurants) {
+      if (!restaurant.assignedMeals) continue;
+
+      try {
+        const assignments: MealAssignment[] = JSON.parse(restaurant.assignedMeals);
+
+        for (const assignment of assignments) {
+          if (assignment.day !== dayNumber) continue;
+
+          const options = optionsByMeal.get(assignment.meal);
+          if (!options) continue;
+
+          if (assignment.priority === 'INCLUDED') {
+            options.primary = restaurant;
+            options.isIncluded = true;
+          } else if (assignment.priority === 'primary') {
+            options.primary = restaurant;
+          } else {
+            options.alternatives.push(restaurant);
+          }
+        }
+      } catch {
+        continue;
+      }
+    }
+
+    return optionsByMeal;
+  }, [dayNumber]);
+}
+
+/**
+ * Get user's meal selection for a specific day and meal
+ */
+export function useMealSelection(
+  dayNumber: number,
+  meal: MealType
+): MealSelection | null | undefined {
+  return useLiveQuery(async () => {
+    const id = `${dayNumber}-${meal}`;
+    const selection = await db.mealSelections.get(id);
+    return selection ?? null;
+  }, [dayNumber, meal]);
+}
+
+/**
+ * Get all meal selections for a day
+ */
+export function useMealSelectionsForDay(
+  dayNumber: number
+): MealSelection[] | undefined {
+  return useLiveQuery(
+    () => db.mealSelections.where('dayNumber').equals(dayNumber).toArray(),
+    [dayNumber]
+  );
+}
+
+/**
+ * Get the selected restaurant for a specific day and meal
+ * Returns full restaurant details if a selection exists
+ */
+export function useSelectedRestaurant(
+  dayNumber: number,
+  meal: MealType
+): Restaurant | null | undefined {
+  return useLiveQuery(async () => {
+    const id = `${dayNumber}-${meal}`;
+    const selection = await db.mealSelections.get(id);
+
+    if (!selection) return null;
+
+    const restaurant = await db.restaurants.get(selection.restaurantId);
+    return restaurant ?? null;
+  }, [dayNumber, meal]);
+}
+
+/**
+ * Set or update a meal selection
+ */
+export async function setMealSelection(
+  dayNumber: number,
+  meal: MealType,
+  restaurantId: string
+): Promise<void> {
+  const now = new Date().toISOString();
+  const id = `${dayNumber}-${meal}`;
+
+  const existing = await db.mealSelections.get(id);
+
+  if (existing) {
+    await db.mealSelections.update(id, {
+      restaurantId,
+      selectedAt: now,
+      updatedAt: now,
+    });
+  } else {
+    await db.mealSelections.add({
+      id,
+      dayNumber,
+      meal,
+      restaurantId,
+      selectedAt: now,
+      createdAt: now,
+      updatedAt: now,
+    });
+  }
+}
+
+/**
+ * Clear a meal selection
+ */
+export async function clearMealSelection(
+  dayNumber: number,
+  meal: MealType
+): Promise<void> {
+  const id = `${dayNumber}-${meal}`;
+  await db.mealSelections.delete(id);
+}
+
+/**
+ * Get a restaurant by ID
+ */
+export function useRestaurant(restaurantId: string | null): Restaurant | undefined {
+  return useLiveQuery(
+    () => (restaurantId ? db.restaurants.get(restaurantId) : undefined),
+    [restaurantId]
+  );
 }
