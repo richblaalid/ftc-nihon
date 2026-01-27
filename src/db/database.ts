@@ -9,6 +9,14 @@ import type {
   AiCache,
   ChecklistItem,
   SyncMeta,
+  Flight,
+  Ticket,
+  TripInfo,
+  DayInfo,
+  Attraction,
+  ShoppingLocation,
+  Phrase,
+  TransportRoute,
 } from '@/types/database';
 
 /**
@@ -27,11 +35,20 @@ export class FTCDatabase extends Dexie {
   aiCache!: Table<AiCache, string>;
   checklistItems!: Table<ChecklistItem, string>;
   syncMeta!: Table<SyncMeta, string>;
+  // Enriched data tables (v2)
+  flights!: Table<Flight, string>;
+  tickets!: Table<Ticket, string>;
+  tripInfo!: Table<TripInfo, string>;
+  dayInfo!: Table<DayInfo, string>;
+  attractions!: Table<Attraction, string>;
+  shoppingLocations!: Table<ShoppingLocation, string>;
+  phrases!: Table<Phrase, string>;
+  transportRoutes!: Table<TransportRoute, string>;
 
   constructor() {
     super('ftc-nihon');
 
-    this.version(1).stores({
+    this.version(2).stores({
       // Activities - main itinerary
       // Primary key: id, Indexes: dayNumber, date, sortOrder compound
       activities: 'id, dayNumber, date, [dayNumber+sortOrder]',
@@ -67,6 +84,42 @@ export class FTCDatabase extends Dexie {
       // Sync metadata - track last sync times
       // Primary key: id, Index: tableName (unique per table)
       syncMeta: 'id, &tableName',
+
+      // =====================================================
+      // Enriched data tables (v2)
+      // =====================================================
+
+      // Flights - outbound and return
+      // Primary key: id, Index: type
+      flights: 'id, type',
+
+      // Tickets - attraction reservations
+      // Primary key: id, Indexes: date, status, sortOrder
+      tickets: 'id, date, status, sortOrder',
+
+      // Trip info - guide and emergency contacts (singleton)
+      // Primary key: id
+      tripInfo: 'id',
+
+      // Day info - metadata per day
+      // Primary key: id, Index: dayNumber
+      dayInfo: 'id, dayNumber',
+
+      // Attractions - detailed attraction database
+      // Primary key: id, Indexes: city, category
+      attractions: 'id, city, category',
+
+      // Shopping locations
+      // Primary key: id, Indexes: city, category
+      shoppingLocations: 'id, city, category',
+
+      // Japanese phrases
+      // Primary key: id, Indexes: category, sortOrder
+      phrases: 'id, category, sortOrder',
+
+      // Transport routes
+      // Primary key: id
+      transportRoutes: 'id',
     });
   }
 
@@ -146,6 +199,14 @@ export class FTCDatabase extends Dexie {
         this.aiCache,
         this.checklistItems,
         this.syncMeta,
+        this.flights,
+        this.tickets,
+        this.tripInfo,
+        this.dayInfo,
+        this.attractions,
+        this.shoppingLocations,
+        this.phrases,
+        this.transportRoutes,
       ],
       async () => {
         await this.activities.clear();
@@ -157,6 +218,14 @@ export class FTCDatabase extends Dexie {
         await this.aiCache.clear();
         await this.checklistItems.clear();
         await this.syncMeta.clear();
+        await this.flights.clear();
+        await this.tickets.clear();
+        await this.tripInfo.clear();
+        await this.dayInfo.clear();
+        await this.attractions.clear();
+        await this.shoppingLocations.clear();
+        await this.phrases.clear();
+        await this.transportRoutes.clear();
       }
     );
   }
