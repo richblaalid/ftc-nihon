@@ -203,7 +203,7 @@ export function useNextActivityWithTransit(): ActivityWithTransit | null | undef
 
     // Fallback: get first future activity (useful when outside trip dates)
     if (!nextActivity) {
-      const allActivities = await db.activities.orderBy('[date+sortOrder]').toArray();
+      const allActivities = await db.activities.orderBy('date').toArray();
 
       // Find first activity that's in the future
       for (const activity of allActivities) {
