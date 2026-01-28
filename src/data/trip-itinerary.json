@@ -1,0 +1,949 @@
+{
+  "$schema": "./trip-schema.json",
+  "_meta": {
+    "version": "1.0.0",
+    "lastUpdated": "2026-01-27",
+    "description": "FTC: Nihon Japan Trip - Single source of truth for all trip data"
+  },
+  "trip": {
+    "id": "japan-2026",
+    "name": "Blaalid & Rowles Japan Adventure",
+    "startDate": "2026-03-06",
+    "endDate": "2026-03-21",
+    "travelers": [
+      {"name": "Rich Blaalid", "type": "adult"},
+      {"name": "Angie Blaalid", "type": "adult"},
+      {"name": "Matt Rowles", "type": "adult"},
+      {"name": "Erin Rowles", "type": "adult"},
+      {"name": "Ben Blaalid", "type": "child", "age": 11},
+      {"name": "Emma Blaalid", "type": "child", "age": 8},
+      {"name": "Livy Rowles", "type": "child", "age": 11}
+    ],
+    "guide": {
+      "name": "Mico Yamamoto",
+      "phone": "+81 9091780911",
+      "email": "mico@yamamototravel.com"
+    },
+    "emergency": {
+      "police": "110",
+      "fireAmbulance": "119",
+      "helpline": "0570-064-211",
+      "usEmbassy": "03-3224-5000"
+    }
+  },
+  "accommodations": [
+    {
+      "id": "tokyo-here-shinjuku",
+      "name": "&Here Shinjuku",
+      "address": "2-15-14-2 Shinjuku, Shinjuku City, Tokyo 160-0022, Japan",
+      "addressJp": "〒160-0022 東京都新宿区新宿2-15-14-2",
+      "checkInTime": "15:00",
+      "checkOutTime": "11:00",
+      "confirmationNumber": "5464976388",
+      "pinCode": "5562",
+      "phone": "+81 3-6384-2040",
+      "googleMapsUrl": "https://maps.app.goo.gl/QvYKjxU9vP5eNrKR7",
+      "instructions": "Check-in: 3:00 PM - 10:00 PM. From Haneda: Airport Limousine Bus to Busta Shinjuku (~50 min), then 14-min walk. Cash NOT accepted.",
+      "startDate": "2026-03-07",
+      "endDate": "2026-03-12",
+      "locationLat": 35.6897,
+      "locationLng": 139.7088
+    },
+    {
+      "id": "hakone-yoshimatsu",
+      "name": "Takumino yado Yoshimatsu Ryokan",
+      "address": "521 Hakone, Hakone-machi, Ashigarashimo-gun, Kanagawa Prefecture 250-0521, Japan",
+      "addressJp": "〒250-0521 神奈川県足柄下郡箱根町箱根521",
+      "checkInTime": "15:00",
+      "checkOutTime": "11:00",
+      "confirmationNumber": "XEVXZWUZ / 9SPM1U1T",
+      "pinCode": null,
+      "phone": "0460-83-6661",
+      "googleMapsUrl": "https://maps.app.goo.gl/U7kv3y7JRnQz9v3KA",
+      "instructions": "CRITICAL: Call ahead (0460-83-6661) to arrange pickup from Hakonemachi Port Pier. Pickup 3-5 PM. Drop-off 8-11 AM. Kaiseki dinner served in room 6-7 PM.",
+      "startDate": "2026-03-12",
+      "endDate": "2026-03-14",
+      "locationLat": 35.1956,
+      "locationLng": 139.0234
+    },
+    {
+      "id": "kyoto-fujinoma",
+      "name": "Fujinoma Machiya House",
+      "address": "476-11 Tenshitsukinuke 4chome, Shimogyo Ward, Kyoto 600-8456, Japan",
+      "addressJp": "〒600-8456 京都市下京区天使突抜4丁目476-11",
+      "checkInTime": "15:00",
+      "checkOutTime": "10:00",
+      "confirmationNumber": "6306540803",
+      "pinCode": "5278",
+      "phone": "+81 90-8161-3870",
+      "googleMapsUrl": "https://g.page/machiya-inns-hotels",
+      "instructions": "NOT at the house! Go to MACHIYA INNS Check-in Desk first (685-2 Higashishiokojichō, 3-min from Kyoto Station). Hours: 10 AM - 7 PM. PAY ACCOMMODATION TAX ¥8,400 CASH at desk.",
+      "startDate": "2026-03-14",
+      "endDate": "2026-03-17",
+      "locationLat": 34.9917,
+      "locationLng": 135.7558
+    },
+    {
+      "id": "osaka-mimaru",
+      "name": "MIMARU Osaka Shinsaibashi East",
+      "address": "1-7-9 Higashishinsaibashi, Chuo-ku, Osaka 542-0083, Japan",
+      "addressJp": "〒542-0083 大阪市中央区東心斎橋1-7-9",
+      "checkInTime": "15:00",
+      "checkOutTime": "11:00",
+      "confirmationNumber": "5937762447",
+      "pinCode": "7761",
+      "phone": "+81 6-4256-4010",
+      "googleMapsUrl": "https://maps.google.com/?q=MIMARU+Osaka+Shinsaibashi+East",
+      "instructions": "Check-in: 3:00 PM - 10:00 PM. FULLY PAID. Walking distance to Dotonbori, Shinsaibashi shopping. Near Namba Station.",
+      "startDate": "2026-03-17",
+      "endDate": "2026-03-21",
+      "locationLat": 34.6723,
+      "locationLng": 135.5046
+    }
+  ],
+  "flights": [
+    {
+      "id": "flight-outbound",
+      "type": "outbound",
+      "confirmation": "HWWFJR",
+      "flightNumber": "DL0121",
+      "aircraft": "Airbus A350-900",
+      "departureAirport": "MSP",
+      "departureTerminal": "1",
+      "departureDateTime": "2026-03-06T11:40:00-06:00",
+      "departureLocalTime": "11:40",
+      "arrivalAirport": "HND",
+      "arrivalTerminal": "3",
+      "arrivalDateTime": "2026-03-07T15:20:00+09:00",
+      "arrivalLocalTime": "15:20",
+      "duration": "12h 40m",
+      "seats": ["34D", "34C", "34B", "34A"]
+    },
+    {
+      "id": "flight-return",
+      "type": "return",
+      "confirmation": "HWWFJR",
+      "flightNumber": "DL0120",
+      "aircraft": "Airbus A350-900",
+      "departureAirport": "HND",
+      "departureTerminal": "3",
+      "departureDateTime": "2026-03-21T17:20:00+09:00",
+      "departureLocalTime": "17:20",
+      "arrivalAirport": "MSP",
+      "arrivalTerminal": "1",
+      "arrivalDateTime": "2026-03-21T14:35:00-06:00",
+      "arrivalLocalTime": "14:35",
+      "duration": "11h 15m",
+      "seats": null
+    }
+  ],
+  "days": [
+    {
+      "dayNumber": 1,
+      "date": "2026-03-06",
+      "dayOfWeek": "Friday",
+      "title": "Departure Day",
+      "location": "Minneapolis → In Transit",
+      "type": "travel",
+      "accommodationId": null,
+      "highlights": ["Depart MSP 11:40 AM"],
+      "hardDeadlines": [
+        {"time": "11:40", "description": "Flight departure"}
+      ],
+      "meals": {
+        "breakfast": "own",
+        "lunch": "flight",
+        "dinner": "flight"
+      }
+    },
+    {
+      "dayNumber": 2,
+      "date": "2026-03-07",
+      "dayOfWeek": "Saturday",
+      "title": "Arrival in Tokyo",
+      "location": "Tokyo",
+      "type": "travel",
+      "accommodationId": "tokyo-here-shinjuku",
+      "highlights": ["Arrive Haneda 3:20 PM", "Check-in &Here Shinjuku"],
+      "hardDeadlines": [
+        {"time": "22:00", "description": "Hotel check-in closes"}
+      ],
+      "meals": {
+        "breakfast": null,
+        "lunch": null,
+        "dinner": "own"
+      }
+    },
+    {
+      "dayNumber": 3,
+      "date": "2026-03-08",
+      "dayOfWeek": "Sunday",
+      "title": "East Tokyo Loop",
+      "location": "Tokyo",
+      "type": "self_guided",
+      "accommodationId": "tokyo-here-shinjuku",
+      "highlights": ["Senso-ji Temple", "Tokyo Skytree", "Ameyoko Market", "Omoide Yokocho"],
+      "hardDeadlines": [],
+      "meals": {
+        "breakfast": "own",
+        "lunch": "own",
+        "dinner": "own"
+      }
+    },
+    {
+      "dayNumber": 4,
+      "date": "2026-03-09",
+      "dayOfWeek": "Monday",
+      "title": "West Tokyo + Ghibli",
+      "location": "Tokyo",
+      "type": "self_guided",
+      "accommodationId": "tokyo-here-shinjuku",
+      "highlights": ["Ghibli Museum", "Meiji Shrine", "Shibuya Crossing", "Kabukicho"],
+      "hardDeadlines": [
+        {"time": "10:00", "description": "Ghibli Museum entry time"}
+      ],
+      "meals": {
+        "breakfast": "own",
+        "lunch": "own",
+        "dinner": "own"
+      }
+    },
+    {
+      "dayNumber": 5,
+      "date": "2026-03-10",
+      "dayOfWeek": "Tuesday",
+      "title": "Central Tokyo Corridor",
+      "location": "Tokyo",
+      "type": "self_guided",
+      "accommodationId": "tokyo-here-shinjuku",
+      "highlights": ["Imperial Palace", "Akihabara", "Ebisu Yokocho"],
+      "hardDeadlines": [],
+      "meals": {
+        "breakfast": "own",
+        "lunch": "own",
+        "dinner": "own"
+      }
+    },
+    {
+      "dayNumber": 6,
+      "date": "2026-03-11",
+      "dayOfWeek": "Wednesday",
+      "title": "TeamLab & Tokyo Bay",
+      "location": "Tokyo",
+      "type": "self_guided",
+      "accommodationId": "tokyo-here-shinjuku",
+      "highlights": ["TeamLab Borderless", "Odaiba"],
+      "hardDeadlines": [
+        {"time": "10:00", "description": "TeamLab Borderless entry"}
+      ],
+      "meals": {
+        "breakfast": "own",
+        "lunch": "own",
+        "dinner": "own"
+      }
+    },
+    {
+      "dayNumber": 7,
+      "date": "2026-03-12",
+      "dayOfWeek": "Thursday",
+      "title": "Tokyo to Hakone",
+      "location": "Hakone",
+      "type": "travel",
+      "accommodationId": "hakone-yoshimatsu",
+      "highlights": ["Hakone Loop", "Pirate Ship", "Ryokan check-in"],
+      "hardDeadlines": [
+        {"time": "17:00", "description": "Latest ryokan pickup"}
+      ],
+      "meals": {
+        "breakfast": "own",
+        "lunch": "own",
+        "dinner": "INCLUDED"
+      }
+    },
+    {
+      "dayNumber": 8,
+      "date": "2026-03-13",
+      "dayOfWeek": "Friday",
+      "title": "Hakone Relaxation",
+      "location": "Hakone",
+      "type": "self_guided",
+      "accommodationId": "hakone-yoshimatsu",
+      "highlights": ["Onsen", "Mt. Fuji views", "Hakone Shrine"],
+      "hardDeadlines": [
+        {"time": "18:00", "description": "Kaiseki dinner starts"}
+      ],
+      "meals": {
+        "breakfast": "INCLUDED",
+        "lunch": "own",
+        "dinner": "INCLUDED"
+      }
+    },
+    {
+      "dayNumber": 9,
+      "date": "2026-03-14",
+      "dayOfWeek": "Saturday",
+      "title": "Hakone to Kyoto",
+      "location": "Kyoto",
+      "type": "travel",
+      "accommodationId": "kyoto-fujinoma",
+      "highlights": ["Shinkansen to Kyoto", "Evening Gion walk"],
+      "hardDeadlines": [],
+      "meals": {
+        "breakfast": "INCLUDED",
+        "lunch": "own",
+        "dinner": "own"
+      }
+    },
+    {
+      "dayNumber": 10,
+      "date": "2026-03-15",
+      "dayOfWeek": "Sunday",
+      "title": "Eastern Kyoto Temples",
+      "location": "Kyoto",
+      "type": "self_guided",
+      "accommodationId": "kyoto-fujinoma",
+      "highlights": ["Fushimi Inari", "Kiyomizu-dera", "Gion"],
+      "hardDeadlines": [],
+      "meals": {
+        "breakfast": "own",
+        "lunch": "own",
+        "dinner": "own"
+      }
+    },
+    {
+      "dayNumber": 11,
+      "date": "2026-03-16",
+      "dayOfWeek": "Monday",
+      "title": "Northern Kyoto",
+      "location": "Kyoto",
+      "type": "self_guided",
+      "accommodationId": "kyoto-fujinoma",
+      "highlights": ["Kinkaku-ji", "Arashiyama Bamboo Grove", "Nishiki Market"],
+      "hardDeadlines": [],
+      "meals": {
+        "breakfast": "own",
+        "lunch": "own",
+        "dinner": "own"
+      }
+    },
+    {
+      "dayNumber": 12,
+      "date": "2026-03-17",
+      "dayOfWeek": "Tuesday",
+      "title": "Kyoto to Osaka",
+      "location": "Osaka",
+      "type": "travel",
+      "accommodationId": "osaka-mimaru",
+      "highlights": ["Train to Osaka", "Dotonbori evening"],
+      "hardDeadlines": [],
+      "meals": {
+        "breakfast": "own",
+        "lunch": "own",
+        "dinner": "own"
+      }
+    },
+    {
+      "dayNumber": 13,
+      "date": "2026-03-18",
+      "dayOfWeek": "Wednesday",
+      "title": "Osaka Fun Day",
+      "location": "Osaka",
+      "type": "self_guided",
+      "accommodationId": "osaka-mimaru",
+      "highlights": ["Osaka Castle", "Shinsekai", "Dotonbori food tour"],
+      "hardDeadlines": [],
+      "meals": {
+        "breakfast": "own",
+        "lunch": "own",
+        "dinner": "own"
+      }
+    },
+    {
+      "dayNumber": 14,
+      "date": "2026-03-19",
+      "dayOfWeek": "Thursday",
+      "title": "Day Trip Option",
+      "location": "Osaka",
+      "type": "self_guided",
+      "accommodationId": "osaka-mimaru",
+      "highlights": ["Nara day trip OR Universal Studios"],
+      "hardDeadlines": [],
+      "meals": {
+        "breakfast": "own",
+        "lunch": "own",
+        "dinner": "own"
+      }
+    },
+    {
+      "dayNumber": 15,
+      "date": "2026-03-20",
+      "dayOfWeek": "Friday",
+      "title": "Last Full Day",
+      "location": "Osaka",
+      "type": "self_guided",
+      "accommodationId": "osaka-mimaru",
+      "highlights": ["Shopping", "Last-minute sights"],
+      "hardDeadlines": [],
+      "meals": {
+        "breakfast": "own",
+        "lunch": "own",
+        "dinner": "own"
+      }
+    },
+    {
+      "dayNumber": 16,
+      "date": "2026-03-21",
+      "dayOfWeek": "Saturday",
+      "title": "Departure Day",
+      "location": "Osaka → Home",
+      "type": "travel",
+      "accommodationId": null,
+      "highlights": ["Flight home 5:20 PM"],
+      "hardDeadlines": [
+        {"time": "14:00", "description": "Arrive at Haneda for flight"}
+      ],
+      "meals": {
+        "breakfast": "own",
+        "lunch": "own",
+        "dinner": "flight"
+      }
+    }
+  ],
+  "activities": [
+    {
+      "id": "act-day1-depart",
+      "dayNumber": 1,
+      "date": "2026-03-06",
+      "startTime": "09:30",
+      "durationMinutes": 120,
+      "name": "Arrive MSP Terminal 1",
+      "category": "transit",
+      "locationName": "Minneapolis-St. Paul International Airport",
+      "locationAddress": "4300 Glumack Dr, St Paul, MN 55111",
+      "locationLat": 44.8848,
+      "locationLng": -93.2223,
+      "description": "Check bags, go through security, grab snacks.",
+      "tips": "TSA PreCheck if available. Terminal 1 has good food options.",
+      "isHardDeadline": true,
+      "isKidFriendly": true,
+      "sortOrder": 1
+    },
+    {
+      "id": "act-day1-flight",
+      "dayNumber": 1,
+      "date": "2026-03-06",
+      "startTime": "11:40",
+      "durationMinutes": 760,
+      "name": "Flight DL0121 to Tokyo",
+      "category": "transit",
+      "locationName": "MSP Terminal 1, Gate varies",
+      "locationAddress": null,
+      "locationLat": 44.8848,
+      "locationLng": -93.2223,
+      "description": "12h 40m flight to Tokyo Haneda. Meals served on board.",
+      "tips": "Download movies beforehand. Stay hydrated.",
+      "isHardDeadline": true,
+      "isKidFriendly": true,
+      "sortOrder": 2
+    },
+    {
+      "id": "act-day2-arrive",
+      "dayNumber": 2,
+      "date": "2026-03-07",
+      "startTime": "15:20",
+      "durationMinutes": 40,
+      "name": "Arrive Tokyo Haneda",
+      "category": "transit",
+      "locationName": "Haneda Airport Terminal 3",
+      "locationAddress": "Haneda Airport, Tokyo, Japan",
+      "locationLat": 35.5494,
+      "locationLng": 139.7798,
+      "googleMapsUrl": "https://maps.google.com/?q=Haneda+Airport+Terminal+3",
+      "description": "Flight DL0121 arrives. Immigration & customs, collect luggage.",
+      "tips": "Have passport and customs form ready. Follow signs to arrivals.",
+      "isHardDeadline": true,
+      "isKidFriendly": true,
+      "sortOrder": 1
+    },
+    {
+      "id": "act-day2-bus",
+      "dayNumber": 2,
+      "date": "2026-03-07",
+      "startTime": "16:30",
+      "durationMinutes": 50,
+      "name": "Airport Limousine Bus to Shinjuku",
+      "category": "transit",
+      "locationName": "Haneda Airport Limousine Bus Counter",
+      "locationAddress": "Arrivals floor, Haneda Terminal 3",
+      "locationLat": 35.5494,
+      "locationLng": 139.7798,
+      "description": "Take bus to Busta Shinjuku (~50 min). Cost: ¥1,400 per person.",
+      "tips": "Buses depart every 20-30 minutes. Buy ticket at counter.",
+      "backupAlternative": "Keikyu Line + Tokyo Metro (faster but more transfers)",
+      "isHardDeadline": false,
+      "isKidFriendly": true,
+      "sortOrder": 2
+    },
+    {
+      "id": "act-day2-checkin",
+      "dayNumber": 2,
+      "date": "2026-03-07",
+      "startTime": "18:00",
+      "durationMinutes": 30,
+      "name": "Check-in at &Here Shinjuku",
+      "category": "hotel",
+      "locationName": "&Here Shinjuku",
+      "locationAddress": "2-15-14-2 Shinjuku, Shinjuku City, Tokyo",
+      "locationAddressJp": "〒160-0022 東京都新宿区新宿2-15-14-2",
+      "locationLat": 35.6897,
+      "locationLng": 139.7088,
+      "googleMapsUrl": "https://maps.app.goo.gl/QvYKjxU9vP5eNrKR7",
+      "description": "14-min walk from Busta Shinjuku. Confirmation: 5464976388, PIN: 5562",
+      "tips": "Check-in until 10 PM. Cash NOT accepted.",
+      "isHardDeadline": false,
+      "isKidFriendly": true,
+      "sortOrder": 3
+    },
+    {
+      "id": "act-day3-sensoji",
+      "dayNumber": 3,
+      "date": "2026-03-08",
+      "startTime": "09:00",
+      "durationMinutes": 120,
+      "name": "Senso-ji Temple & Nakamise-dori",
+      "category": "temple",
+      "locationName": "Senso-ji Temple",
+      "locationAddress": "2-3-1 Asakusa, Taito City, Tokyo",
+      "locationAddressJp": "〒111-0032 東京都台東区浅草2-3-1",
+      "locationLat": 35.7148,
+      "locationLng": 139.7967,
+      "googleMapsUrl": "https://maps.google.com/?q=Senso-ji+Temple",
+      "description": "Tokyo's oldest temple (628 AD). See Kaminarimon Gate, Nakamise-dori shopping street.",
+      "tips": "Arrive early to avoid crowds. Great snacks on Nakamise-dori.",
+      "whatToOrder": "Melon pan, ningyo-yaki",
+      "isHardDeadline": false,
+      "isKidFriendly": true,
+      "sortOrder": 1
+    },
+    {
+      "id": "act-day3-skytree",
+      "dayNumber": 3,
+      "date": "2026-03-08",
+      "startTime": "11:30",
+      "durationMinutes": 120,
+      "name": "Tokyo Skytree & Solamachi",
+      "category": "activity",
+      "locationName": "Tokyo Skytree",
+      "locationAddress": "1-1-2 Oshiage, Sumida City, Tokyo",
+      "locationAddressJp": "〒131-0045 東京都墨田区押上1-1-2",
+      "locationLat": 35.7101,
+      "locationLng": 139.8107,
+      "googleMapsUrl": "https://maps.google.com/?q=Tokyo+Skytree",
+      "websiteUrl": "https://www.tokyo-skytree.jp/en/",
+      "description": "634m tall - Japan's tallest structure. Tembo Deck (350m) observation.",
+      "tips": "Book tickets online to skip lines. Clear days have Mt. Fuji views.",
+      "backupAlternative": "Skip observation deck, just explore Solamachi Mall",
+      "isHardDeadline": false,
+      "isKidFriendly": true,
+      "sortOrder": 2
+    },
+    {
+      "id": "act-day3-ueno",
+      "dayNumber": 3,
+      "date": "2026-03-08",
+      "startTime": "14:00",
+      "durationMinutes": 150,
+      "name": "Ueno Park & Ameyoko Market",
+      "category": "shopping",
+      "locationName": "Ueno Park",
+      "locationAddress": "Uenokoen, Taito City, Tokyo",
+      "locationAddressJp": "〒110-0007 東京都台東区上野公園",
+      "locationLat": 35.7146,
+      "locationLng": 139.7732,
+      "googleMapsUrl": "https://maps.google.com/?q=Ueno+Park",
+      "description": "Ameyoko Market - bustling shopping street under train tracks.",
+      "tips": "Great for snacks, clothes, souvenirs. Bargaining sometimes works.",
+      "isHardDeadline": false,
+      "isKidFriendly": true,
+      "sortOrder": 3
+    },
+    {
+      "id": "act-day3-omoide",
+      "dayNumber": 3,
+      "date": "2026-03-08",
+      "startTime": "18:30",
+      "durationMinutes": 90,
+      "name": "Omoide Yokocho Dinner",
+      "category": "food",
+      "locationName": "Omoide Yokocho (Memory Lane)",
+      "locationAddress": "1 Chome Nishishinjuku, Shinjuku City, Tokyo",
+      "locationLat": 35.6938,
+      "locationLng": 139.6989,
+      "googleMapsUrl": "https://maps.google.com/?q=Omoide+Yokocho",
+      "description": "Atmospheric yakitori alley near Shinjuku Station. Very local feel.",
+      "tips": "Small seats, smoky atmosphere. Order skewers and beer.",
+      "whatToOrder": "Yakitori skewers, beer",
+      "isHardDeadline": false,
+      "isKidFriendly": true,
+      "sortOrder": 4
+    }
+  ],
+  "restaurants": [
+    {
+      "id": "tsunahachi-shinjuku",
+      "name": "Tsunahachi",
+      "nameJapanese": "つな八",
+      "type": "Tempura",
+      "city": "Tokyo",
+      "district": "Shinjuku",
+      "address": "3-31-8 Shinjuku, Shinjuku City, Tokyo",
+      "addressJapanese": "〒160-0022 東京都新宿区新宿3-31-8",
+      "locationLat": 35.6905,
+      "locationLng": 139.7037,
+      "nearestStation": "Shinjuku Station",
+      "phone": "+81 3-3352-1012",
+      "hours": "11:00-22:00",
+      "priceRange": "¥1,500-3,000",
+      "isKidFriendly": true,
+      "notes": "Historic tempura since 1924. Family-friendly counter seating.",
+      "googleMapsUrl": "https://maps.app.goo.gl/qYz7RfYKtNmX6Ck47",
+      "whatToOrder": "Ten-don (tempura rice bowl), assorted tempura set",
+      "assignedMeals": [
+        {"day": 2, "date": "2026-03-07", "meal": "dinner", "priority": "primary"}
+      ]
+    },
+    {
+      "id": "ichiran-shinjuku",
+      "name": "Ichiran Ramen",
+      "nameJapanese": "一蘭",
+      "type": "Ramen",
+      "city": "Tokyo",
+      "district": "Shinjuku",
+      "address": "3-34-11 Shinjuku, Shinjuku City, Tokyo",
+      "locationLat": 35.6909,
+      "locationLng": 139.7025,
+      "nearestStation": "Shinjuku Station",
+      "hours": "24 hours",
+      "priceRange": "¥1,000-1,500",
+      "isKidFriendly": true,
+      "notes": "Individual booth seating. Customize your ramen on paper form.",
+      "whatToOrder": "Tonkotsu ramen with extra chashu",
+      "assignedMeals": [
+        {"day": 2, "date": "2026-03-07", "meal": "dinner", "priority": "alternative"}
+      ]
+    },
+    {
+      "id": "afuri-ebisu",
+      "name": "AFURI",
+      "nameJapanese": "阿夫利",
+      "type": "Ramen",
+      "city": "Tokyo",
+      "district": "Ebisu",
+      "address": "1-1-7 Ebisuminami, Shibuya City, Tokyo",
+      "addressJapanese": "〒150-0022 東京都渋谷区恵比寿南1-1-7",
+      "locationLat": 35.6465,
+      "locationLng": 139.7102,
+      "nearestStation": "Ebisu Station",
+      "hours": "11:00-23:00",
+      "priceRange": "¥1,000-1,500",
+      "isKidFriendly": true,
+      "notes": "Famous for light, refreshing yuzu shio ramen.",
+      "googleMapsUrl": "https://maps.app.goo.gl/wBcg9pJyLvP4KLVZ7",
+      "whatToOrder": "Yuzu Shio Ramen, Char siu rice",
+      "assignedMeals": [
+        {"day": 5, "date": "2026-03-10", "meal": "dinner", "priority": "primary"}
+      ]
+    },
+    {
+      "id": "ebisu-yokocho",
+      "name": "Ebisu Yokocho",
+      "nameJapanese": "恵比寿横丁",
+      "type": "Food Alley",
+      "city": "Tokyo",
+      "district": "Ebisu",
+      "address": "1-7-4 Ebisu, Shibuya City, Tokyo",
+      "locationLat": 35.6469,
+      "locationLng": 139.7105,
+      "nearestStation": "Ebisu Station",
+      "hours": "17:00-24:00",
+      "priceRange": "¥1,500-3,000",
+      "isKidFriendly": true,
+      "notes": "Covered alley with 20+ small stalls. Very local atmosphere.",
+      "whatToOrder": "Hop between stalls - gyoza, yakitori, oden",
+      "assignedMeals": [
+        {"day": 5, "date": "2026-03-10", "meal": "dinner", "priority": "alternative"}
+      ]
+    },
+    {
+      "id": "yuzuan-akihabara",
+      "name": "Yuzuan",
+      "nameJapanese": "柚庵",
+      "type": "All-You-Can-Eat",
+      "city": "Tokyo",
+      "district": "Akihabara",
+      "address": "Akihabara, Chiyoda City, Tokyo",
+      "locationLat": 35.7023,
+      "locationLng": 139.7745,
+      "nearestStation": "Akihabara Station",
+      "hours": "11:00-22:00",
+      "priceRange": "¥3,500-5,000",
+      "isKidFriendly": true,
+      "notes": "All-you-can-eat sushi and A5 wagyu. Gluten-free options available.",
+      "whatToOrder": "A5 wagyu, premium sushi selection",
+      "assignedMeals": [
+        {"day": 3, "date": "2026-03-08", "meal": "dinner", "priority": "alternative"},
+        {"day": 5, "date": "2026-03-10", "meal": "lunch", "priority": "alternative"}
+      ]
+    },
+    {
+      "id": "syabu-yo-akihabara",
+      "name": "Syabu-Yo",
+      "nameJapanese": "しゃぶ葉",
+      "type": "Shabu-shabu",
+      "city": "Tokyo",
+      "district": "Akihabara",
+      "address": "Akihabara UDX Building, 4-14-1 Sotokanda, Chiyoda City",
+      "locationLat": 35.7002,
+      "locationLng": 139.7725,
+      "nearestStation": "Akihabara Station",
+      "hours": "11:00-23:00",
+      "priceRange": "¥2,000-3,000",
+      "isKidFriendly": true,
+      "notes": "Robot tablet ordering! Fun for kids. All-you-can-eat shabu-shabu.",
+      "whatToOrder": "Pork and beef shabu-shabu, vegetables, udon for dipping",
+      "assignedMeals": [
+        {"day": 5, "date": "2026-03-10", "meal": "lunch", "priority": "primary"}
+      ]
+    },
+    {
+      "id": "omoide-yokocho",
+      "name": "Omoide Yokocho",
+      "nameJapanese": "思い出横丁",
+      "type": "Yakitori Alley",
+      "city": "Tokyo",
+      "district": "Shinjuku",
+      "address": "1 Chome Nishishinjuku, Shinjuku City, Tokyo",
+      "locationLat": 35.6938,
+      "locationLng": 139.6989,
+      "nearestStation": "Shinjuku Station (West Exit)",
+      "hours": "17:00-24:00",
+      "priceRange": "¥1,000-2,000",
+      "isKidFriendly": true,
+      "notes": "Atmospheric narrow alley with tiny yakitori shops. Smoky and authentic.",
+      "googleMapsUrl": "https://maps.google.com/?q=Omoide+Yokocho",
+      "whatToOrder": "Yakitori skewers (tsukune, negima, kawa), draft beer",
+      "assignedMeals": [
+        {"day": 3, "date": "2026-03-08", "meal": "dinner", "priority": "primary"}
+      ]
+    },
+    {
+      "id": "omen-kyoto",
+      "name": "Omen Nippon",
+      "nameJapanese": "おめん",
+      "type": "Udon",
+      "city": "Kyoto",
+      "district": "Ginkaku-ji area",
+      "address": "74 Jodoji Ishibashicho, Sakyo Ward, Kyoto",
+      "locationLat": 35.0273,
+      "locationLng": 135.7982,
+      "nearestStation": "Ginkaku-ji-michi Bus Stop",
+      "hours": "11:00-21:00",
+      "priceRange": "¥1,200-1,800",
+      "isKidFriendly": true,
+      "notes": "Famous handmade udon in beautiful traditional setting.",
+      "whatToOrder": "Omen udon with seasonal vegetables",
+      "assignedMeals": [
+        {"day": 10, "date": "2026-03-15", "meal": "lunch", "priority": "primary"}
+      ]
+    },
+    {
+      "id": "nishiki-market",
+      "name": "Nishiki Market",
+      "nameJapanese": "錦市場",
+      "type": "Market Street Food",
+      "city": "Kyoto",
+      "district": "Central Kyoto",
+      "address": "Nishikikoji-dori, Nakagyo Ward, Kyoto",
+      "locationLat": 35.0050,
+      "locationLng": 135.7648,
+      "nearestStation": "Shijo Station",
+      "hours": "09:00-18:00",
+      "priceRange": "¥500-2,000",
+      "isKidFriendly": true,
+      "notes": "400-year-old market with 100+ vendors. Great for lunch grazing.",
+      "whatToOrder": "Fresh sashimi, tamagoyaki, pickles, matcha treats",
+      "assignedMeals": [
+        {"day": 11, "date": "2026-03-16", "meal": "lunch", "priority": "primary"}
+      ]
+    },
+    {
+      "id": "wanaka-dotonbori",
+      "name": "Wanaka",
+      "nameJapanese": "わなか",
+      "type": "Takoyaki",
+      "city": "Osaka",
+      "district": "Dotonbori",
+      "address": "Dotonbori, Chuo Ward, Osaka",
+      "locationLat": 34.6687,
+      "locationLng": 135.5027,
+      "nearestStation": "Namba Station",
+      "hours": "10:00-23:00",
+      "priceRange": "¥500-800",
+      "isKidFriendly": true,
+      "notes": "Crispiest takoyaki in Osaka! Watch them being made fresh.",
+      "whatToOrder": "Original takoyaki, ponzu takoyaki",
+      "assignedMeals": [
+        {"day": 12, "date": "2026-03-17", "meal": "dinner", "priority": "primary"},
+        {"day": 13, "date": "2026-03-18", "meal": "dinner", "priority": "alternative"}
+      ]
+    },
+    {
+      "id": "mizuno-dotonbori",
+      "name": "Mizuno",
+      "nameJapanese": "美津の",
+      "type": "Okonomiyaki",
+      "city": "Osaka",
+      "district": "Dotonbori",
+      "address": "1-4-15 Dotonbori, Chuo Ward, Osaka",
+      "locationLat": 34.6685,
+      "locationLng": 135.5025,
+      "nearestStation": "Namba Station",
+      "hours": "11:00-22:00",
+      "priceRange": "¥1,200-1,800",
+      "isKidFriendly": true,
+      "notes": "Since 1945. Worth the wait. They cook it at your table.",
+      "whatToOrder": "Yamaimo-yaki (yam okonomiyaki), pork and seafood mix",
+      "assignedMeals": [
+        {"day": 13, "date": "2026-03-18", "meal": "dinner", "priority": "primary"}
+      ]
+    },
+    {
+      "id": "daruma-shinsekai",
+      "name": "Daruma",
+      "nameJapanese": "だるま",
+      "type": "Kushikatsu",
+      "city": "Osaka",
+      "district": "Shinsekai",
+      "address": "2-3-9 Ebisuhigashi, Naniwa Ward, Osaka",
+      "locationLat": 34.6522,
+      "locationLng": 135.5063,
+      "nearestStation": "Shin-Imamiya Station",
+      "hours": "11:00-22:30",
+      "priceRange": "¥1,500-2,500",
+      "isKidFriendly": true,
+      "notes": "Famous for kushikatsu (deep-fried skewers). NO DOUBLE-DIPPING in sauce!",
+      "whatToOrder": "Assorted kushikatsu set, asparagus, cheese",
+      "assignedMeals": [
+        {"day": 13, "date": "2026-03-18", "meal": "lunch", "priority": "primary"}
+      ]
+    }
+  ],
+  "tickets": [
+    {
+      "id": "teamlab-borderless",
+      "name": "TeamLab Borderless",
+      "date": "2026-03-11",
+      "status": "purchased",
+      "entryTime": "10:00",
+      "confirmations": ["TBD"],
+      "locationName": "Azabudai Hills",
+      "locationAddress": "Azabudai Hills, Minato City, Tokyo",
+      "locationLat": 35.6615,
+      "locationLng": 139.7394,
+      "duration": "2-3 hours",
+      "tips": ["Wear white to reflect projections", "No flash photography", "Sandals/heels difficult - flat shoes recommended"],
+      "mapsUrl": "https://maps.google.com/?q=TeamLab+Borderless+Azabudai"
+    },
+    {
+      "id": "ghibli-museum",
+      "name": "Ghibli Museum",
+      "date": "2026-03-09",
+      "status": "purchased",
+      "entryTime": "10:00",
+      "confirmations": ["TBD"],
+      "purchaseSaleDate": "2026-02-10",
+      "purchaseSaleTime": "10:00",
+      "purchaseWebsite": "https://l-tike.com/ghibli/",
+      "purchaseNotes": "Tickets sell out FAST. Be ready at exactly 10:00 AM JST.",
+      "locationName": "Ghibli Museum",
+      "locationAddress": "1-1-83 Shimorenjaku, Mitaka City, Tokyo",
+      "locationLat": 35.6962,
+      "locationLng": 139.5704,
+      "duration": "2 hours",
+      "tips": ["No photos inside", "Short film shown (random selection)", "Rooftop robot from Laputa"]
+    }
+  ],
+  "transitSegments": [
+    {
+      "id": "transit-day3-to-sensoji",
+      "activityId": "act-day3-sensoji",
+      "leaveBy": "08:30",
+      "walkToStationMinutes": 5,
+      "stationName": "Shinjuku-sanchome",
+      "trainLine": "Tokyo Metro Marunouchi → Ginza",
+      "suggestedDeparture": "08:35",
+      "travelMinutes": 25,
+      "transfers": "Transfer at Ginza to Ginza Line",
+      "arrivalStation": "Asakusa",
+      "walkToDestinationMinutes": 5,
+      "bufferMinutes": 10
+    },
+    {
+      "id": "transit-day3-sensoji-to-skytree",
+      "activityId": "act-day3-skytree",
+      "leaveBy": "11:00",
+      "walkToStationMinutes": null,
+      "stationName": null,
+      "trainLine": null,
+      "suggestedDeparture": null,
+      "travelMinutes": 20,
+      "transfers": null,
+      "arrivalStation": null,
+      "walkToDestinationMinutes": 20,
+      "bufferMinutes": 10,
+      "notes": "Walk across Azumabashi Bridge - great views of Skytree"
+    }
+  ],
+  "phrases": [
+    {
+      "id": "phrase-sumimasen",
+      "japanese": "すみません",
+      "romaji": "Sumimasen",
+      "meaning": "Excuse me / I'm sorry",
+      "when": "Getting attention, apologizing, thanking",
+      "category": "essential"
+    },
+    {
+      "id": "phrase-arigatou",
+      "japanese": "ありがとうございます",
+      "romaji": "Arigatou gozaimasu",
+      "meaning": "Thank you very much",
+      "when": "Thanking someone politely",
+      "category": "essential"
+    },
+    {
+      "id": "phrase-oishii",
+      "japanese": "おいしい",
+      "romaji": "Oishii",
+      "meaning": "Delicious!",
+      "when": "Complimenting food (staff love hearing this)",
+      "category": "restaurant"
+    },
+    {
+      "id": "phrase-okaikei",
+      "japanese": "お会計お願いします",
+      "romaji": "Okaikei onegaishimasu",
+      "meaning": "Check please",
+      "when": "Asking for the bill at restaurants",
+      "category": "restaurant"
+    },
+    {
+      "id": "phrase-eigo",
+      "japanese": "英語のメニューはありますか",
+      "romaji": "Eigo no menu wa arimasu ka",
+      "meaning": "Do you have an English menu?",
+      "when": "At restaurants",
+      "category": "restaurant"
+    }
+  ]
+}

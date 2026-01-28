@@ -4,6 +4,7 @@
  */
 
 import { db } from './database';
+// Import from JSON-based seed file (single source of truth)
 import {
   accommodations,
   activities,
@@ -18,7 +19,7 @@ import {
   phrases,
   transportRoutes,
   checklistItems,
-} from './seed-data';
+} from './seed-from-json';
 
 /**
  * Check if database is already seeded

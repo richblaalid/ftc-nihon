@@ -13,6 +13,100 @@ You are editing the FTC: Nihon Japan trip itinerary (March 6-21, 2026). This is 
 
 ---
 
+## CRITICAL: Required Output Format
+
+**YOU MUST OUTPUT JSON** that matches the schema in `src/data/trip-itinerary.json`.
+
+**DO NOT output:**
+- Excel spreadsheets or CSV files
+- Markdown tables
+- TypeScript code
+- Plain text lists
+
+**ALWAYS output:**
+- Valid JSON inside ```json code blocks
+- Complete objects with ALL required fields
+- Proper JSON syntax (double quotes, no trailing commas)
+
+### For Adding New Items
+
+Output the complete JSON object to add:
+
+```json
+{
+  "ADD_TO": "restaurants",
+  "data": {
+    "id": "afuri-ebisu",
+    "name": "AFURI",
+    "nameJapanese": "阿夫利",
+    "type": "Ramen",
+    "city": "Tokyo",
+    "district": "Ebisu",
+    "address": "1-1-7 Ebisuminami, Shibuya City, Tokyo",
+    "addressJapanese": "〒150-0022 東京都渋谷区恵比寿南1-1-7",
+    "locationLat": 35.6465,
+    "locationLng": 139.7102,
+    "nearestStation": "Ebisu Station",
+    "phone": null,
+    "hours": "11:00-23:00",
+    "priceRange": "¥1,000-1,500",
+    "isKidFriendly": true,
+    "notes": "Famous for yuzu shio ramen",
+    "googleMapsUrl": "https://maps.app.goo.gl/wBcg9pJyLvP4KLVZ7",
+    "websiteUrl": null,
+    "whatToOrder": "Yuzu Shio Ramen, Char siu rice",
+    "backupAlternative": null,
+    "assignedMeals": [
+      {"day": 5, "date": "2026-03-10", "meal": "dinner", "priority": "primary"}
+    ]
+  }
+}
+```
+
+### For Updating Existing Items
+
+Specify the array, ID, and fields to change:
+
+```json
+{
+  "UPDATE": "activities",
+  "id": "act-day3-sensoji",
+  "changes": {
+    "startTime": "08:30",
+    "durationMinutes": 150
+  }
+}
+```
+
+### For Deleting Items
+
+```json
+{
+  "DELETE_FROM": "restaurants",
+  "id": "ichiran-shinjuku"
+}
+```
+
+### For Multiple Changes
+
+Output an array of operations:
+
+```json
+[
+  {
+    "ADD_TO": "restaurants",
+    "data": { ... }
+  },
+  {
+    "UPDATE": "activities",
+    "id": "act-day5-lunch",
+    "changes": { "name": "Lunch at AFURI" }
+  }
+]
+```
+
+---
+
 ## Trip Overview
 
 | Dates | Location | Accommodation |
@@ -22,113 +116,121 @@ You are editing the FTC: Nihon Japan trip itinerary (March 6-21, 2026). This is 
 | Mar 14-17 | Kyoto | Fujinoma Machiya House |
 | Mar 17-21 | Osaka | MIMARU Shinsaibashi East |
 
-**Travelers:** Rich, Cassie, Thomas, Linda (adults) + Emma, Matt, Sarah (children ages 8-12)
+**Travelers:** Rich and Angie Blaalid, Matt and Erin Rowles (adults) + Ben (11), Emma (8), Livy (11) (children)
 
 ---
 
-## Data Schema Reference
+## JSON Schema Reference
 
 ### Activity Object
-```typescript
+
+```json
 {
-  id: string;                    // Format: "act-XXXX" (auto-generated)
-  dayNumber: number;             // 1-15
-  date: string;                  // "YYYY-MM-DD" format
-  startTime: string;             // "HH:MM" 24-hour format
-  durationMinutes: number | null;
-  name: string;                  // Activity name (English)
-  category: "food" | "temple" | "shopping" | "transit" | "activity" | "hotel";
-  locationName: string | null;
-  locationAddress: string | null;
-  locationAddressJp: string | null;  // Japanese address for taxi drivers
-  locationLat: number | null;        // GPS latitude
-  locationLng: number | null;        // GPS longitude
-  googleMapsUrl: string | null;
-  websiteUrl: string | null;
-  description: string | null;
-  tips: string | null;
-  whatToOrder: string | null;        // For food activities
-  backupAlternative: string | null;
-  isHardDeadline: boolean;           // Cannot be moved (tickets, reservations)
-  isKidFriendly: boolean;
-  sortOrder: number;                 // Order within the day
+  "id": "act-day3-sensoji",
+  "dayNumber": 3,
+  "date": "2026-03-08",
+  "startTime": "09:00",
+  "durationMinutes": 120,
+  "name": "Senso-ji Temple & Nakamise-dori",
+  "category": "temple",
+  "locationName": "Senso-ji Temple",
+  "locationAddress": "2-3-1 Asakusa, Taito City, Tokyo",
+  "locationAddressJp": "〒111-0032 東京都台東区浅草2-3-1",
+  "locationLat": 35.7148,
+  "locationLng": 139.7967,
+  "googleMapsUrl": "https://maps.google.com/?q=Senso-ji+Temple",
+  "websiteUrl": null,
+  "description": "Tokyo's oldest temple",
+  "tips": "Arrive early to avoid crowds",
+  "whatToOrder": "Melon pan, ningyo-yaki",
+  "backupAlternative": null,
+  "isHardDeadline": false,
+  "isKidFriendly": true,
+  "sortOrder": 1
 }
 ```
+
+**Required fields:** `id`, `dayNumber`, `date`, `startTime`, `name`, `category`, `sortOrder`
+
+**Category values:** `"food"`, `"temple"`, `"shopping"`, `"transit"`, `"activity"`, `"hotel"`
 
 ### Restaurant Object
-```typescript
+
+```json
 {
-  id: string;                    // Format: kebab-case slug, e.g., "tsunahachi-shinjuku"
-  name: string;                  // English name
-  nameJapanese: string | null;   // Japanese name (for asking locals)
-  type: string | null;           // Cuisine type: "Ramen", "Tempura", "Sushi", etc.
-  address: string | null;
-  addressJapanese: string | null;
-  locationLat: number | null;
-  locationLng: number | null;
-  nearestStation: string | null;
-  phone: string | null;          // For reservations
-  hours: string | null;          // Operating hours
-  priceRange: string | null;     // "$$", "$$$", "¥1,000-2,000", etc.
-  isKidFriendly: boolean;
-  notes: string | null;
-  googleMapsUrl: string | null;
-  websiteUrl: string | null;
-  whatToOrder: string | null;    // Recommended dishes
-  backupAlternative: string | null;
-  city: string | null;           // "Tokyo", "Kyoto", "Osaka", "Hakone"
-  assignedMeals: MealAssignment[];  // Which day/meal this restaurant is for
+  "id": "afuri-ebisu",
+  "name": "AFURI",
+  "nameJapanese": "阿夫利",
+  "type": "Ramen",
+  "city": "Tokyo",
+  "district": "Ebisu",
+  "address": "1-1-7 Ebisuminami, Shibuya City, Tokyo",
+  "addressJapanese": "〒150-0022 東京都渋谷区恵比寿南1-1-7",
+  "locationLat": 35.6465,
+  "locationLng": 139.7102,
+  "nearestStation": "Ebisu Station",
+  "phone": null,
+  "hours": "11:00-23:00",
+  "priceRange": "¥1,000-1,500",
+  "isKidFriendly": true,
+  "notes": "Famous for yuzu shio ramen",
+  "googleMapsUrl": null,
+  "websiteUrl": null,
+  "whatToOrder": "Yuzu Shio Ramen",
+  "backupAlternative": null,
+  "assignedMeals": [
+    {"day": 5, "date": "2026-03-10", "meal": "dinner", "priority": "primary"}
+  ]
 }
 ```
 
-### MealAssignment Object
-```typescript
+**Required fields:** `id`, `name`, `city`, `isKidFriendly`, `assignedMeals`
+
+**Meal values:** `"breakfast"`, `"lunch"`, `"dinner"`, `"snack"`, `"afternoon"`
+
+**Priority values:** `"primary"`, `"alternative"`, `"INCLUDED"`
+
+### Day Object
+
+```json
 {
-  day: number;                   // Day number (1-15)
-  date: string;                  // "YYYY-MM-DD"
-  meal: "breakfast" | "lunch" | "dinner" | "snack" | "afternoon";
-  priority: "primary" | "alternative" | "INCLUDED";  // INCLUDED = ryokan/hotel meal
+  "dayNumber": 3,
+  "date": "2026-03-08",
+  "dayOfWeek": "Sunday",
+  "title": "East Tokyo Loop",
+  "location": "Tokyo",
+  "type": "self_guided",
+  "accommodationId": "tokyo-here-shinjuku",
+  "highlights": ["Senso-ji Temple", "Tokyo Skytree", "Ameyoko Market"],
+  "hardDeadlines": [],
+  "meals": {
+    "breakfast": "own",
+    "lunch": "own",
+    "dinner": "own"
+  }
 }
 ```
 
-### DayInfo Object
-```typescript
-{
-  id: string;                    // Format: "day-XX"
-  dayNumber: number;
-  date: string;                  // "YYYY-MM-DD"
-  dayOfWeek: string;             // "Saturday", "Sunday", etc.
-  title: string;                 // Day title, e.g., "Shibuya & Harajuku"
-  location: string;              // City name
-  type: "travel" | "self_guided" | "guided_tour" | "mixed";
-  accommodationId: string | null;
-  highlights: string[];          // Key activities for the day
-  hardDeadlines: HardDeadline[]; // Time-sensitive items
-  meals: {
-    breakfast: string | null;    // "Hotel" or restaurant name or null
-    lunch: string | null;
-    dinner: string | null;
-  };
-  optimizationNote: string | null;
-  transitSummary: { totalMinutes: number; segments: number } | null;
-}
-```
+**Type values:** `"travel"`, `"self_guided"`, `"guided_tour"`, `"mixed"`
 
-### TransitSegment Object
-```typescript
+**Meal plan values:** `"own"`, `"INCLUDED"`, `"flight"`, `null`
+
+### Transit Segment Object
+
+```json
 {
-  id: string;                    // Format: "transit-XXXX"
-  activityId: string;            // Links to activity this transit FOLLOWS
-  leaveBy: string;               // "HH:MM" - when to leave current activity
-  walkToStationMinutes: number | null;
-  stationName: string | null;
-  trainLine: string | null;
-  suggestedDeparture: string | null;  // Train departure time
-  travelMinutes: number | null;
-  transfers: string | null;      // Transfer instructions
-  arrivalStation: string | null;
-  walkToDestinationMinutes: number | null;
-  bufferMinutes: number;         // Buffer time (default: 10)
+  "id": "transit-day3-to-sensoji",
+  "activityId": "act-day3-sensoji",
+  "leaveBy": "08:30",
+  "walkToStationMinutes": 5,
+  "stationName": "Shinjuku-sanchome",
+  "trainLine": "Tokyo Metro Marunouchi → Ginza",
+  "suggestedDeparture": "08:35",
+  "travelMinutes": 25,
+  "transfers": "Transfer at Ginza to Ginza Line",
+  "arrivalStation": "Asakusa",
+  "walkToDestinationMinutes": 5,
+  "bufferMinutes": 10
 }
 ```
 
@@ -136,34 +238,33 @@ You are editing the FTC: Nihon Japan trip itinerary (March 6-21, 2026). This is 
 
 ## Editing Rules
 
-### Rule 1: Preserve IDs
-- **Never change existing IDs** - they are referenced elsewhere
-- For new items, use the pattern: `{type}-{sequential-number}` or descriptive slug
-- Restaurant IDs should be kebab-case slugs: `restaurant-name-area`
+### Rule 1: ID Conventions
+- **Activities:** `act-day{N}-{slug}` (e.g., `act-day3-sensoji`)
+- **Restaurants:** `{name-slug}-{area}` (e.g., `afuri-ebisu`)
+- **Transit:** `transit-day{N}-{description}` (e.g., `transit-day3-to-skytree`)
+- **Never change existing IDs** - they are referenced by other records
 
-### Rule 2: Maintain Date/Day Consistency
-- Day 1 = March 7, 2026 (Saturday)
-- Day 15 = March 21, 2026 (Saturday)
-- When changing `dayNumber`, also update `date` field
-- Date formula: `2026-03-{06 + dayNumber}`
+### Rule 2: Date/Day Consistency
+When changing `dayNumber`, also update `date`:
 
 | Day | Date | Day of Week |
 |-----|------|-------------|
-| 1 | 2026-03-07 | Saturday |
-| 2 | 2026-03-08 | Sunday |
-| 3 | 2026-03-09 | Monday |
-| 4 | 2026-03-10 | Tuesday |
-| 5 | 2026-03-11 | Wednesday |
-| 6 | 2026-03-12 | Thursday |
-| 7 | 2026-03-13 | Friday |
-| 8 | 2026-03-14 | Saturday |
-| 9 | 2026-03-15 | Sunday |
-| 10 | 2026-03-16 | Monday |
-| 11 | 2026-03-17 | Tuesday |
-| 12 | 2026-03-18 | Wednesday |
-| 13 | 2026-03-19 | Thursday |
-| 14 | 2026-03-20 | Friday |
-| 15 | 2026-03-21 | Saturday |
+| 1 | 2026-03-06 | Friday |
+| 2 | 2026-03-07 | Saturday |
+| 3 | 2026-03-08 | Sunday |
+| 4 | 2026-03-09 | Monday |
+| 5 | 2026-03-10 | Tuesday |
+| 6 | 2026-03-11 | Wednesday |
+| 7 | 2026-03-12 | Thursday |
+| 8 | 2026-03-13 | Friday |
+| 9 | 2026-03-14 | Saturday |
+| 10 | 2026-03-15 | Sunday |
+| 11 | 2026-03-16 | Monday |
+| 12 | 2026-03-17 | Tuesday |
+| 13 | 2026-03-18 | Wednesday |
+| 14 | 2026-03-19 | Thursday |
+| 15 | 2026-03-20 | Friday |
+| 16 | 2026-03-21 | Saturday |
 
 ### Rule 3: Location Constraints
 | Days | Location | Cannot Schedule |
@@ -171,93 +272,44 @@ You are editing the FTC: Nihon Japan trip itinerary (March 6-21, 2026). This is 
 | 1-6 | Tokyo | Kyoto temples, Osaka food |
 | 7-8 | Hakone | Must stay near ryokan |
 | 9-11 | Kyoto | Tokyo activities |
-| 12-15 | Osaka | Tokyo/Kyoto activities |
+| 12-16 | Osaka | Tokyo/Kyoto activities |
 
 ### Rule 4: Time Cascade
 When changing an activity's duration or start time:
 1. Check if subsequent activities need adjustment
-2. Update transit segments if timing changes
-3. Ensure no overlaps (activity end time < next activity start time)
-4. Maintain meal times in reasonable windows:
+2. Ensure no overlaps (activity end time < next activity start time)
+3. Maintain reasonable meal windows:
    - Breakfast: 07:00-09:00
    - Lunch: 11:30-13:30
    - Dinner: 17:30-20:00
 
 ### Rule 5: Hard Deadlines Cannot Move
 These have `isHardDeadline: true` and CANNOT be rescheduled:
-- TeamLab Borderless (Day 2, 10:00 entry)
-- Sumo Tournament (Day 3, 13:00)
+- TeamLab Borderless (Day 6, 10:00 entry)
 - Ghibli Museum (Day 4, 10:00 entry)
-- Hakone Pirate Ship (Day 7, specific times)
-- Fushimi Inari (Day 10, early morning recommended)
+- Flight departures/arrivals
 
-### Rule 6: Meal Assignment Sync
+### Rule 6: Meal Assignment Rules
 When editing restaurant `assignedMeals`:
-1. Ensure day number matches the city the restaurant is in
-2. Update DayInfo `meals` object to reflect changes
-3. One restaurant can be assigned to multiple meals (alternatives)
-4. Mark ryokan meals as `priority: "INCLUDED"`
+1. Day number must match the city the restaurant is in
+2. One restaurant can be assigned to multiple meals (as alternative)
+3. Use `priority: "INCLUDED"` for ryokan/hotel meals only
 
-### Rule 7: Kid-Friendly Awareness
-Always flag `isKidFriendly: false` for:
+### Rule 7: Kid-Friendly Flag
+Set `isKidFriendly: false` for:
 - Late-night izakaya (after 8 PM)
 - Bars or adult-only venues
 - Very spicy food restaurants
 - Long meditation/quiet activities
 
-### Rule 8: Required Fields
-Always include these fields (use `null` if unknown):
-- Activities: `id`, `dayNumber`, `date`, `startTime`, `name`, `category`, `sortOrder`
-- Restaurants: `id`, `name`, `city`, `assignedMeals`, `isKidFriendly`
-- Transit: `id`, `activityId`, `bufferMinutes` (default: 10)
-
-### Rule 9: GPS Coordinates
-- Include `locationLat` and `locationLng` when possible
+### Rule 8: GPS Coordinates
+Always include `locationLat` and `locationLng` when adding locations:
 - Tokyo: ~35.6762, 139.6503
 - Hakone: ~35.2329, 139.1069
 - Kyoto: ~35.0116, 135.7681
 - Osaka: ~34.6937, 135.5023
 
-### Rule 10: Output Format
-Return edits in one of these formats:
-
-**For single item edits:**
-```json
-{
-  "action": "update",
-  "type": "activity",
-  "id": "act-0015",
-  "changes": {
-    "startTime": "14:00",
-    "durationMinutes": 90
-  }
-}
-```
-
-**For new items:**
-```json
-{
-  "action": "add",
-  "type": "restaurant",
-  "data": {
-    "id": "ichiran-shibuya",
-    "name": "Ichiran Ramen Shibuya",
-    // ... full object
-  }
-}
-```
-
-**For deletions:**
-```json
-{
-  "action": "delete",
-  "type": "activity",
-  "id": "act-0015"
-}
-```
-
-**For bulk day edits:**
-Return the complete updated day section.
+Look up exact coordinates from Google Maps.
 
 ---
 
@@ -265,37 +317,37 @@ Return the complete updated day section.
 
 Before finalizing edits, verify:
 
-- [ ] All dates match day numbers (Day 1 = Mar 7)
+- [ ] All dates match day numbers
 - [ ] No time overlaps within a day
 - [ ] Hard deadline activities unchanged
 - [ ] Restaurant cities match day locations
 - [ ] Meal assignments have valid day references
-- [ ] Transit segments link to valid activity IDs
 - [ ] sortOrder is sequential within each day
-- [ ] GPS coordinates are in valid ranges
+- [ ] GPS coordinates are valid (lat ~35, lng ~135-139 for Japan)
 - [ ] isKidFriendly is set appropriately
+- [ ] All required fields are present
 
 ---
 
 ## Example Edit Requests
 
 ### Good Request:
-"Move the Senso-ji Temple visit from Day 2 afternoon to Day 3 morning at 9:00 AM. Adjust the transit from the previous activity accordingly."
+"Add AFURI Ramen in Ebisu as an alternative dinner option for Day 5. Include the GPS coordinates from Google Maps."
 
 ### Bad Request:
-"Add some restaurants" (too vague - specify which day, meal, cuisine, location)
+"Add some restaurants" (too vague)
 
 ### Good Request:
-"Add Afuri Ramen in Ebisu as an alternative dinner option for Day 5. Include coordinates and hours."
+"Move the Senso-ji Temple visit from Day 3 at 9:00 AM to 8:30 AM, and extend it to 2.5 hours."
 
 ### Bad Request:
-"Change the schedule" (specify exactly what to change)
+"Change the schedule" (not specific)
 
 ---
 
 ## City-Specific Notes
 
-### Tokyo (Days 1-6)
+### Tokyo (Days 2-6)
 - JR Pass not needed (use Suica/Pasmo)
 - Most attractions close 5-6 PM
 - Rush hour: 7:30-9:30 AM, 5-8 PM (avoid trains)
@@ -310,17 +362,25 @@ Before finalizing edits, verify:
 - Buses get crowded - consider walking/taxi
 - Geisha district active evening only
 
-### Osaka (Days 12-15)
+### Osaka (Days 12-16)
 - Food heaven - many options
 - Dotonbori best at night (neon signs)
-- Day 15 is departure - limited morning only
+- Day 16 is departure - morning only available
 
 ---
 
-## How to Use This Prompt
+## How to Apply Changes
 
-1. Copy this entire document
-2. Paste as context/system prompt to your AI
-3. Then make your specific edit request
-4. Review the AI's output against the validation checklist
-5. Apply changes using the update process (see UPDATE_PROCESS.md)
+After receiving JSON output from AI:
+
+1. **Review the JSON** - Check it matches the schema
+2. **Open Claude Code** in the project
+3. **Request the update:**
+   ```
+   Apply these changes to src/data/trip-itinerary.json:
+   [paste the JSON output]
+   ```
+4. **Verify build:** Run `npm run build` to check for errors
+5. **Clear browser database:** DevTools → Application → IndexedDB → Delete "ftc-nihon"
+6. **Refresh the app** to see changes
+7. **Commit:** `git commit -am "data: [describe your change]"`
