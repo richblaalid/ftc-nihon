@@ -35,6 +35,9 @@ function ScheduleContent() {
   // Update store when day changes - call store action directly to avoid stale closures
   const handleDayChange = (day: number) => {
     useAppStore.getState().setSelectedDay(day);
+    // Scroll to top so user sees day summary first
+    const scrollContainer = document.getElementById('main-scroll-container');
+    scrollContainer?.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   // Fetch activities for selected day
