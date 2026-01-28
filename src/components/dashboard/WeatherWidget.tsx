@@ -72,27 +72,85 @@ export function WeatherWidget() {
   }
 
   return (
-    <div className="card flex items-center gap-4">
+    <div className="card flex items-center gap-3 p-3">
       {/* Weather icon */}
-      <span className="text-4xl">{weather.icon}</span>
+      <span className="text-3xl">{weather.icon}</span>
 
       {/* Temperature and condition */}
-      <div className="flex-1">
-        <p className="text-sm text-foreground-tertiary">{weather.city}</p>
-        <div className="flex items-baseline gap-2">
-          <span className="text-2xl font-semibold text-foreground">{weather.temperature}°F</span>
-          <span className="text-sm text-foreground-secondary">{weather.condition}</span>
-        </div>
+      <div className="flex-1 min-w-0">
+        <p className="text-xs text-foreground-tertiary truncate">{weather.city}</p>
+        <p className="text-xl font-semibold text-foreground">{weather.temperature}°F</p>
         <p className="text-xs text-foreground-tertiary">
-          H: {weather.tempHigh}° L: {weather.tempLow}°
+          {weather.tempHigh}°/{weather.tempLow}°
         </p>
       </div>
+    </div>
+  );
+}
 
-      {/* Humidity */}
-      <div className="text-right">
-        <p className="text-xs text-foreground-tertiary">Humidity</p>
-        <p className="text-sm font-medium text-foreground-secondary">{weather.humidity}%</p>
+/**
+ * Compact weather widget for use in utility row
+ */
+export function WeatherWidgetCompact() {
+  const [weather, setWeather] = useState<WeatherData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const dayNumber = useCurrentDayNumber();
+
+  const city = dayNumber ? DAY_CITIES[dayNumber] ?? 'Tokyo' : 'Tokyo';
+
+  useEffect(() => {
+    let mounted = true;
+
+    async function loadWeather() {
+      const cached = getCachedWeather();
+      if (cached && mounted) {
+        setWeather(cached);
+        setIsLoading(false);
+      }
+
+      const fresh = await getWeather(city);
+      if (fresh && mounted) {
+        setWeather(fresh);
+      }
+      if (mounted) {
+        setIsLoading(false);
+      }
+    }
+
+    loadWeather();
+    const interval = setInterval(loadWeather, 30 * 60 * 1000);
+
+    return () => {
+      mounted = false;
+      clearInterval(interval);
+    };
+  }, [city]);
+
+  if (isLoading && !weather) {
+    return (
+      <div className="card flex flex-col items-center justify-center p-3 animate-pulse">
+        <div className="h-8 w-8 rounded-full bg-background-secondary" />
+        <div className="mt-2 h-5 w-14 rounded bg-background-secondary" />
+        <div className="mt-1 h-3 w-16 rounded bg-background-secondary" />
       </div>
+    );
+  }
+
+  if (!weather) {
+    return (
+      <div className="card flex flex-col items-center justify-center p-3">
+        <span className="text-2xl">🌡️</span>
+        <p className="text-lg font-bold text-foreground">--°F</p>
+        <p className="text-xs text-foreground-tertiary">--° / --°</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="card flex flex-col items-center justify-center p-3">
+      <span className="text-2xl">{weather.icon}</span>
+      <p className="text-lg font-bold text-foreground">{weather.temperature}°F</p>
+      <p className="text-xs text-foreground-tertiary">{weather.tempHigh}° / {weather.tempLow}°</p>
     </div>
   );
 }

@@ -1,107 +1,77 @@
 'use client';
 
-import Link from 'next/link';
 import { CurrencyConverter, useCurrencyConverter } from '@/components/ui/CurrencyConverter';
+import { WeatherWidgetCompact } from './WeatherWidget';
 
-interface QuickActionProps {
-  href: string;
+// Google Translate URL - English to Japanese by default
+const GOOGLE_TRANSLATE_URL = 'https://translate.google.com/?sl=en&tl=ja&op=translate';
+
+/**
+ * Utility widget button - matches card style of weather widget
+ */
+interface UtilityWidgetProps {
   icon: string;
   label: string;
-  disabled?: boolean;
+  onClick?: () => void;
+  href?: string;
   external?: boolean;
   testId?: string;
 }
 
-function QuickAction({ href, icon, label, disabled, external, testId }: QuickActionProps) {
+function UtilityWidget({ icon, label, onClick, href, external, testId }: UtilityWidgetProps) {
   const baseClasses =
-    'flex flex-col items-center justify-center gap-1 rounded-xl p-4 transition-all duration-fast min-h-touch min-w-touch';
+    'card flex flex-col items-center justify-center p-3 transition-all active:scale-95 cursor-pointer hover:bg-background-secondary';
 
-  if (disabled) {
+  if (href) {
+    if (external) {
+      return (
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          data-testid={testId}
+          className={baseClasses}
+        >
+          <span className="text-2xl font-bold text-foreground" aria-hidden="true">{icon}</span>
+          <p className="text-sm font-medium text-foreground-secondary mt-2">{label}</p>
+        </a>
+      );
+    }
     return (
-      <div
-        className={`${baseClasses} cursor-not-allowed bg-background-tertiary`}
-        data-testid={testId}
-        aria-disabled="true"
-      >
-        <span className="text-2xl opacity-50" aria-hidden="true">{icon}</span>
-        <span className="text-xs font-medium text-foreground-secondary">{label}</span>
-      </div>
-    );
-  }
-
-  if (external) {
-    return (
-      <a
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        data-testid={testId}
-        className={`${baseClasses} bg-background-secondary hover:bg-background-tertiary active:scale-95`}
-      >
-        <span className="text-2xl" aria-hidden="true">{icon}</span>
-        <span className="text-xs font-medium text-foreground-secondary">{label}</span>
+      <a href={href} data-testid={testId} className={baseClasses}>
+        <span className="text-2xl font-bold text-foreground" aria-hidden="true">{icon}</span>
+        <p className="text-sm font-medium text-foreground-secondary mt-2">{label}</p>
       </a>
     );
   }
 
   return (
-    <Link
-      href={href}
-      data-testid={testId}
-      className={`${baseClasses} bg-background-secondary hover:bg-background-tertiary active:scale-95`}
-    >
-      <span className="text-2xl" aria-hidden="true">{icon}</span>
-      <span className="text-xs font-medium text-foreground-secondary">{label}</span>
-    </Link>
-  );
-}
-
-interface QuickActionButtonProps {
-  icon: string;
-  label: string;
-  onClick: () => void;
-  testId?: string;
-}
-
-export function QuickActionButton({ icon, label, onClick, testId }: QuickActionButtonProps) {
-  const baseClasses =
-    'flex flex-col items-center justify-center gap-1 rounded-xl p-4 transition-all duration-fast min-h-touch min-w-touch';
-
-  return (
-    <button
-      onClick={onClick}
-      data-testid={testId}
-      className={`${baseClasses} bg-background-secondary hover:bg-background-tertiary active:scale-95`}
-    >
-      <span className="text-2xl" aria-hidden="true">{icon}</span>
-      <span className="text-xs font-medium text-foreground-secondary">{label}</span>
+    <button onClick={onClick} data-testid={testId} className={baseClasses}>
+      <span className="text-2xl font-bold text-foreground" aria-hidden="true">{icon}</span>
+      <p className="text-sm font-medium text-foreground-secondary mt-2">{label}</p>
     </button>
   );
 }
 
-// Google Translate URL - opens in browser/app
-const GOOGLE_TRANSLATE_URL = 'https://translate.google.com/?sl=auto&tl=en&op=translate';
-
+/**
+ * Row of 3 utility widgets: Weather, Currency, Translate
+ */
 export function QuickActions() {
   const currencyConverter = useCurrencyConverter();
 
   return (
     <>
-      <div className="grid grid-cols-4 gap-3" data-testid="quick-actions">
-        <QuickAction href="/schedule" icon="📅" label="Schedule" testId="quick-action-schedule" />
-        <QuickAction href="/map" icon="🗺️" label="Map" testId="quick-action-map" />
-        <QuickAction href="/reservations" icon="🏨" label="Hotels" testId="quick-action-hotels" />
-        <QuickActionButton
-          icon="💱"
+      <div className="grid grid-cols-3 gap-3" data-testid="quick-actions">
+        <WeatherWidgetCompact />
+        <UtilityWidget
+          icon="¥ ↔ $"
           label="Currency"
           onClick={currencyConverter.open}
           testId="quick-action-currency"
         />
-      </div>
-      <div className="grid grid-cols-4 gap-3 mt-3">
-        <QuickAction
+        <UtilityWidget
           href={GOOGLE_TRANSLATE_URL}
-          icon="🌐"
+          icon="話す"
           label="Translate"
           external
           testId="quick-action-translate"

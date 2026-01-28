@@ -6,7 +6,6 @@ import {
   DashboardLayout,
   NowWidget,
   NextWidget,
-  WeatherWidget,
   TimeWidget,
   AlertBanner,
   QuickActions,
@@ -101,9 +100,6 @@ export default function Home() {
       {/* Alert banner - shows urgent alerts and approaching deadlines */}
       <AlertBanner />
 
-      {/* Quick action buttons */}
-      <QuickActions />
-
       {/* Flight info on relevant days */}
       {relevantFlight && (
         <section aria-labelledby="flight-heading">
@@ -135,8 +131,10 @@ export default function Home() {
         </section>
       )}
 
-      {/* Weather and Time widgets */}
-      <WeatherWidget />
+      {/* Utility widgets row: Weather, Currency, Translate */}
+      <QuickActions />
+
+      {/* Time widget */}
       <TimeWidget />
 
       {/* Emergency button - floating action */}
