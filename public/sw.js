@@ -1,14 +1,18 @@
 /// <reference lib="webworker" />
 
-const CACHE_NAME = 'ftc-nihon-v4';
+const CACHE_NAME = 'ftc-nihon-v5';
 const STATIC_ASSETS = [
   '/',
+  '/schedule',
+  '/map',
+  '/reservations',
   '/icon-192x192.png',
   '/icon-384x384.png',
   '/icon-512x512.png',
   '/apple-touch-icon.png',
   '/favicon-32x32.png',
   '/favicon-16x16.png',
+  '/ftc-nihon-logo.png',
 ];
 
 // Install event - cache static assets

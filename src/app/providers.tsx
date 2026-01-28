@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import { initializeSync, subscribeToChanges } from '@/lib/sync';
 import { useSyncStore, initOnlineListeners } from '@/stores/sync-store';
 import { seedDatabase, reseedDatabase } from '@/db/seed';
+import { warmAllCaches } from '@/lib/cache-warmer';
 
 interface ProvidersProps {
   children: React.ReactNode;
@@ -73,6 +74,13 @@ export function Providers({ children }: ProvidersProps) {
       } finally {
         setIsSyncing(false);
       }
+
+      // Warm caches in background after sync (with delay to not block UI)
+      setTimeout(() => {
+        warmAllCaches().catch((err) => {
+          console.warn('[Providers] Cache warming failed:', err);
+        });
+      }, 2000);
     };
 
     runSync();
