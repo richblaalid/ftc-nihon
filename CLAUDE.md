@@ -96,6 +96,18 @@ supabase start     # Start local Supabase
 supabase db reset  # Reset and seed database
 ```
 
+### Testing
+
+```bash
+npm test           # Run Vitest in watch mode (during development)
+npm run test:run   # Run tests once (use before commits)
+npm run test:coverage  # Run with coverage report
+npm run test:e2e   # Run Playwright E2E tests
+```
+
+**Test files:** Co-located with source files as `*.test.ts` or `*.test.tsx`
+**Coverage target:** 90% (configured in vitest.config.ts)
+
 ### Claude Code Skills
 
 ```
@@ -266,7 +278,7 @@ See [docs/tasks.md](docs/tasks.md) for current implementation status.
 
 ### Completing a Task
 
-1. Ensure build passes
+1. Ensure tests and build pass (`npm run test:run && npm run build`)
 2. Mark task as complete in docs/tasks.md
 3. Update Task Log with date and commit hash
 4. Commit with descriptive message
