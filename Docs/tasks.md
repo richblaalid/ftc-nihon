@@ -597,13 +597,13 @@
 
 ### 5.5.3 Context-Aware Japanese Phrases
 
-- [ ] 5.5.3.1: Create phrases database schema and types
+- [x] 5.5.3.1: Create phrases database schema and types
   - Files: src/db/database.ts, src/db/types.ts, src/types/database.ts
   - Schema: phrases table with id, category, context, english, romaji, japanese, sortOrder
   - Categories: restaurant, transit, shopping, temple, hotel, emergency
   - Test: Schema compiles, migrations work
 
-- [ ] 5.5.3.2: Populate phrases database with initial content
+- [x] 5.5.3.2: Populate phrases database with initial content
   - Files: src/db/seed-phrases.ts (or Supabase seed)
   - Content: 8-12 phrases per category (~60 total)
   - Categories:
@@ -615,39 +615,39 @@
     - Emergency: help, medical, lost items
   - Test: Phrases load from database
 
-- [ ] 5.5.3.3: Create usePhrases hook
+- [x] 5.5.3.3: Create usePhrases hook
   - Files: src/db/hooks.ts
   - Hook: usePhrases(category?) - returns phrases filtered by category
   - Hook: usePhrasesByContext(activityCategory) - maps activity category to phrase categories
   - Test: Hooks return correct phrases
 
-- [ ] 5.5.3.4: Create PhraseCard component
+- [x] 5.5.3.4: Create PhraseCard component
   - Files: src/components/ui/PhraseCard.tsx
   - Display: English phrase, Romaji (pronunciation), Japanese characters
   - Features: Tap to expand/copy, "Show to staff" large text mode
   - Style: Clean card with clear typography hierarchy
   - Test: Card displays all three text formats correctly
 
-- [ ] 5.5.3.5: Create PhraseList component with category tabs
+- [x] 5.5.3.5: Create PhraseList component with category tabs
   - Files: src/components/phrases/PhraseList.tsx
   - UI: Horizontal scrolling category tabs, list of PhraseCards
   - Features: Filter by category, expand all option
   - Test: Category filtering works
 
-- [ ] 5.5.3.6: Create contextual phrases preview component
+- [x] 5.5.3.6: Create contextual phrases preview component
   - Files: src/components/phrases/ContextualPhrases.tsx
   - Display: 2-3 most relevant phrases for current activity type
   - Features: "See all phrases" button to expand full list
   - Logic: Map activity category to phrase categories (food→restaurant, temple→temple, etc.)
   - Test: Preview shows relevant phrases based on activity
 
-- [ ] 5.5.3.7: Add phrases preview to activity detail page
+- [x] 5.5.3.7: Add phrases preview to activity detail page
   - Files: src/app/schedule/[id]/page.tsx or src/components/schedule/ActivityDetail.tsx
   - Integration: Show ContextualPhrases component below activity details
   - Condition: Only show for relevant categories (food, temple, shopping, hotel)
   - Test: Phrases appear contextually on activity details
 
-- [ ] 5.5.3.8: Create dedicated phrases page
+- [x] 5.5.3.8: Create dedicated phrases page
   - Files: src/app/phrases/page.tsx
   - UI: Full PhraseList with all categories
   - Access: From "See all phrases" button or navigation

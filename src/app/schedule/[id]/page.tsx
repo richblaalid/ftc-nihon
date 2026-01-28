@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useActivityWithTransit } from '@/db/hooks';
 import { CategoryIcon, getCategoryPillClass } from '@/components/ui/CategoryIcon';
+import { ContextualPhrases } from '@/components/phrases/ContextualPhrases';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -265,6 +266,11 @@ function ActivityDetailContent({ params }: PageProps) {
             <p className="mt-1 whitespace-pre-line text-foreground">{activity.backupAlternative}</p>
           </div>
         )}
+
+        {/* Contextual Japanese phrases */}
+        <div className="mt-6">
+          <ContextualPhrases activityCategory={activity.category} />
+        </div>
 
         {/* Website link */}
         {activity.websiteUrl && (

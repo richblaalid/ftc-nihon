@@ -16,10 +16,11 @@ import {
   attractions,
   shoppingLocations,
   restaurants,
-  phrases,
   transportRoutes,
   checklistItems,
 } from './seed-data';
+// Import comprehensive phrases from dedicated file
+import { PHRASES as phrases } from './seed-phrases';
 
 /**
  * Check if database is already seeded
