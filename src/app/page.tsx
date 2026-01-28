@@ -50,24 +50,27 @@ export default function Home() {
     <DashboardLayout
       header={
         <div className="flex flex-col items-center pt-2">
-          {/* Branded header with logo */}
-          <div className="relative flex flex-col items-center">
+          {/* Branded header with logo - compact horizontal layout */}
+          <div className="flex items-center justify-center gap-1">
+            <h1 className="font-display text-2xl text-foreground tracking-wide">
+              日本
+            </h1>
             <Image
               src="/ftc-nihon-logo.png"
               alt="Finer Things Club: Nihon"
-              width={140}
-              height={140}
+              width={72}
+              height={72}
               className="drop-shadow-lg"
               priority
             />
-            <h1 className="font-display text-display-sm text-foreground -mt-2">
-              日本 2026
-            </h1>
+            <span className="font-display text-2xl text-foreground tracking-wide">
+              2026
+            </span>
           </div>
 
           {/* Sync status indicator - subtle, below header */}
           <div
-            className="mt-1 flex items-center gap-2 text-xs text-foreground-tertiary"
+            className="flex items-center gap-2 text-xs text-foreground-tertiary"
             data-testid="sync-status"
             aria-live="polite"
           >
