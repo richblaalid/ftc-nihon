@@ -24,7 +24,7 @@ export function CurrencyConverter({ isOpen, onClose }: CurrencyConverterProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [inputValue, setInputValue] = useState('');
-  const [direction, setDirection] = useState<ConversionDirection>('usd-to-jpy');
+  const [direction, setDirection] = useState<ConversionDirection>('jpy-to-usd');
   const [rate, setRate] = useState<number | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [isOffline, setIsOffline] = useState(false);
