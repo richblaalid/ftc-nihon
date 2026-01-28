@@ -3,10 +3,9 @@
 import { Suspense, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useActivitiesWithTransit, useCurrentActivity, useCurrentDayNumber, useDayInfo } from '@/db/hooks';
-import { DayStrip } from '@/components/ui';
+import { DayStrip, PageHeader } from '@/components/ui';
 import { Timeline } from '@/components/schedule/Timeline';
 import { useAppStore } from '@/stores/app-store';
-import Link from 'next/link';
 import { DayHeader } from '@/components/ui/DayHeader';
 import { HardDeadlineList } from '@/components/ui/HardDeadlineAlert';
 import type { HardDeadline } from '@/types/database';
@@ -54,39 +53,28 @@ function ScheduleContent() {
   return (
     <div className="flex min-h-screen flex-col bg-background">
       {/* Header */}
-      <header className="sticky top-0 z-10 border-b border-background-secondary bg-background/95 pb-2 pt-safe backdrop-blur-sm">
-        <div className="flex items-center justify-between px-4 pt-2">
-          {/* Back button */}
-          <Link
-            href="/"
-            className="flex min-h-touch min-w-touch items-center justify-center rounded-full text-foreground-secondary hover:bg-background-secondary"
-          >
-            <span className="text-xl">←</span>
-          </Link>
-
-          <h1 className="font-display text-xl text-foreground">Schedule</h1>
-
-          {/* Today button */}
-          {!isToday && currentDayNumber && (
+      <PageHeader
+        title="Schedule"
+        rightAction={
+          !isToday && currentDayNumber ? (
             <button
               onClick={() => handleDayChange(currentDayNumber)}
-              className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary"
+              className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary hover:bg-primary/20 transition-colors"
             >
               Today
             </button>
-          )}
-          {(isToday || !currentDayNumber) && <div className="w-12" />}
-        </div>
-
+          ) : undefined
+        }
+      >
         {/* Day strip navigation */}
-        <div className="mt-2">
+        <div className="pb-2">
           <DayStrip
             selectedDay={selectedDay}
             currentDay={currentDayNumber}
             onDayChange={handleDayChange}
           />
         </div>
-      </header>
+      </PageHeader>
 
       {/* Main content */}
       <main className="flex-1 px-4 py-4 pb-safe">

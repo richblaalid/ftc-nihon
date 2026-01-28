@@ -2,7 +2,7 @@
 
 import { useAccommodations } from '@/db/hooks';
 import { AccommodationCard } from '@/components/reservations';
-import Link from 'next/link';
+import { PageHeader } from '@/components/ui';
 
 /**
  * Reservations page showing all accommodations
@@ -28,20 +28,7 @@ export default function ReservationsPage() {
   return (
     <div className="flex min-h-screen flex-col bg-background pb-safe">
       {/* Header */}
-      <header className="sticky top-0 z-10 border-b border-border bg-background/95 backdrop-blur-sm px-4 py-3 pt-safe">
-        <div className="flex items-center gap-3">
-          <Link
-            href="/"
-            aria-label="Back to home"
-            className="p-2 -ml-2 rounded-lg hover:bg-background-secondary"
-          >
-            <svg className="w-5 h-5 text-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          </Link>
-          <h1 className="text-lg font-semibold text-foreground">Reservations</h1>
-        </div>
-      </header>
+      <PageHeader title="Reservations" />
 
       {/* Main content */}
       <main className="flex-1 p-4 space-y-4">

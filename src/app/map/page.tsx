@@ -3,12 +3,11 @@
 import { useState, useCallback, Suspense, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Map, PinLegend, PinInfo, Directions } from '@/components/maps';
-import { DayStrip } from '@/components/ui';
+import { DayStrip, PageHeader } from '@/components/ui';
 import { useGeolocation } from '@/lib/hooks/useGeolocation';
 import { useActivitiesWithTransit, useCurrentDayNumber, useAccommodationsForDay } from '@/db/hooks';
 import { useAppStore } from '@/stores/app-store';
 import type { ActivityWithTransit, Accommodation } from '@/types/database';
-import Link from 'next/link';
 
 function MapContent() {
   const searchParams = useSearchParams();
@@ -132,39 +131,30 @@ function MapContent() {
   return (
     <div className="flex flex-col bg-background overflow-hidden" style={{ height: 'calc(100dvh - 4rem - env(safe-area-inset-bottom))' }}>
       {/* Header */}
-      <header className="flex-shrink-0 px-4 py-3 bg-background border-b border-border">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link href="/" aria-label="Back to home" className="p-2 -ml-2 rounded-lg hover:bg-background-secondary">
-              <svg className="w-5 h-5 text-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-            </Link>
-            <h1 className="text-lg font-semibold text-foreground">Day {selectedDay} Map</h1>
-          </div>
-
-          {/* Location toggle */}
+      <PageHeader
+        title={`Day ${selectedDay} Map`}
+        rightAction={
           <button
             onClick={() => !isTracking && startTracking()}
             aria-label={isTracking ? 'Location tracking enabled' : 'Enable location tracking'}
-            className={`p-2 rounded-lg ${isTracking ? 'bg-primary/10 text-primary' : 'bg-background-secondary text-foreground-secondary'}`}
+            className={`p-2 rounded-lg transition-colors ${isTracking ? 'bg-primary/10 text-primary' : 'bg-background-secondary text-foreground-secondary hover:bg-background-tertiary'}`}
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
           </button>
-        </div>
-
+        }
+      >
         {/* Day strip navigation */}
-        <div className="mt-2 -mx-4">
+        <div className="-mx-0">
           <DayStrip
             selectedDay={selectedDay}
             currentDay={currentTripDay}
             onDayChange={handleDayChange}
           />
         </div>
-      </header>
+      </PageHeader>
 
       {/* Map container - takes remaining space */}
       <div className="flex-1 relative min-h-0 overflow-hidden">
