@@ -23,14 +23,34 @@ export function AccommodationCard({ accommodation, isCurrent = false, isExpanded
   useEffect(() => {
     if (isExpandedFromUrl) {
       setIsExpanded(true);
-      // Small delay to let the page render first
-      if (cardRef.current) {
-        setTimeout(() => {
-          cardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }, 100);
-      }
     }
   }, [isExpandedFromUrl]);
+
+  // Scroll to show expanded content when card is expanded
+  useEffect(() => {
+    if (isExpanded && cardRef.current) {
+      // Small delay to let the expanded content render
+      setTimeout(() => {
+        const card = cardRef.current;
+        if (!card) return;
+
+        const cardRect = card.getBoundingClientRect();
+        const navHeight = 80; // 4rem nav + some padding
+        const viewportHeight = window.innerHeight;
+        const visibleBottom = viewportHeight - navHeight;
+
+        // Check if card bottom is below the visible area (above nav)
+        if (cardRect.bottom > visibleBottom) {
+          // Scroll so card bottom is just above the nav
+          const scrollContainer = document.getElementById('main-scroll-container');
+          if (scrollContainer) {
+            const scrollAmount = cardRect.bottom - visibleBottom + 16; // 16px extra padding
+            scrollContainer.scrollBy({ top: scrollAmount, behavior: 'smooth' });
+          }
+        }
+      }, 150);
+    }
+  }, [isExpanded]);
 
   // Format date range (parse as local date to avoid timezone issues)
   const formatDateRange = () => {

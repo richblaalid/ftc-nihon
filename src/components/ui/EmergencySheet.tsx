@@ -112,7 +112,7 @@ export function EmergencySheet({ tripInfo, isOpen, onClose }: EmergencySheetProp
           shadow-2xl
           transform transition-transform duration-300 ease-out
           ${isAnimating ? 'translate-y-0' : 'translate-y-full'}
-          max-h-[85vh] overflow-y-auto
+          max-h-[95vh] overflow-y-auto
         `}
         style={{ bottom: 0 }}
       >
@@ -142,7 +142,7 @@ export function EmergencySheet({ tripInfo, isOpen, onClose }: EmergencySheetProp
           </div>
         </div>
 
-        <div className="p-5 space-y-5" style={{ paddingBottom: 'calc(5rem + env(safe-area-inset-bottom, 0px))' }}>
+        <div className="p-5 space-y-5 pb-safe">
           {/* Guide Contact - Mico */}
           {tripInfo.guideName && (
             <div className="p-4 bg-gradient-to-br from-coral-50 to-amber-50 dark:from-coral-950/30 dark:to-amber-950/30 rounded-2xl border border-coral-200 dark:border-coral-800">
