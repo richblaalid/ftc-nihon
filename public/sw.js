@@ -1,6 +1,6 @@
 /// <reference lib="webworker" />
 
-const CACHE_NAME = 'ftc-nihon-v5';
+const CACHE_NAME = 'ftc-nihon-v6';
 const STATIC_ASSETS = [
   '/',
   '/schedule',
@@ -22,7 +22,14 @@ self.addEventListener('install', (event) => {
       return cache.addAll(STATIC_ASSETS);
     })
   );
-  self.skipWaiting();
+  // Don't skipWaiting() here - let the client control when to update
+});
+
+// Listen for skip waiting message from client
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
 });
 
 // Activate event - clean up old caches

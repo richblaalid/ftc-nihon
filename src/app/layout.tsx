@@ -4,6 +4,7 @@ import localFont from 'next/font/local';
 import './globals.css';
 import { ServiceWorkerRegistration } from '@/components/ServiceWorkerRegistration';
 import { BottomNav } from '@/components/ui';
+import { UpdateBanner } from '@/components/ui/UpdateBanner';
 import { Providers } from './providers';
 
 // Primary body font - Urbanist
@@ -74,6 +75,7 @@ export default function RootLayout({
       >
         <ServiceWorkerRegistration />
         <Providers>
+          <UpdateBanner />
           <div className="flex h-[100dvh] flex-col overflow-hidden">
             <div id="main-scroll-container" className="flex-1 overflow-y-auto pb-16">{children}</div>
             <BottomNav />
