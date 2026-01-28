@@ -77,6 +77,60 @@ async function warmStaticRoutes(): Promise<number> {
   return cached;
 }
 
+interface MealAssignment {
+  day: number;
+  meal: string;
+  priority: string;
+}
+
+/**
+ * Warm the cache with restaurant detail pages
+ */
+export async function warmRestaurantCache(): Promise<{ cached: number; total: number }> {
+  try {
+    const restaurants = await db.restaurants.toArray();
+    const urlsToCache = new Set<string>();
+
+    // Build URLs from meal assignments
+    for (const restaurant of restaurants) {
+      if (!restaurant.assignedMeals) continue;
+
+      try {
+        const assignments: MealAssignment[] = JSON.parse(restaurant.assignedMeals);
+        for (const assignment of assignments) {
+          const url = `/restaurants/day-${assignment.day}-${assignment.meal}/${restaurant.id}`;
+          urlsToCache.add(url);
+        }
+      } catch {
+        // Skip restaurants with invalid JSON
+        continue;
+      }
+    }
+
+    const urls = Array.from(urlsToCache);
+    console.log(`[CacheWarmer] Warming cache for ${urls.length} restaurant pages...`);
+
+    let cached = 0;
+    const batchSize = 5;
+
+    for (let i = 0; i < urls.length; i += batchSize) {
+      const batch = urls.slice(i, i + batchSize);
+      const results = await Promise.all(batch.map((url) => prefetchUrl(url)));
+      cached += results.filter(Boolean).length;
+
+      if (i + batchSize < urls.length) {
+        await new Promise((resolve) => setTimeout(resolve, 100));
+      }
+    }
+
+    console.log(`[CacheWarmer] Cached ${cached}/${urls.length} restaurant pages`);
+    return { cached, total: urls.length };
+  } catch (error) {
+    console.error('[CacheWarmer] Failed to warm restaurant cache:', error);
+    return { cached: 0, total: 0 };
+  }
+}
+
 /**
  * Warm all caches - call this once after initial sync
  */
@@ -102,6 +156,7 @@ export async function warmAllCaches(): Promise<void> {
   // Warm caches sequentially to avoid overwhelming the network
   await warmStaticRoutes();
   await warmActivityCache();
+  await warmRestaurantCache();
 
   // Mark as warmed
   localStorage.setItem('ftc-cache-warmed', Date.now().toString());
