@@ -1,0 +1,1463 @@
+{
+  "trip": {
+    "id": "japan-2026-blaalid-rowles",
+    "name": "Blaalid & Rowles Japan Adventure",
+    "startDate": "2026-03-06",
+    "endDate": "2026-03-21",
+    "totalNights": 15,
+    "regions": ["Tokyo", "Hakone", "Kyoto", "Osaka"],
+    "travelers": {
+      "total": 7,
+      "adults": 4,
+      "children": 3,
+      "childAges": [12, 11, 9]
+    },
+    "guide": {
+      "name": "Mico Yamamoto",
+      "company": "Yamamoto Travel",
+      "phone": "+81 9091780911",
+      "email": "mico@yamamototravel.com"
+    }
+  },
+  "emergency": {
+    "police": "110",
+    "fireAmbulance": "119",
+    "japanHelpline": "0570-064-211",
+    "usEmbassyTokyo": "03-3224-5000",
+    "guide": "+81 9091780911"
+  },
+  "flights": {
+    "outbound": {
+      "confirmation": "HWWFJR",
+      "flightNumber": "DL0121",
+      "aircraft": "Airbus A350-900",
+      "departure": {
+        "airport": "MSP",
+        "airportName": "Minneapolis/St Paul",
+        "terminal": "1",
+        "dateTime": "2026-03-06T11:40:00-06:00",
+        "localTime": "11:40 AM"
+      },
+      "arrival": {
+        "airport": "HND",
+        "airportName": "Tokyo Haneda",
+        "terminal": "3",
+        "dateTime": "2026-03-07T15:20:00+09:00",
+        "localTime": "3:20 PM"
+      },
+      "duration": "12h 40m",
+      "stops": 0,
+      "seats": ["34D", "34C", "34B", "34A"]
+    },
+    "return": {
+      "confirmation": "HWWFJR",
+      "flightNumber": "DL0120",
+      "aircraft": "Airbus A350-900",
+      "departure": {
+        "airport": "HND",
+        "airportName": "Tokyo Haneda",
+        "terminal": "3",
+        "dateTime": "2026-03-21T17:20:00+09:00",
+        "localTime": "5:20 PM"
+      },
+      "arrival": {
+        "airport": "MSP",
+        "airportName": "Minneapolis/St Paul",
+        "terminal": "1",
+        "dateTime": "2026-03-21T14:35:00-06:00",
+        "localTime": "2:35 PM"
+      },
+      "duration": "11h 15m",
+      "stops": 0
+    },
+    "passengers": [
+      {"name": "Richard Blaalid", "eTicket": "0067335610854", "status": "Silver Medallion"},
+      {"name": "Angela Blaalid", "eTicket": "0067335610855", "status": null},
+      {"name": "Benjamin Blaalid", "eTicket": "0067335610856", "status": null},
+      {"name": "Emma Blaalid", "eTicket": "0067335610857", "status": null}
+    ]
+  },
+  "accommodations": [
+    {
+      "id": "tokyo-here-shinjuku",
+      "name": "&Here Shinjuku",
+      "nameJapanese": "＆ヒア新宿",
+      "type": "hotel",
+      "city": "Tokyo",
+      "dates": {
+        "checkIn": "2026-03-07",
+        "checkOut": "2026-03-12",
+        "nights": 5
+      },
+      "confirmation": "5464976388",
+      "pin": "5562",
+      "address": {
+        "english": "2-15-14-2 Shinjuku, Shinjuku City, Tokyo 160-0022",
+        "japanese": "〒160-0022 東京都新宿区新宿2-15-14-2",
+        "postalCode": "160-0022"
+      },
+      "coordinates": {
+        "lat": 35.6895,
+        "lng": 139.7089
+      },
+      "contact": {
+        "phone": "+81 3-6384-2040",
+        "website": "https://andherehotels-shinjuku.com/en/"
+      },
+      "checkInTime": "15:00-22:00",
+      "checkOutTime": "11:00",
+      "rooms": [
+        {"type": "Superior Triple Bunk Bed Room with Terrace", "price": 251790},
+        {"type": "Deluxe Family 2 Bed & 2 Bunk Bed Room", "price": 333300}
+      ],
+      "totalCost": 585090,
+      "currency": "JPY",
+      "paymentStatus": "guaranteed",
+      "mealsIncluded": false,
+      "cancellationDeadline": "2026-03-05T23:59:00+09:00",
+      "mapsUrl": "https://maps.app.goo.gl/QvYKjxU9vP5eNrKR7",
+      "notes": ["Cash NOT accepted", "14-min walk from Busta Shinjuku"]
+    },
+    {
+      "id": "hakone-yoshimatsu",
+      "name": "Takumino yado Yoshimatsu",
+      "nameJapanese": "匠の宿 佳松",
+      "type": "ryokan",
+      "city": "Hakone",
+      "dates": {
+        "checkIn": "2026-03-12",
+        "checkOut": "2026-03-14",
+        "nights": 2
+      },
+      "confirmations": [
+        {"family": "Blaalid", "code": "XEVXZWUZ", "transaction": "0014757894"},
+        {"family": "Rowles", "code": "9SPM1U1T", "transaction": "0014757990"}
+      ],
+      "address": {
+        "english": "521 Hakone, Hakone-machi, Ashigarashimo-gun, Kanagawa 250-0521",
+        "japanese": "〒250-0521 神奈川県足柄下郡箱根町箱根521",
+        "postalCode": "250-0521"
+      },
+      "coordinates": {
+        "lat": 35.1956,
+        "lng": 139.0265
+      },
+      "contact": {
+        "phone": "0460-83-6661",
+        "phoneHours": "9:00-20:00",
+        "website": "https://www.hakone.co.jp/"
+      },
+      "checkInTime": "15:00-17:00",
+      "checkOutTime": "11:00",
+      "mealsIncluded": true,
+      "meals": [
+        {"date": "2026-03-12", "breakfast": false, "dinner": true},
+        {"date": "2026-03-13", "breakfast": true, "dinner": true},
+        {"date": "2026-03-14", "breakfast": true, "dinner": false}
+      ],
+      "dinnerTime": "18:00-19:00",
+      "pickup": {
+        "required": true,
+        "location": "Hakonemachi Port Bus Stop / Pirate Ship Pier",
+        "timeWindow": "15:00-17:00",
+        "actionRequired": "CALL AHEAD to confirm arrival time"
+      },
+      "dropoff": {
+        "location": "Hakonemachi Port Bus Stop",
+        "timeWindow": "08:00-11:00"
+      },
+      "amenities": ["onsen", "kaiseki", "tatami", "mt_fuji_view", "lake_ashi_view"],
+      "mapsUrl": "https://maps.app.goo.gl/U7kv3y7JRnQz9v3KA"
+    },
+    {
+      "id": "kyoto-fujinoma",
+      "name": "Fujinoma Machiya House",
+      "nameJapanese": "藤の間 町家",
+      "type": "vacation_rental",
+      "city": "Kyoto",
+      "dates": {
+        "checkIn": "2026-03-14",
+        "checkOut": "2026-03-17",
+        "nights": 3
+      },
+      "confirmation": "6306540803",
+      "pin": "5278",
+      "address": {
+        "english": "476-11 Tenshitsukinuke 4chome, Shimogyo Ward, Kyoto 600-8456",
+        "japanese": "〒600-8456 京都市下京区天使突抜4丁目476-11",
+        "postalCode": "600-8456"
+      },
+      "coordinates": {
+        "lat": 34.9919,
+        "lng": 135.7530
+      },
+      "contact": {
+        "phone": "+81 90-8161-3870",
+        "email": "info1@kyoto-machiya-inn.com",
+        "website": "https://www.kyoto-machiya-inn.com/accommodations/fujinoma/"
+      },
+      "checkInTime": "15:00-19:00",
+      "checkOutTime": "10:00",
+      "mealsIncluded": false,
+      "checkInProcess": {
+        "important": "DO NOT go to house first!",
+        "steps": [
+          "Go to MACHIYA INNS Check-in Desk",
+          "Complete registration in person",
+          "Pay accommodation tax (¥8,400 CASH)",
+          "Receive house check-in instructions",
+          "Proceed to Machiya House"
+        ],
+        "deskAddress": "685-2 Higashishiokōjichō, Shimogyō-ku, Kyoto 600-8216",
+        "deskHours": "10:00-19:00",
+        "deskMapsUrl": "https://g.page/machiya-inns-hotels?share"
+      },
+      "accommodationTax": {
+        "amount": 8400,
+        "currency": "JPY",
+        "paymentMethod": "CASH ONLY"
+      },
+      "mapsUrl": "https://maps.app.goo.gl/FnoMachiyaKyoto"
+    },
+    {
+      "id": "osaka-mimaru",
+      "name": "MIMARU Osaka Shinsaibashi East",
+      "nameJapanese": "MIMARU大阪 心斎橋EAST",
+      "type": "apartment_hotel",
+      "city": "Osaka",
+      "dates": {
+        "checkIn": "2026-03-17",
+        "checkOut": "2026-03-21",
+        "nights": 4
+      },
+      "confirmation": "5937762447",
+      "pin": "7761",
+      "address": {
+        "english": "1-7-9 Higashishinsaibashi, Chuo-ku, Osaka 542-0083",
+        "japanese": "〒542-0083 大阪市中央区東心斎橋1-7-9",
+        "postalCode": "542-0083"
+      },
+      "coordinates": {
+        "lat": 34.6729,
+        "lng": 135.5029
+      },
+      "contact": {
+        "phone": "+81 6-4256-4010",
+        "website": "https://mimaruhotels.com/en/hotel/shinsaibashi-east/"
+      },
+      "checkInTime": "15:00-22:00",
+      "checkOutTime": "07:00-11:00",
+      "roomType": "Superior Two-Bedroom Japanese Apartment For 7",
+      "totalCost": 329011,
+      "currency": "JPY",
+      "paymentStatus": "FULLY PAID",
+      "mealsIncluded": false,
+      "cancellationPolicy": "NON-REFUNDABLE",
+      "mapsUrl": "https://maps.app.goo.gl/8YvqMJVZjzCHqVKD9"
+    }
+  ],
+  "tickets": [
+    {
+      "id": "teamlab-borderless",
+      "name": "TeamLab Borderless",
+      "date": "2026-03-11",
+      "status": "purchased",
+      "entryTime": "12:00-12:30",
+      "confirmations": [
+        {"family": "Blaalid", "code": "AYKYXUUTXUJ7-0001"},
+        {"family": "Rowles", "code": "AAUTXAPVAFMF-0001"}
+      ],
+      "location": {
+        "name": "Azabudai Hills Garden Plaza B B1",
+        "address": "5-9 Toranomon, Minato-ku, Tokyo",
+        "coordinates": {"lat": 35.6615, "lng": 139.7419}
+      },
+      "duration": "2-3 hours",
+      "tips": [
+        "Wear comfortable shoes",
+        "Avoid white clothing",
+        "Charge phone for photos"
+      ],
+      "mapsUrl": "https://maps.app.goo.gl/JQN3B9y1ZMGFQB8Z8"
+    },
+    {
+      "id": "ghibli-museum",
+      "name": "Ghibli Museum",
+      "date": "2026-03-09",
+      "status": "not_purchased",
+      "targetEntryTime": "10:00",
+      "purchaseInfo": {
+        "saleDate": "2026-02-10",
+        "saleTime": "10:00 JST",
+        "yourTime": "2026-02-09T19:00:00-06:00",
+        "website": "https://l-tike.com/ghibli/",
+        "critical": "Purchase for MARCH 9 (not March 11) - enables optimized routing"
+      },
+      "location": {
+        "name": "Ghibli Museum",
+        "address": "1-1-83 Shimorenjaku, Mitaka, Tokyo 181-0013",
+        "coordinates": {"lat": 35.6962, "lng": 139.5704}
+      },
+      "duration": "2-3 hours",
+      "tips": [
+        "No photos inside",
+        "No re-entry",
+        "Short film in theater - line up early",
+        "Pairs with Harajuku/Shibuya (same west corridor)"
+      ],
+      "mapsUrl": "https://maps.app.goo.gl/qvnWYf4Z8HdK6CVG7"
+    },
+    {
+      "id": "sumo-osaka",
+      "name": "Osaka Sumo Tournament",
+      "date": "2026-03-20",
+      "status": "not_purchased",
+      "specialNote": "Emma's Birthday!",
+      "purchaseInfo": {
+        "saleDate": "2026-02-07",
+        "saleTime": "10:00 JST",
+        "yourTime": "2026-02-06T19:00:00-06:00",
+        "website": "https://sumo.pia.jp/en/sumo03.jsp"
+      },
+      "schedule": {
+        "doorsOpen": "10:30",
+        "topDivision": "15:00",
+        "finalMatch": "18:00"
+      },
+      "location": {
+        "name": "EDION Arena Osaka",
+        "address": "Near Namba Station",
+        "walkFromNamba": "10 min",
+        "coordinates": {"lat": 34.6597, "lng": 135.5012}
+      },
+      "seatOptions": [
+        {"type": "Masu Box B (4 people)", "price": 40000, "notes": "Floor-level, remove shoes"},
+        {"type": "Masu Box C (4 people)", "price": 34000, "notes": "Floor-level, remove shoes"},
+        {"type": "Arena Seats", "priceFrom": 3500, "notes": "Stadium-style with backrest"}
+      ],
+      "mapsUrl": "https://maps.app.goo.gl/BqQ2Lv3vK8v6xCqP8"
+    }
+  ],
+  "itinerary": [
+    {
+      "day": 1,
+      "date": "2026-03-06",
+      "dayOfWeek": "Friday",
+      "title": "Departure Day",
+      "location": "Minneapolis → In Transit",
+      "type": "travel",
+      "highlights": ["Depart MSP 11:40 AM"],
+      "hardDeadlines": [],
+      "timeline": [
+        {"time": "09:30", "activity": "Arrive MSP Terminal 1", "duration": 120, "type": "logistics"},
+        {"time": "11:40", "activity": "Depart DL0121", "duration": 760, "type": "flight"}
+      ],
+      "meals": {
+        "breakfast": {"type": "own", "notes": "Before airport"},
+        "lunch": {"type": "flight", "notes": "On plane"},
+        "dinner": {"type": "flight", "notes": "On plane"}
+      }
+    },
+    {
+      "day": 2,
+      "date": "2026-03-07",
+      "dayOfWeek": "Saturday",
+      "title": "Arrival in Tokyo",
+      "location": "Tokyo",
+      "type": "travel",
+      "accommodation": "tokyo-here-shinjuku",
+      "highlights": ["Arrive Haneda 3:20 PM", "Check-in &Here Shinjuku"],
+      "hardDeadlines": [
+        {"time": "22:00", "description": "Hotel check-in closes"}
+      ],
+      "timeline": [
+        {"time": "15:20", "activity": "Arrive Haneda Terminal 3", "duration": 40, "type": "logistics"},
+        {"time": "16:00", "activity": "Immigration & collect luggage", "duration": 30, "type": "logistics"},
+        {"time": "16:30", "activity": "Airport Limousine Bus to Busta Shinjuku", "duration": 50, "type": "transport", "cost": 1400},
+        {"time": "17:30", "activity": "Walk to hotel", "duration": 14, "type": "walking"},
+        {"time": "18:00", "activity": "Check-in &Here Shinjuku", "duration": 30, "type": "accommodation"},
+        {"time": "19:00", "activity": "Easy dinner near hotel", "duration": 60, "type": "dining"},
+        {"time": "21:00", "activity": "Try to stay awake for jetlag", "duration": 60, "type": "rest"}
+      ],
+      "meals": {
+        "breakfast": {"type": "none", "notes": "On flight"},
+        "lunch": {"type": "none", "notes": "On flight"},
+        "dinner": {"type": "own", "options": ["Tsunahachi", "Ichiran Ramen", "7-Eleven"]}
+      }
+    },
+    {
+      "day": 3,
+      "date": "2026-03-08",
+      "dayOfWeek": "Sunday",
+      "title": "EAST TOKYO LOOP ⭐ OPTIMIZED",
+      "location": "Tokyo",
+      "type": "self_guided",
+      "districts": ["Asakusa", "Skytree", "Ueno", "Yanaka"],
+      "accommodation": "tokyo-here-shinjuku",
+      "ratings": {"efficiency": 9, "effort": 7, "quality": 7},
+      "highlights": ["Senso-ji Temple", "Tokyo Skytree", "Ameyoko Market", "Yanaka Ginza", "Bird Cafe", "Omoide Yokocho"],
+      "hardDeadlines": [],
+      "shoppingOpportunities": [
+        {"item": "Baseball Hats", "location": "Ameyoko Market", "priceRange": "¥2,000-5,000", "notes": "Haggling OK"}
+      ],
+      "optimizationNote": "Yanaka moved here from Day 5 - it's 5 min from Ueno, saves 50+ min transit",
+      "timeline": [
+        {"time": "08:30", "activity": "Depart hotel", "duration": 25, "type": "transport", "details": "Metro to Asakusa"},
+        {"time": "09:00", "activity": "Senso-ji Temple", "duration": 60, "type": "attraction", "attractionId": "sensoji"},
+        {"time": "10:00", "activity": "Nakamise-dori shopping", "duration": 45, "type": "shopping"},
+        {"time": "10:45", "activity": "Kaminarimon Gate photos", "duration": 15, "type": "attraction"},
+        {"time": "11:00", "activity": "Walk to Skytree (via Azumabashi)", "duration": 20, "type": "walking"},
+        {"time": "11:20", "activity": "Tokyo Skytree Tembo Deck", "duration": 70, "type": "attraction", "cost": 2100},
+        {"time": "12:30", "activity": "Lunch at Solamachi", "duration": 60, "type": "dining"},
+        {"time": "13:30", "activity": "Train to Ueno", "duration": 10, "type": "transport"},
+        {"time": "13:45", "activity": "Ueno Park", "duration": 60, "type": "attraction"},
+        {"time": "14:45", "activity": "Ameyoko Market (baseball hats!)", "duration": 75, "type": "shopping", "notes": "Baseball hats ¥2,000-5,000"},
+        {"time": "16:00", "activity": "Walk to Yanaka", "duration": 15, "type": "walking", "notes": "Via Ueno Cemetery"},
+        {"time": "16:15", "activity": "Yanaka Ginza exploration", "duration": 60, "type": "sightseeing", "notes": "Old Tokyo, cats"},
+        {"time": "17:15", "activity": "Torino Iru Bird Cafe", "duration": 60, "type": "experience", "cost": 2150},
+        {"time": "18:15", "activity": "Train to Shinjuku", "duration": 25, "type": "transport", "details": "JR from Nippori"},
+        {"time": "18:45", "activity": "Omoide Yokocho dinner", "duration": 90, "type": "dining", "notes": "Yakitori alley - very local"},
+        {"time": "20:15", "activity": "Walk to hotel", "duration": 10, "type": "walking"}
+      ],
+      "transitSummary": {"totalMinutes": 95, "segments": 5},
+      "meals": {
+        "breakfast": {"type": "own", "options": ["Quick near hotel", "Konbini"]},
+        "lunch": {"type": "own", "location": "Solamachi (Skytree)"},
+        "dinner": {"type": "own", "location": "Omoide Yokocho", "notes": "Yakitori alley - very local feel"}
+      }
+    },
+    {
+      "day": 4,
+      "date": "2026-03-09",
+      "dayOfWeek": "Monday",
+      "title": "WEST TOKYO + GHIBLI ⭐ OPTIMIZED",
+      "location": "Tokyo",
+      "type": "self_guided",
+      "districts": ["Mitaka/Ghibli", "Harajuku", "Shibuya", "Shinjuku"],
+      "accommodation": "tokyo-here-shinjuku",
+      "ratings": {"efficiency": 9, "effort": 8, "quality": 8},
+      "highlights": ["Ghibli Museum", "Meiji Shrine", "Onitsuka Tiger Shopping", "Shibuya Crossing", "Kabukicho"],
+      "hardDeadlines": [
+        {"time": "10:00", "description": "Ghibli Museum entry"}
+      ],
+      "shoppingOpportunities": [
+        {"item": "Onitsuka Tiger Shoes", "location": "Yellow Concept Store, Omotesando", "priceRange": "¥25,000+"}
+      ],
+      "optimizationNote": "Ghibli moved here from Day 6 - pairs with west Tokyo corridor, eliminates Mitaka→Azabudai gap",
+      "timeline": [
+        {"time": "08:15", "activity": "Depart hotel", "duration": 18, "type": "transport", "details": "JR Chuo Rapid to Kichijoji"},
+        {"time": "08:35", "activity": "Arrive Kichijoji", "duration": 0, "type": "logistics"},
+        {"time": "08:40", "activity": "Walk through Inokashira Park", "duration": 20, "type": "walking", "notes": "Beautiful forest path"},
+        {"time": "09:00", "activity": "Arrive Ghibli Museum", "duration": 60, "type": "waiting"},
+        {"time": "10:00", "activity": "Ghibli Museum", "duration": 120, "type": "attraction", "ticketId": "ghibli-museum"},
+        {"time": "12:00", "activity": "Exit Ghibli", "duration": 0, "type": "logistics"},
+        {"time": "12:15", "activity": "Train to Harajuku", "duration": 25, "type": "transport", "details": "JR via Shinjuku"},
+        {"time": "12:45", "activity": "Lunch in Harajuku", "duration": 45, "type": "dining"},
+        {"time": "13:30", "activity": "Meiji Jingu Shrine", "duration": 60, "type": "attraction"},
+        {"time": "14:30", "activity": "Walk to Omotesando", "duration": 10, "type": "walking"},
+        {"time": "14:45", "activity": "Onitsuka Tiger Yellow Concept Store", "duration": 45, "type": "shopping", "attractionId": "onitsuka-yellow"},
+        {"time": "15:30", "activity": "Takeshita Street", "duration": 60, "type": "shopping"},
+        {"time": "16:30", "activity": "Animal Cafe (optional)", "duration": 45, "type": "experience"},
+        {"time": "17:15", "activity": "Walk to Shibuya", "duration": 15, "type": "walking", "details": "Via Cat Street"},
+        {"time": "17:30", "activity": "Shibuya Crossing", "duration": 20, "type": "attraction"},
+        {"time": "17:50", "activity": "Hachiko Statue", "duration": 10, "type": "attraction"},
+        {"time": "18:00", "activity": "Nintendo Store", "duration": 45, "type": "shopping"},
+        {"time": "18:45", "activity": "Pokemon Center", "duration": 30, "type": "shopping"},
+        {"time": "19:15", "activity": "Train to Shinjuku", "duration": 5, "type": "transport"},
+        {"time": "19:30", "activity": "Dinner in Shinjuku", "duration": 75, "type": "dining"},
+        {"time": "20:45", "activity": "Kabukicho walking", "duration": 30, "type": "sightseeing"},
+        {"time": "21:15", "activity": "Godzilla Road", "duration": 15, "type": "attraction"},
+        {"time": "21:30", "activity": "Walk to hotel", "duration": 10, "type": "walking"}
+      ],
+      "transitSummary": {"totalMinutes": 83, "segments": 4},
+      "meals": {
+        "breakfast": {"type": "own", "notes": "Quick, early departure"},
+        "lunch": {"type": "own", "location": "Harajuku", "options": ["Afuri Ramen", "Marion Crepes", "Gyukatsu Motomura"]},
+        "dinner": {"type": "own", "location": "Shinjuku", "options": ["Torikizoku", "Fuunji"]}
+      }
+    },
+    {
+      "day": 5,
+      "date": "2026-03-10",
+      "dayOfWeek": "Tuesday",
+      "title": "CENTRAL CORRIDOR ⭐ OPTIMIZED",
+      "location": "Tokyo",
+      "type": "self_guided",
+      "districts": ["Imperial Palace", "Akihabara", "Ebisu"],
+      "accommodation": "tokyo-here-shinjuku",
+      "ratings": {"efficiency": 7, "effort": 7, "quality": 8},
+      "highlights": ["Imperial Palace East Gardens", "Super Potato gaming", "Animal Cafe", "Ebisu Yokocho (very local)", "Afuri Ramen"],
+      "hardDeadlines": [],
+      "optimizationNote": "Akihabara moved here from Day 3 - forms central corridor. Yanaka moved to Day 3 (near Ueno)",
+      "timeline": [
+        {"time": "09:00", "activity": "Depart hotel", "duration": 15, "type": "transport", "details": "Metro Marunouchi to Otemachi"},
+        {"time": "09:20", "activity": "Imperial Palace East Gardens", "duration": 90, "type": "attraction"},
+        {"time": "10:50", "activity": "Ninomaru Garden", "duration": 30, "type": "attraction"},
+        {"time": "11:20", "activity": "Walk to Otemachi Station", "duration": 10, "type": "walking"},
+        {"time": "11:35", "activity": "Train to Akihabara", "duration": 10, "type": "transport"},
+        {"time": "11:45", "activity": "Arrive Akihabara", "duration": 0, "type": "logistics"},
+        {"time": "12:00", "activity": "Lunch (Syabu-YŌ robot servers!)", "duration": 60, "type": "dining"},
+        {"time": "13:00", "activity": "Super Potato (retro gaming)", "duration": 60, "type": "shopping"},
+        {"time": "14:00", "activity": "Animal Cafe", "duration": 60, "type": "experience", "cost": 1500},
+        {"time": "15:00", "activity": "Manga/Gashapon shops", "duration": 60, "type": "shopping"},
+        {"time": "16:00", "activity": "Train to Ebisu", "duration": 20, "type": "transport", "details": "JR via Yurakucho"},
+        {"time": "16:30", "activity": "Yebisu Garden Place", "duration": 60, "type": "sightseeing", "notes": "Beer museum, shopping"},
+        {"time": "17:30", "activity": "Explore Ebisu neighborhood", "duration": 30, "type": "sightseeing"},
+        {"time": "18:00", "activity": "Ebisu Yokocho dinner", "duration": 120, "type": "dining", "notes": "Izakaya food hall - VERY local"},
+        {"time": "20:00", "activity": "Afuri Ramen", "duration": 45, "type": "dining", "attractionId": "afuri-ebisu"},
+        {"time": "20:45", "activity": "Train to Shinjuku", "duration": 12, "type": "transport"}
+      ],
+      "transitSummary": {"totalMinutes": 57, "segments": 4},
+      "meals": {
+        "breakfast": {"type": "own", "location": "Near hotel"},
+        "lunch": {"type": "own", "location": "Akihabara", "options": ["Syabu-YŌ (robot servers!)", "Yuzuan", "Kanda Yabu Soba"]},
+        "dinner": {"type": "own", "location": "Ebisu Yokocho + Afuri Ramen", "notes": "Ebisu Yokocho is very local, not touristy"}
+      }
+    },
+    {
+      "day": 6,
+      "date": "2026-03-11",
+      "dayOfWeek": "Wednesday",
+      "title": "TEAMLAB DAY ⭐ OPTIMIZED (Relaxed)",
+      "location": "Tokyo",
+      "type": "self_guided",
+      "accommodation": "tokyo-here-shinjuku",
+      "ratings": {"efficiency": 8, "effort": 4, "quality": 7},
+      "highlights": ["Sleep in!", "TeamLab Borderless", "Eyeglasses for Angie", "Pack for Hakone"],
+      "hardDeadlines": [
+        {"time": "12:00-12:30", "description": "TeamLab Borderless entry window"}
+      ],
+      "optimizationNote": "Ghibli moved to Day 4 - this day is now relaxed pre-Hakone recovery. Single focus = no stress!",
+      "timeline": [
+        {"time": "09:00", "activity": "Sleep in / lazy morning", "duration": 60, "type": "rest", "notes": "Recovery day!"},
+        {"time": "10:00", "activity": "Late breakfast near hotel", "duration": 45, "type": "dining"},
+        {"time": "10:45", "activity": "Oh My Glasses for Angie", "duration": 30, "type": "shopping", "attractionId": "oh-my-glasses"},
+        {"time": "11:15", "activity": "Depart for TeamLab", "duration": 25, "type": "transport", "details": "Metro to Azabudai Hills"},
+        {"time": "11:45", "activity": "Arrive Azabudai Hills (buffer)", "duration": 15, "type": "waiting"},
+        {"time": "12:00", "activity": "TeamLab entry window", "duration": 0, "type": "logistics"},
+        {"time": "12:30", "activity": "TeamLab Borderless", "duration": 180, "type": "attraction", "ticketId": "teamlab-borderless"},
+        {"time": "15:30", "activity": "Exit TeamLab", "duration": 0, "type": "logistics"},
+        {"time": "15:45", "activity": "Explore Azabudai Hills", "duration": 45, "type": "sightseeing"},
+        {"time": "16:30", "activity": "Return to hotel", "duration": 25, "type": "transport"},
+        {"time": "17:00", "activity": "Rest & pack for Hakone", "duration": 90, "type": "rest", "notes": "Big travel day tomorrow!"},
+        {"time": "18:30", "activity": "Easy dinner near hotel", "duration": 60, "type": "dining"},
+        {"time": "19:30", "activity": "Finalize packing", "duration": 60, "type": "rest"},
+        {"time": "21:00", "activity": "Early night", "duration": 0, "type": "rest", "notes": "Need energy for Hakone"}
+      ],
+      "transitSummary": {"totalMinutes": 60, "segments": 2},
+      "preHakoneChecklist": [
+        "Pack for 2 nights (ryokan provides yukata)",
+        "Confirm ryokan pickup call plan",
+        "Charge all devices",
+        "Download offline Hakone maps"
+      ],
+      "meals": {
+        "breakfast": {"type": "own", "notes": "Late, leisurely"},
+        "lunch": {"type": "own", "location": "Azabudai Hills", "notes": "Near TeamLab"},
+        "dinner": {"type": "own", "location": "Near hotel", "options": ["Ichiran Ramen", "7-Eleven", "Matsuya"], "notes": "Light, easy"}
+      }
+    },
+    {
+      "day": 7,
+      "date": "2026-03-12",
+      "dayOfWeek": "Thursday",
+      "title": "Tokyo → Hakone",
+      "location": "Tokyo → Hakone",
+      "type": "travel",
+      "accommodation": "hakone-yoshimatsu",
+      "highlights": ["Romancecar to Hakone", "Hakone circuit", "Ryokan check-in", "Kaiseki dinner"],
+      "hardDeadlines": [
+        {"time": "11:00", "description": "Check-out &Here Shinjuku"},
+        {"time": "17:00", "description": "CALL RYOKAN for pickup"},
+        {"time": "15:00-17:00", "description": "Ryokan pickup window"}
+      ],
+      "actionRequired": {
+        "description": "Call Ryokan to confirm pickup",
+        "phone": "0460-83-6661",
+        "when": "Before 5:00 PM"
+      },
+      "timeline": [
+        {"time": "08:00", "activity": "Breakfast, final packing", "duration": 90, "type": "logistics"},
+        {"time": "09:30", "activity": "Check bags at front desk", "duration": 15, "type": "logistics"},
+        {"time": "10:00", "activity": "Walk to Shinjuku Station", "duration": 15, "type": "walking"},
+        {"time": "10:30", "activity": "Purchase Hakone Free Pass + Romancecar", "duration": 30, "type": "logistics", "cost": 9500},
+        {"time": "11:00", "activity": "Board Romancecar", "duration": 85, "type": "transport"},
+        {"time": "12:25", "activity": "Arrive Hakone-Yumoto", "duration": 0, "type": "logistics"},
+        {"time": "12:30", "activity": "Explore Hakone-Yumoto + lunch", "duration": 90, "type": "sightseeing"},
+        {"time": "14:00", "activity": "Begin Hakone circuit to Lake Ashi", "duration": 90, "type": "transport"},
+        {"time": "15:30", "activity": "Arrive Lake Ashi area", "duration": 0, "type": "logistics"},
+        {"time": "16:00", "activity": "CALL RYOKAN", "duration": 5, "type": "logistics", "critical": true},
+        {"time": "16:30", "activity": "Wait at Hakonemachi Port", "duration": 30, "type": "waiting"},
+        {"time": "17:00", "activity": "Ryokan pickup", "duration": 15, "type": "transport"},
+        {"time": "17:30", "activity": "Check-in Yoshimatsu", "duration": 60, "type": "accommodation"},
+        {"time": "18:30", "activity": "Kaiseki dinner in room", "duration": 90, "type": "dining", "included": true},
+        {"time": "20:00", "activity": "Onsen (hot spring baths)", "duration": 60, "type": "experience"}
+      ],
+      "meals": {
+        "breakfast": {"type": "own", "notes": "Near hotel before checkout"},
+        "lunch": {"type": "own", "location": "Hakone-Yumoto"},
+        "dinner": {"type": "included", "notes": "Kaiseki in room, 6:30 PM"}
+      }
+    },
+    {
+      "day": 8,
+      "date": "2026-03-13",
+      "dayOfWeek": "Friday",
+      "title": "Hakone Full Day",
+      "location": "Hakone",
+      "type": "self_guided",
+      "accommodation": "hakone-yoshimatsu",
+      "highlights": ["Owakudani black eggs", "Lake Ashi cruise", "Hakone Open-Air Museum", "Onsen"],
+      "hardDeadlines": [
+        {"time": "17:00", "description": "Return to ryokan for dinner"},
+        {"time": "18:30", "description": "Kaiseki dinner time (approx)"}
+      ],
+      "timeline": [
+        {"time": "07:30", "activity": "Breakfast in room", "duration": 60, "type": "dining", "included": true},
+        {"time": "08:30", "activity": "Request drop-off", "duration": 0, "type": "logistics"},
+        {"time": "09:00", "activity": "Pirate Ship to Togendai", "duration": 30, "type": "transport"},
+        {"time": "09:30", "activity": "Ropeway to Owakudani", "duration": 30, "type": "transport"},
+        {"time": "10:00", "activity": "Owakudani (Hell Valley)", "duration": 90, "type": "attraction", "attractionId": "owakudani"},
+        {"time": "11:30", "activity": "Ropeway to Sounzan", "duration": 10, "type": "transport"},
+        {"time": "11:45", "activity": "Cable Car to Gora", "duration": 10, "type": "transport"},
+        {"time": "12:00", "activity": "Lunch near Gora", "duration": 60, "type": "dining"},
+        {"time": "13:00", "activity": "Hakone Open-Air Museum", "duration": 180, "type": "attraction", "attractionId": "hakone-open-air"},
+        {"time": "16:00", "activity": "Bus/train back to ryokan", "duration": 45, "type": "transport"},
+        {"time": "17:00", "activity": "Return to ryokan, rest", "duration": 90, "type": "rest"},
+        {"time": "18:30", "activity": "Kaiseki dinner in room", "duration": 90, "type": "dining", "included": true},
+        {"time": "20:00", "activity": "Onsen baths", "duration": 60, "type": "experience"}
+      ],
+      "meals": {
+        "breakfast": {"type": "included", "notes": "Japanese breakfast in room"},
+        "lunch": {"type": "own", "location": "Near Gora or Open-Air Museum"},
+        "dinner": {"type": "included", "notes": "Kaiseki in room"}
+      }
+    },
+    {
+      "day": 9,
+      "date": "2026-03-14",
+      "dayOfWeek": "Saturday",
+      "title": "Hakone → Kyoto",
+      "location": "Hakone → Kyoto",
+      "type": "travel",
+      "accommodation": "kyoto-fujinoma",
+      "highlights": ["Shinkansen to Kyoto", "Machiya check-in", "Pay accommodation tax"],
+      "hardDeadlines": [
+        {"time": "11:00", "description": "Check-out ryokan"},
+        {"time": "19:00", "description": "Machiya check-in desk closes"}
+      ],
+      "actionRequired": {
+        "description": "Pay Kyoto accommodation tax",
+        "amount": "¥8,400 CASH",
+        "where": "Machiya check-in desk"
+      },
+      "timeline": [
+        {"time": "07:30", "activity": "Breakfast in room", "duration": 60, "type": "dining", "included": true},
+        {"time": "08:30", "activity": "Pack, prepare", "duration": 60, "type": "logistics"},
+        {"time": "09:30", "activity": "Request drop-off", "duration": 0, "type": "logistics"},
+        {"time": "10:00", "activity": "Drop-off at Hakonemachi Port", "duration": 15, "type": "transport"},
+        {"time": "10:15", "activity": "Bus to Odawara", "duration": 60, "type": "transport"},
+        {"time": "11:15", "activity": "Arrive Odawara", "duration": 30, "type": "waiting"},
+        {"time": "11:45", "activity": "Shinkansen to Kyoto", "duration": 120, "type": "transport", "cost": 12000},
+        {"time": "13:45", "activity": "Arrive Kyoto Station", "duration": 15, "type": "logistics"},
+        {"time": "14:00", "activity": "Lunch at Kyoto Station", "duration": 45, "type": "dining"},
+        {"time": "14:45", "activity": "Walk to check-in desk", "duration": 3, "type": "walking"},
+        {"time": "15:00", "activity": "Check-in at Machiya desk", "duration": 30, "type": "accommodation", "payTax": true},
+        {"time": "15:30", "activity": "Walk to Fujinoma House", "duration": 15, "type": "walking"},
+        {"time": "16:00", "activity": "Settle into Machiya", "duration": 60, "type": "rest"},
+        {"time": "17:00", "activity": "Light neighborhood exploration", "duration": 120, "type": "sightseeing"},
+        {"time": "19:00", "activity": "Easy dinner nearby", "duration": 90, "type": "dining"}
+      ],
+      "meals": {
+        "breakfast": {"type": "included", "notes": "Japanese breakfast in room at ryokan"},
+        "lunch": {"type": "own", "location": "Kyoto Station Porta underground"},
+        "dinner": {"type": "own", "notes": "Local neighborhood"}
+      }
+    },
+    {
+      "day": 10,
+      "date": "2026-03-15",
+      "dayOfWeek": "Sunday",
+      "title": "Kyoto with Mico",
+      "location": "Kyoto",
+      "type": "guided_tour",
+      "accommodation": "kyoto-fujinoma",
+      "guide": "Mico Yamamoto",
+      "highlights": ["Kiyomizudera Temple", "Gion", "Nishiki Market", "Fushimi Inari"],
+      "hardDeadlines": [
+        {"time": "TBD", "description": "Meet Mico - confirm time/location"}
+      ],
+      "timeline": [
+        {"time": "09:00", "activity": "Meet Mico (TBD)", "duration": 0, "type": "meet_guide"},
+        {"time": "09:30", "activity": "Kiyomizudera Temple", "duration": 90, "type": "attraction"},
+        {"time": "11:00", "activity": "Gion Backstreets", "duration": 60, "type": "sightseeing"},
+        {"time": "12:00", "activity": "Nishiki Market lunch", "duration": 90, "type": "dining"},
+        {"time": "13:30", "activity": "Sanjusangendo Temple", "duration": 60, "type": "attraction"},
+        {"time": "14:30", "activity": "Break/transport", "duration": 30, "type": "logistics"},
+        {"time": "15:00", "activity": "Fushimi Inari", "duration": 120, "type": "attraction"},
+        {"time": "17:00", "activity": "End tour", "duration": 0, "type": "logistics"},
+        {"time": "18:00", "activity": "Dinner in Gion", "duration": 90, "type": "dining"}
+      ],
+      "meals": {
+        "breakfast": {"type": "own", "notes": "Light, Machiya area"},
+        "lunch": {"type": "included_tour", "location": "Nishiki Market sampling"},
+        "dinner": {"type": "own", "notes": "Gion area, Mico will advise"}
+      }
+    },
+    {
+      "day": 11,
+      "date": "2026-03-16",
+      "dayOfWeek": "Monday",
+      "title": "Kyoto Arashiyama",
+      "location": "Kyoto",
+      "type": "self_guided",
+      "accommodation": "kyoto-fujinoma",
+      "highlights": ["Bamboo Grove", "Monkey Park", "Rickshaw ride", "Pontocho Alley dinner"],
+      "hardDeadlines": [
+        {"time": "17:00", "description": "Golden Pavilion closes (if visiting)"}
+      ],
+      "timeline": [
+        {"time": "08:00", "activity": "Early breakfast", "duration": 30, "type": "dining"},
+        {"time": "08:30", "activity": "Train to Arashiyama", "duration": 30, "type": "transport"},
+        {"time": "09:00", "activity": "Bamboo Grove (early = few crowds)", "duration": 45, "type": "attraction"},
+        {"time": "09:45", "activity": "Tenryu-ji Temple", "duration": 60, "type": "attraction"},
+        {"time": "10:45", "activity": "Togetsukyo Bridge photos", "duration": 20, "type": "attraction"},
+        {"time": "11:05", "activity": "Walk to Monkey Park", "duration": 15, "type": "walking"},
+        {"time": "11:20", "activity": "Iwatayama Monkey Park", "duration": 90, "type": "attraction"},
+        {"time": "12:50", "activity": "Lunch in Arashiyama", "duration": 60, "type": "dining"},
+        {"time": "14:00", "activity": "Rickshaw Ride (optional)", "duration": 120, "type": "experience", "cost": 9000},
+        {"time": "16:00", "activity": "Kimono Forest", "duration": 20, "type": "attraction"},
+        {"time": "16:30", "activity": "Return toward Machiya", "duration": 45, "type": "transport"},
+        {"time": "17:30", "activity": "Rest at Machiya", "duration": 60, "type": "rest"},
+        {"time": "18:30", "activity": "Pontocho Alley dinner", "duration": 120, "type": "dining"}
+      ],
+      "optionalEvening": {
+        "activity": "Golden Pavilion",
+        "timing": "Late afternoon before dinner",
+        "duration": 60,
+        "closingTime": "17:00"
+      },
+      "meals": {
+        "breakfast": {"type": "own", "notes": "Quick, before Arashiyama"},
+        "lunch": {"type": "own", "location": "Arashiyama", "options": ["% Arabica", "Atelier Pages"]},
+        "dinner": {"type": "own", "location": "Pontocho Alley"}
+      }
+    },
+    {
+      "day": 12,
+      "date": "2026-03-17",
+      "dayOfWeek": "Tuesday",
+      "title": "Kyoto → Osaka",
+      "location": "Kyoto → Osaka",
+      "type": "travel",
+      "accommodation": "osaka-mimaru",
+      "highlights": ["Golden Pavilion (optional)", "Train to Osaka", "Dotonbori evening"],
+      "hardDeadlines": [
+        {"time": "10:00", "description": "Check-out Fujinoma Machiya"},
+        {"time": "22:00", "description": "MIMARU check-in closes"}
+      ],
+      "timeline": [
+        {"time": "08:00", "activity": "Breakfast", "duration": 60, "type": "dining"},
+        {"time": "09:00", "activity": "Pack, clean up", "duration": 60, "type": "logistics"},
+        {"time": "10:00", "activity": "Check-out Machiya", "duration": 0, "type": "accommodation"},
+        {"time": "10:30", "activity": "Golden Pavilion (if not done)", "duration": 60, "type": "attraction", "optional": true},
+        {"time": "11:30", "activity": "Return to Kyoto Station", "duration": 30, "type": "transport"},
+        {"time": "12:00", "activity": "Train to Osaka", "duration": 30, "type": "transport", "cost": 560},
+        {"time": "12:30", "activity": "Arrive Osaka Station", "duration": 0, "type": "logistics"},
+        {"time": "13:00", "activity": "Lunch in Umeda", "duration": 60, "type": "dining"},
+        {"time": "14:00", "activity": "Subway to Shinsaibashi", "duration": 15, "type": "transport"},
+        {"time": "14:30", "activity": "Arrive MIMARU area", "duration": 30, "type": "logistics"},
+        {"time": "15:00", "activity": "Check-in MIMARU", "duration": 30, "type": "accommodation"},
+        {"time": "16:00", "activity": "Rest, unpack", "duration": 90, "type": "rest"},
+        {"time": "17:30", "activity": "Walk to Dotonbori", "duration": 10, "type": "walking"},
+        {"time": "18:00", "activity": "Dotonbori evening", "duration": 180, "type": "sightseeing"},
+        {"time": "21:00", "activity": "Return to hotel", "duration": 10, "type": "walking"}
+      ],
+      "meals": {
+        "breakfast": {"type": "own", "notes": "Machiya area before checkout"},
+        "lunch": {"type": "own", "location": "Umeda, Osaka"},
+        "dinner": {"type": "own", "location": "Dotonbori street food"}
+      }
+    },
+    {
+      "day": 13,
+      "date": "2026-03-18",
+      "dayOfWeek": "Wednesday",
+      "title": "Osaka with Mico",
+      "location": "Osaka",
+      "type": "guided_tour",
+      "accommodation": "osaka-mimaru",
+      "guide": "Mico Yamamoto",
+      "highlights": ["Kuromon Market", "Knife Shop Demo", "Sake Sampling", "Hidden Alleys"],
+      "hardDeadlines": [
+        {"time": "TBD", "description": "Meet Mico - confirm time/location"}
+      ],
+      "shoppingOpportunities": [
+        {"item": "Japanese Knives", "location": "Tower Knives Osaka (after tour)", "priceRange": "¥6,000-80,000+"}
+      ],
+      "timeline": [
+        {"time": "09:00", "activity": "Meet Mico (TBD)", "duration": 0, "type": "meet_guide"},
+        {"time": "09:30", "activity": "Kuromon Market", "duration": 120, "type": "attraction"},
+        {"time": "11:30", "activity": "Knife Shop Demo", "duration": 60, "type": "experience"},
+        {"time": "12:30", "activity": "Hidden Alleys", "duration": 90, "type": "sightseeing"},
+        {"time": "14:00", "activity": "Sake Samplings", "duration": 60, "type": "experience"},
+        {"time": "15:00", "activity": "Underworld Visit", "duration": 60, "type": "experience"},
+        {"time": "16:00", "activity": "End tour", "duration": 0, "type": "logistics"},
+        {"time": "16:30", "activity": "Tower Knives Osaka (optional)", "duration": 60, "type": "shopping", "attractionId": "tower-knives"},
+        {"time": "18:00", "activity": "Free evening / Dotonbori dinner", "duration": 180, "type": "free_time"}
+      ],
+      "meals": {
+        "breakfast": {"type": "own", "notes": "Hotel area, light"},
+        "lunch": {"type": "included_tour", "location": "Kuromon Market"},
+        "dinner": {"type": "own", "location": "Free evening, Dotonbori"}
+      }
+    },
+    {
+      "day": 14,
+      "date": "2026-03-19",
+      "dayOfWeek": "Thursday",
+      "title": "Kyoto Mountain Day Trip",
+      "location": "Kyoto Mountains",
+      "type": "guided_tour",
+      "accommodation": "osaka-mimaru",
+      "guide": "Mico Yamamoto + Driver",
+      "highlights": ["Kayabuki no Sato", "Shaga Forest", "Ine Village", "Amanohashidate"],
+      "hardDeadlines": [
+        {"time": "TBD", "description": "Meet Mico - confirm time/location"}
+      ],
+      "timeline": [
+        {"time": "08:00", "activity": "Breakfast at hotel", "duration": 60, "type": "dining"},
+        {"time": "09:00", "activity": "Meet Mico + Driver", "duration": 0, "type": "meet_guide"},
+        {"time": "09:00", "activity": "Drive to Kayabuki no Sato", "duration": 120, "type": "transport"},
+        {"time": "11:00", "activity": "Kayabuki no Sato (thatched village)", "duration": 90, "type": "attraction"},
+        {"time": "12:30", "activity": "Shaga Forest", "duration": 90, "type": "attraction"},
+        {"time": "14:00", "activity": "Lunch (Mico arranges)", "duration": 60, "type": "dining"},
+        {"time": "15:00", "activity": "Ine Village (boat houses)", "duration": 90, "type": "attraction"},
+        {"time": "16:30", "activity": "Amanohashidate", "duration": 60, "type": "attraction"},
+        {"time": "17:30", "activity": "Drive back to Osaka", "duration": 120, "type": "transport"},
+        {"time": "19:30", "activity": "Return to hotel", "duration": 0, "type": "logistics"},
+        {"time": "20:00", "activity": "Dinner in Osaka", "duration": 90, "type": "dining"}
+      ],
+      "meals": {
+        "breakfast": {"type": "own", "notes": "Hotel before departure"},
+        "lunch": {"type": "included_tour", "notes": "Mico will arrange"},
+        "dinner": {"type": "own", "notes": "Upon return to Osaka"}
+      }
+    },
+    {
+      "day": 15,
+      "date": "2026-03-20",
+      "dayOfWeek": "Friday",
+      "title": "Nara & Sumo - Emma's Birthday! 🎂",
+      "location": "Nara + Osaka",
+      "type": "mixed",
+      "accommodation": "osaka-mimaru",
+      "specialEvent": "Emma's Birthday",
+      "highlights": ["Nara deer park", "Todai-ji Temple", "Sumo Tournament", "Birthday dinner"],
+      "hardDeadlines": [
+        {"time": "14:00", "description": "Leave Nara for Sumo"},
+        {"time": "15:00", "description": "Top-division Sumo matches begin"}
+      ],
+      "timeline": [
+        {"time": "09:00", "activity": "Train to Nara", "duration": 45, "type": "transport", "cost": 680},
+        {"time": "09:45", "activity": "Arrive Nara", "duration": 15, "type": "logistics"},
+        {"time": "10:00", "activity": "Nara Park (deer)", "duration": 90, "type": "attraction"},
+        {"time": "11:30", "activity": "Todai-ji Temple (Great Buddha)", "duration": 60, "type": "attraction"},
+        {"time": "12:30", "activity": "Lunch in Nara", "duration": 45, "type": "dining"},
+        {"time": "13:15", "activity": "Buy deer crackers, more deer time", "duration": 30, "type": "experience"},
+        {"time": "13:45", "activity": "Train back to Osaka", "duration": 45, "type": "transport"},
+        {"time": "14:30", "activity": "Arrive Osaka, walk to arena", "duration": 15, "type": "walking"},
+        {"time": "14:45", "activity": "Arrive EDION Arena", "duration": 15, "type": "logistics"},
+        {"time": "15:00", "activity": "Sumo Tournament (top division)", "duration": 180, "type": "attraction", "ticketId": "sumo-osaka"},
+        {"time": "18:00", "activity": "Tournament ends", "duration": 30, "type": "logistics"},
+        {"time": "18:30", "activity": "Walk to dinner", "duration": 15, "type": "walking"},
+        {"time": "19:00", "activity": "Emma's Birthday Dinner 🎂", "duration": 120, "type": "dining", "special": true}
+      ],
+      "meals": {
+        "breakfast": {"type": "own", "notes": "Hotel"},
+        "lunch": {"type": "own", "location": "Nara"},
+        "dinner": {"type": "special", "notes": "Emma's birthday! Ask Mico for recommendation"}
+      }
+    },
+    {
+      "day": 16,
+      "date": "2026-03-21",
+      "dayOfWeek": "Saturday",
+      "title": "Departure Day",
+      "location": "Osaka → Tokyo → MSP",
+      "type": "travel",
+      "highlights": ["Shinkansen to Tokyo", "Flight home"],
+      "hardDeadlines": [
+        {"time": "11:00", "description": "Check-out MIMARU"},
+        {"time": "17:20", "description": "Flight DL0120 departs Haneda"}
+      ],
+      "timeline": [
+        {"time": "08:00", "activity": "Breakfast", "duration": 60, "type": "dining"},
+        {"time": "09:00", "activity": "Final packing", "duration": 60, "type": "logistics"},
+        {"time": "10:00", "activity": "Check out MIMARU", "duration": 30, "type": "accommodation"},
+        {"time": "10:30", "activity": "Shinkansen Shin-Osaka → Tokyo", "duration": 150, "type": "transport", "cost": 14400},
+        {"time": "13:00", "activity": "Arrive Tokyo Station", "duration": 15, "type": "logistics"},
+        {"time": "13:15", "activity": "Quick shopping (optional)", "duration": 45, "type": "shopping"},
+        {"time": "14:00", "activity": "Train to Haneda", "duration": 45, "type": "transport"},
+        {"time": "14:45", "activity": "Arrive Haneda Terminal 3", "duration": 15, "type": "logistics"},
+        {"time": "15:00", "activity": "Check-in, security", "duration": 90, "type": "logistics"},
+        {"time": "17:20", "activity": "Flight DL0120 departs", "duration": 675, "type": "flight"},
+        {"time": "14:35", "activity": "Arrive Minneapolis", "duration": 0, "type": "arrival"}
+      ],
+      "meals": {
+        "breakfast": {"type": "own", "notes": "Hotel"},
+        "lunch": {"type": "own", "notes": "Tokyo Station or airport"},
+        "dinner": {"type": "flight", "notes": "On plane"}
+      }
+    }
+  ],
+  "attractions": [
+    {
+      "id": "sensoji",
+      "name": "Senso-ji Temple",
+      "nameJapanese": "浅草寺",
+      "city": "Tokyo",
+      "district": "Asakusa",
+      "category": "temple",
+      "description": "Tokyo's oldest temple, founded in 628 AD",
+      "highlights": ["Kaminarimon Gate", "Nakamise-dori shopping", "Five-story pagoda"],
+      "duration": 60,
+      "cost": 0,
+      "coordinates": {"lat": 35.7147, "lng": 139.7966},
+      "mapsUrl": "https://maps.app.goo.gl/UZjqhKDKTxVCZVhx5",
+      "nearestStation": "Asakusa"
+    },
+    {
+      "id": "meiji-shrine",
+      "name": "Meiji Jingu Shrine",
+      "nameJapanese": "明治神宮",
+      "city": "Tokyo",
+      "district": "Harajuku",
+      "category": "shrine",
+      "description": "Sacred Shinto shrine dedicated to Emperor Meiji",
+      "highlights": ["Forest walk", "Main shrine", "Sake barrels"],
+      "duration": 60,
+      "cost": 0,
+      "coordinates": {"lat": 35.6764, "lng": 139.6993},
+      "mapsUrl": "https://maps.app.goo.gl/M4eMKfJVcLxgvb3QA",
+      "nearestStation": "Meiji-jingumae"
+    },
+    {
+      "id": "owakudani",
+      "name": "Owakudani",
+      "nameJapanese": "大涌谷",
+      "city": "Hakone",
+      "category": "natural",
+      "description": "Active volcanic valley with sulfur vents",
+      "highlights": ["Black eggs (kuro-tamago)", "Sulfur vents", "Mt. Fuji views"],
+      "duration": 90,
+      "cost": 0,
+      "coordinates": {"lat": 35.2442, "lng": 139.0228},
+      "mapsUrl": "https://maps.app.goo.gl/JQJXZJXZJXZJXZJX7",
+      "tips": ["Buy black eggs", "30-min trail to vents", "Check weather for Mt. Fuji views"]
+    },
+    {
+      "id": "hakone-open-air",
+      "name": "Hakone Open-Air Museum",
+      "nameJapanese": "箱根彫刻の森美術館",
+      "city": "Hakone",
+      "category": "museum",
+      "description": "Outdoor sculpture museum with Picasso collection",
+      "highlights": ["Picasso Pavilion", "Symphonic Sculpture (kids can climb)", "Woods of Net", "Foot bath"],
+      "duration": 180,
+      "cost": 1600,
+      "kidFriendly": true,
+      "coordinates": {"lat": 35.2467, "lng": 139.0486},
+      "mapsUrl": "https://maps.app.goo.gl/kZwQ1VcZKjyj6RWYA",
+      "nearestStation": "Chokoku-no-Mori"
+    },
+    {
+      "id": "fushimi-inari",
+      "name": "Fushimi Inari Taisha",
+      "nameJapanese": "伏見稲荷大社",
+      "city": "Kyoto",
+      "category": "shrine",
+      "description": "Famous shrine with thousands of vermillion torii gates",
+      "highlights": ["10,000+ torii gates", "Mountain hike", "Fox statues"],
+      "duration": 120,
+      "cost": 0,
+      "coordinates": {"lat": 34.9671, "lng": 135.7727},
+      "mapsUrl": "https://maps.app.goo.gl/wBXZJXZJXZJXZJX9",
+      "tips": ["Go early or evening for fewer crowds", "First viewpoint is 45-60 min up", "Full hike is 2-3 hours"]
+    },
+    {
+      "id": "arashiyama-bamboo",
+      "name": "Arashiyama Bamboo Grove",
+      "nameJapanese": "嵐山竹林",
+      "city": "Kyoto",
+      "district": "Arashiyama",
+      "category": "natural",
+      "description": "Towering bamboo forest path",
+      "highlights": ["Bamboo forest walk", "Early morning photos"],
+      "duration": 45,
+      "cost": 0,
+      "coordinates": {"lat": 35.0171, "lng": 135.6716},
+      "mapsUrl": "https://maps.app.goo.gl/8QJXZJXZJXZJXZJXB",
+      "tips": ["Go before 9 AM for best photos", "Free to walk through"]
+    },
+    {
+      "id": "nara-park",
+      "name": "Nara Park",
+      "nameJapanese": "奈良公園",
+      "city": "Nara",
+      "category": "park",
+      "description": "Park with 1,200+ wild deer",
+      "highlights": ["Friendly wild deer", "Shika senbei (deer crackers)", "Bowing deer"],
+      "duration": 90,
+      "cost": 0,
+      "coordinates": {"lat": 34.6851, "lng": 135.8430},
+      "mapsUrl": "https://maps.app.goo.gl/DQJXZJXZJXZJXZJXG",
+      "tips": ["Bow to deer, they bow back", "Don't tease with crackers", "Watch your bags"]
+    }
+  ],
+  "shopping": [
+    {
+      "id": "onitsuka-yellow",
+      "name": "Onitsuka Tiger Yellow Concept Store",
+      "category": "shoes",
+      "city": "Tokyo",
+      "district": "Omotesando",
+      "address": "6-3-9 Jingumae, Shibuya-ku",
+      "hours": "11:00-20:00",
+      "coordinates": {"lat": 35.6691, "lng": 139.7087},
+      "mapsUrl": "https://maps.app.goo.gl/pL8JkW6Yq3ZVqX5Z9",
+      "priceRange": "¥25,000+",
+      "notes": "Newest store, immersive experience, exclusive items",
+      "nearestStation": "Meiji-jingumae"
+    },
+    {
+      "id": "tower-knives",
+      "name": "Tower Knives Osaka",
+      "category": "knives",
+      "city": "Osaka",
+      "district": "Shinsekai",
+      "address": "1-4-7 Ebisuhigashi, Naniwa-ku, Osaka 556-0002",
+      "phone": "06-4301-7860",
+      "hours": "10:00-18:00",
+      "openDaily": true,
+      "website": "https://www.towerknives.com/en",
+      "coordinates": {"lat": 34.6514, "lng": 135.5063},
+      "mapsUrl": "https://maps.app.goo.gl/CQJXZJXZJXZJXZJXF",
+      "priceRange": {
+        "entryLevel": "¥6,000-15,000",
+        "midRange": "¥15,000-30,000",
+        "premium": "¥30,000-80,000+"
+      },
+      "features": [
+        "English-speaking staff",
+        "Knives by Sakai artisans",
+        "Free 10-min sharpening lesson",
+        "Free name engraving",
+        "Tax-free for tourists"
+      ],
+      "nearestStation": "Ebisucho (Exit 3)",
+      "walkFromStation": 4
+    },
+    {
+      "id": "hanshin-tigers-shop",
+      "name": "Hanshin Tigers Shop",
+      "category": "sports_merchandise",
+      "city": "Osaka",
+      "district": "Umeda",
+      "address": "Hanshin Department Store, 8th Floor, 1-13-13 Umeda, Kita-ku",
+      "hours": "10:00-20:00",
+      "coordinates": {"lat": 34.7003, "lng": 135.4968},
+      "mapsUrl": "https://maps.app.goo.gl/EQJXZJXZJXZJXZJXH",
+      "priceRange": "¥2,000-10,000",
+      "items": ["Baseball caps", "Jerseys", "Towels", "Accessories"],
+      "notes": "Osaka's local NPB team, 2,000+ items",
+      "nearestStation": "Hanshin Umeda"
+    },
+    {
+      "id": "oh-my-glasses",
+      "name": "Oh My Glasses Tokyo Shinjuku East",
+      "category": "eyewear",
+      "city": "Tokyo",
+      "district": "Shinjuku",
+      "purpose": "Eyeglasses for Angie",
+      "coordinates": {"lat": 35.6906, "lng": 139.7039},
+      "mapsUrl": "https://maps.app.goo.gl/57uAabM4wCevQCPu8"
+    }
+  ],
+  "restaurants": {
+    "tokyo": [
+      {
+        "id": "afuri-ebisu",
+        "name": "Afuri Ramen",
+        "nameJapanese": "阿夫利",
+        "type": "ramen",
+        "specialty": "Yuzu shio ramen",
+        "district": "Ebisu",
+        "priceRange": "¥1,000-1,500",
+        "kidFriendly": true,
+        "notes": "One of Tokyo's best ramen",
+        "mapsUrl": "https://maps.app.goo.gl/wBcg9pJyLvP4KLVZ7"
+      },
+      {
+        "id": "tsunahachi",
+        "name": "Tsunahachi",
+        "nameJapanese": "つな八",
+        "type": "tempura",
+        "district": "Shinjuku",
+        "priceRange": "¥1,500-3,000",
+        "kidFriendly": true,
+        "established": 1924,
+        "notes": "Historic, family-friendly",
+        "mapsUrl": "https://maps.app.goo.gl/qYz7RfYKtNmX6Ck47"
+      },
+      {
+        "id": "torikizoku",
+        "name": "Torikizoku",
+        "nameJapanese": "鳥貴族",
+        "type": "izakaya",
+        "district": "Various",
+        "priceRange": "¥1,000-2,000",
+        "kidFriendly": true,
+        "notes": "All items ¥350, great value"
+      },
+      {
+        "id": "yuzuan",
+        "name": "Yuzuan Akihabara",
+        "type": "all-you-can-eat",
+        "specialty": "Sushi, A5 Wagyu",
+        "district": "Akihabara",
+        "priceRange": "¥3,500-5,000",
+        "kidFriendly": true,
+        "notes": "Gluten-free options available"
+      },
+      {
+        "id": "syabu-yo",
+        "name": "Syabu-YŌ",
+        "type": "shabu-shabu",
+        "district": "Akihabara",
+        "priceRange": "¥2,000-3,000",
+        "kidFriendly": true,
+        "notes": "Robot servers, fun for kids"
+      },
+      {
+        "id": "tayori",
+        "name": "Tayori",
+        "nameJapanese": "たより",
+        "type": "local cuisine",
+        "district": "Yanaka",
+        "priceRange": "¥1,500-2,500",
+        "micoRecommendation": true,
+        "notes": "Mico's recommendation!",
+        "mapsUrl": "https://maps.app.goo.gl/yZzXr1VpGQj7NGPV6"
+      }
+    ],
+    "kyoto": [
+      {
+        "id": "omen-nippon",
+        "name": "Omen Nippon",
+        "type": "udon",
+        "district": "Near Ginkaku-ji",
+        "priceRange": "¥1,200-1,800",
+        "notes": "Handmade udon, beautiful setting"
+      },
+      {
+        "id": "tousuiro",
+        "name": "Tousuiro",
+        "type": "tofu kaiseki",
+        "district": "Gion",
+        "priceRange": "¥3,000-5,000",
+        "notes": "300-year-old tofu restaurant"
+      },
+      {
+        "id": "ippudo-nishiki",
+        "name": "Ippudo Nishiki",
+        "type": "ramen",
+        "district": "Nishiki Market",
+        "priceRange": "¥900-1,200",
+        "kidFriendly": true,
+        "notes": "Reliable, quick"
+      }
+    ],
+    "osaka": [
+      {
+        "id": "wanaka",
+        "name": "Wanaka",
+        "nameJapanese": "わなか",
+        "type": "takoyaki",
+        "district": "Dotonbori",
+        "priceRange": "¥500-800",
+        "notes": "Crispiest takoyaki in Osaka"
+      },
+      {
+        "id": "mizuno",
+        "name": "Mizuno",
+        "nameJapanese": "美津の",
+        "type": "okonomiyaki",
+        "district": "Dotonbori",
+        "priceRange": "¥1,200-1,800",
+        "established": 1945,
+        "notes": "75 years, worth the wait"
+      },
+      {
+        "id": "daruma",
+        "name": "Daruma",
+        "nameJapanese": "だるま",
+        "type": "kushikatsu",
+        "district": "Shinsekai",
+        "priceRange": "¥1,500-2,500",
+        "notes": "No double-dipping rule!"
+      },
+      {
+        "id": "yakiniku-m",
+        "name": "Yakiniku M",
+        "type": "yakiniku",
+        "specialty": "A5 Wagyu",
+        "district": "Dotonbori",
+        "priceRange": "¥4,000-8,000",
+        "notes": "Great for groups, cook at table"
+      },
+      {
+        "id": "hanamaruken",
+        "name": "Hanamaruken",
+        "type": "ramen",
+        "specialty": "Pork rib ramen",
+        "district": "Dotonbori",
+        "priceRange": "¥1,000-1,500",
+        "notes": "Rich, flavorful broth"
+      }
+    ]
+  },
+  "optionalExperiences": [
+    {
+      "id": "kimono-rental",
+      "name": "Kimono Rental",
+      "city": "Kyoto",
+      "bestDays": ["2026-03-15", "2026-03-16"],
+      "providers": [
+        {
+          "name": "MAIKOYA Nishiki",
+          "recommended": true,
+          "priceRange": "¥4,500-8,000",
+          "ageLimit": "4+",
+          "notes": "Tea ceremony combo available",
+          "website": "https://mai-ko.com/"
+        },
+        {
+          "name": "Okamoto",
+          "priceRange": "¥3,500-6,500",
+          "ageLimit": "85cm+",
+          "notes": "1000+ kimonos, multiple locations"
+        },
+        {
+          "name": "Kimono Rental Wargo",
+          "priceRange": "¥3,190-5,500",
+          "location": "Kyoto Tower",
+          "notes": "Most convenient"
+        }
+      ],
+      "bookingAdvice": "Book 1-2 weeks before",
+      "duration": 90
+    },
+    {
+      "id": "tea-ceremony",
+      "name": "Tea Ceremony",
+      "city": "Kyoto",
+      "bestDays": ["2026-03-15", "2026-03-16"],
+      "providers": [
+        {
+          "name": "MAIKOYA Family Tea Ceremony",
+          "recommended": true,
+          "priceAdult": 6500,
+          "priceChild": 4500,
+          "ageLimit": "7+",
+          "duration": 90,
+          "notes": "Can combine with kimono"
+        },
+        {
+          "name": "Tea Ceremony Nagomi",
+          "pricePerPerson": 3300,
+          "ageLimit": "5+",
+          "duration": 60,
+          "locations": ["Ninenzaka", "Arashiyama"]
+        }
+      ],
+      "bookingAdvice": "Book 1-2 weeks before"
+    },
+    {
+      "id": "samurai-experience",
+      "name": "Samurai Sword Experience",
+      "city": "Kyoto",
+      "bestDays": ["2026-03-15", "2026-03-16"],
+      "provider": {
+        "name": "MAIKOYA Samurai for Families",
+        "priceAdult": 5500,
+        "priceChild": 4000,
+        "ageLimit": "3+",
+        "duration": 120,
+        "location": "SAMURAI & NINJA MUSEUM, 109 Horinoue-chō, Nakagyo Ward"
+      },
+      "includes": [
+        "Hakama or ninja costume",
+        "4 basic sword strikes",
+        "Museum tour",
+        "Ninja star throwing",
+        "Blow gun activity",
+        "Photo opportunities"
+      ],
+      "bookingAdvice": "Book 1-2 weeks before",
+      "website": "https://mai-ko.com/"
+    },
+    {
+      "id": "rickshaw-ride",
+      "name": "Rickshaw Ride",
+      "city": "Kyoto",
+      "district": "Arashiyama",
+      "bestDay": "2026-03-16",
+      "duration": 120,
+      "priceRange": "¥9,000-15,000",
+      "notes": "Book day before or on-site",
+      "includes": ["Personal tour guide", "Photos", "Hidden spots"]
+    }
+  ],
+  "transportation": {
+    "icCard": {
+      "types": ["Suica", "Pasmo"],
+      "usage": ["Trains", "Buses", "Convenience stores", "Vending machines"],
+      "notes": "Tap in/out at ticket gates, recharge at any station"
+    },
+    "hakoneFreePlass": {
+      "prices": {
+        "adult2Day": 7100,
+        "child2Day": 1000,
+        "adult3Day": 7400,
+        "child3Day": 1100
+      },
+      "includes": [
+        "Odakyu Line (Shinjuku ↔ Odawara)",
+        "Hakone Tozan Railway",
+        "Hakone Tozan Cable Car",
+        "Hakone Ropeway",
+        "Lake Ashi Pirate Ship",
+        "Hakone Tozan Bus"
+      ],
+      "romancecarUpgrade": {
+        "adult": 1200,
+        "child": 600,
+        "perWay": true,
+        "duration": 85,
+        "notes": "Reserved seats, restrooms, Mt. Fuji views"
+      },
+      "purchaseLocations": ["EMot app", "Odakyu Service Centers", "Station machines"]
+    },
+    "keyRoutes": [
+      {"from": "Shinjuku", "to": "Asakusa", "method": "Metro", "duration": 25, "cost": 280},
+      {"from": "Shinjuku", "to": "Shibuya", "method": "JR Yamanote", "duration": 5, "cost": 160},
+      {"from": "Shinjuku", "to": "Hakone-Yumoto", "method": "Romancecar", "duration": 85, "cost": 2470},
+      {"from": "Odawara", "to": "Kyoto", "method": "Shinkansen", "duration": 120, "cost": 12000},
+      {"from": "Kyoto", "to": "Osaka", "method": "JR Rapid", "duration": 29, "cost": 560},
+      {"from": "Osaka", "to": "Nara", "method": "Kintetsu", "duration": 45, "cost": 680},
+      {"from": "Shin-Osaka", "to": "Tokyo", "method": "Shinkansen Nozomi", "duration": 150, "cost": 14400}
+    ]
+  },
+  "etiquette": {
+    "phrases": [
+      {"japanese": "Arigatou gozaimasu", "meaning": "Thank you very much", "when": "After any service"},
+      {"japanese": "Sumimasen", "meaning": "Excuse me / Sorry", "when": "Getting attention"},
+      {"japanese": "Konnichiwa", "meaning": "Hello (daytime)", "when": "Entering shops"},
+      {"japanese": "Oishii!", "meaning": "Delicious!", "when": "Complimenting food"},
+      {"japanese": "Kawaii!", "meaning": "Cute!", "when": "Reactions"},
+      {"japanese": "Gomen nasai", "meaning": "I'm sorry", "when": "Apologizing"},
+      {"japanese": "May-go desu", "meaning": "I am lost", "when": "Emergency"}
+    ],
+    "restaurant": {
+      "do": ["Use payment tray", "Say Itadakimasu before eating", "Finish everything"],
+      "dont": ["Heavily customize orders", "Tip (it's confusing)", "Leave lots of food"]
+    },
+    "onsen": {
+      "do": ["Wash thoroughly before entering", "Keep towel on head", "Enter slowly"],
+      "dont": ["Put towel in water", "Be loud or splashy", "Wear swimsuit"]
+    },
+    "train": {
+      "do": ["Queue in marked lines", "Give up Priority Seats", "Use quiet voices"],
+      "dont": ["Make phone calls", "Eat on local trains", "Block doors"]
+    }
+  },
+  "actionItems": [
+    {
+      "task": "Buy Sumo Tickets",
+      "dueDate": "2026-02-06",
+      "dueTime": "19:00",
+      "timezone": "America/Chicago",
+      "website": "https://sumo.pia.jp/en/sumo03.jsp",
+      "priority": "critical",
+      "notes": "Sale opens Feb 7 at 10:00 AM JST"
+    },
+    {
+      "task": "Buy Ghibli Tickets",
+      "dueDate": "2026-02-09",
+      "dueTime": "19:00",
+      "timezone": "America/Chicago",
+      "website": "https://l-tike.com/ghibli/",
+      "priority": "critical",
+      "notes": "Sale opens Feb 10 at 10:00 AM JST"
+    },
+    {
+      "task": "Call bank about overseas charges",
+      "dueDate": "2026-02-05",
+      "priority": "high"
+    },
+    {
+      "task": "Book Romancecar seats",
+      "dueDate": "2026-02-12",
+      "priority": "medium",
+      "notes": "Available 1 month before departure"
+    },
+    {
+      "task": "Book kimono rental",
+      "dueDate": "2026-03-01",
+      "priority": "medium"
+    },
+    {
+      "task": "Confirm meet times with Mico",
+      "dueDate": "2026-03-01",
+      "priority": "high",
+      "items": ["March 15 Kyoto tour", "March 18 Osaka tour", "March 19 Mountain trip", "March 20 Nara/Sumo"]
+    },
+    {
+      "task": "Prepare ¥8,400 cash for Kyoto tax",
+      "dueDate": "2026-03-14",
+      "priority": "critical"
+    },
+    {
+      "task": "Call ryokan for pickup",
+      "dueDate": "2026-03-12",
+      "phone": "0460-83-6661",
+      "priority": "critical",
+      "notes": "Call before 5:00 PM"
+    }
+  ],
+  "weather": {
+    "march": {
+      "tokyo": {"tempC": "8-15", "tempF": "46-59", "conditions": "Spring weather, possible rain"},
+      "hakone": {"tempC": "5-12", "tempF": "41-54", "conditions": "Cooler in mountains"},
+      "kyoto": {"tempC": "7-15", "tempF": "45-59", "conditions": "Cherry blossoms may begin late March"},
+      "osaka": {"tempC": "8-15", "tempF": "46-59", "conditions": "Similar to Tokyo"}
+    },
+    "packingTips": ["Layers", "Light rain jacket", "Comfortable walking shoes", "Small umbrella"]
+  },
+  "apps": [
+    {"name": "Google Maps", "purpose": "Navigation, transit times"},
+    {"name": "Google Translate", "purpose": "Camera for menus, signs"},
+    {"name": "Suica/Pasmo", "purpose": "IC card on phone"},
+    {"name": "EMot", "purpose": "Romancecar booking"},
+    {"name": "Tabelog", "purpose": "Restaurant ratings (JP Yelp)"},
+    {"name": "Papago", "purpose": "Better JP translation"}
+  ],
+  "metadata": {
+    "version": "1.0.0",
+    "lastUpdated": "2026-01-26",
+    "currency": "JPY",
+    "timezone": "Asia/Tokyo",
+    "createdFor": "Blaalid & Rowles Families PWA"
+  }
+}

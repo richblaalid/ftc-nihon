@@ -1,5 +1,7 @@
 export interface WeatherData {
   temperature: number;
+  tempHigh: number;
+  tempLow: number;
   condition: string;
   icon: string;
   humidity: number;
@@ -28,6 +30,8 @@ export function getCachedWeather(): WeatherData | null {
     // The fetchWeather function will update it when online
     return {
       temperature: data.temperature,
+      tempHigh: data.tempHigh ?? data.temperature,
+      tempLow: data.tempLow ?? data.temperature,
       condition: data.condition,
       icon: data.icon,
       humidity: data.humidity,
@@ -134,7 +138,7 @@ export async function fetchWeather(city: string): Promise<WeatherData | null> {
   }
 
   try {
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${coords.lat}&longitude=${coords.lon}&current=temperature_2m,relative_humidity_2m,weather_code&timezone=Asia/Tokyo&temperature_unit=fahrenheit`;
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${coords.lat}&longitude=${coords.lon}&current=temperature_2m,relative_humidity_2m,weather_code&daily=temperature_2m_max,temperature_2m_min&timezone=Asia/Tokyo&temperature_unit=fahrenheit&forecast_days=1`;
 
     const response = await fetch(url);
     if (!response.ok) {
@@ -143,11 +147,14 @@ export async function fetchWeather(city: string): Promise<WeatherData | null> {
 
     const data = await response.json();
     const current = data.current;
+    const daily = data.daily;
 
     const { condition, icon } = getWeatherCondition(current.weather_code);
 
     const weatherData: WeatherData = {
       temperature: Math.round(current.temperature_2m),
+      tempHigh: Math.round(daily.temperature_2m_max[0]),
+      tempLow: Math.round(daily.temperature_2m_min[0]),
       condition,
       icon,
       humidity: current.relative_humidity_2m,

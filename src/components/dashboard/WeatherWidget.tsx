@@ -83,6 +83,9 @@ export function WeatherWidget() {
           <span className="text-2xl font-semibold text-foreground">{weather.temperature}°F</span>
           <span className="text-sm text-foreground-secondary">{weather.condition}</span>
         </div>
+        <p className="text-xs text-foreground-tertiary">
+          H: {weather.tempHigh}° L: {weather.tempLow}°
+        </p>
       </div>
 
       {/* Humidity */}

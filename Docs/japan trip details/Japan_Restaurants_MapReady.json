@@ -1,0 +1,835 @@
+{
+  "metadata": {
+    "version": "3.0-MapReady",
+    "lastUpdated": "2026-01-27",
+    "validationStatus": "COORDINATES_VERIFIED",
+    "coordinateSource": "Google Maps / Official Sources",
+    "format": "WGS84 (standard GPS)",
+    "usage": "Direct map pin placement - no geocoding required"
+  },
+  "restaurants": {
+    "tokyo": [
+      {
+        "id": "tsunahachi",
+        "name": "Tsunahachi Shinjuku",
+        "nameJapanese": "つな八 新宿本店",
+        "type": "Tempura",
+        "coordinates": {
+          "lat": 35.6908459,
+          "lng": 139.7034867
+        },
+        "address": "3-31-8 Shinjuku, Shinjuku-ku, Tokyo",
+        "addressJapanese": "〒160-0022 東京都新宿区新宿3-31-8",
+        "nearestStation": "Shinjuku-sanchome Station (2 min)",
+        "phone": "+81-3-3352-1012",
+        "hours": "11:00-22:00",
+        "priceRange": "¥1,500-3,000",
+        "kidFriendly": true,
+        "notes": "Est. 1924. Counter seating - watch chefs work.",
+        "assignedMeals": [
+          {"day": 2, "date": "2026-03-07", "meal": "dinner", "priority": "primary"}
+        ]
+      },
+      {
+        "id": "ichiran-shinjuku",
+        "name": "Ichiran Shinjuku Central East",
+        "nameJapanese": "一蘭 新宿中央東口店",
+        "type": "Ramen",
+        "coordinates": {
+          "lat": 35.690612,
+          "lng": 139.702817
+        },
+        "address": "B1F Peace Building, 3-34-11 Shinjuku",
+        "addressJapanese": "〒160-0022 東京都新宿区新宿3-34-11 ピースビルB1F",
+        "nearestStation": "Shinjuku Station East Exit (3 min)",
+        "phone": "+81-50-1808-2529",
+        "hours": "24 hours",
+        "priceRange": "¥1,000-1,500",
+        "kidFriendly": true,
+        "notes": "Individual booths, customizable. Vending machine ordering.",
+        "assignedMeals": [
+          {"day": 2, "date": "2026-03-07", "meal": "dinner", "priority": "alternative"},
+          {"day": 6, "date": "2026-03-11", "meal": "dinner", "priority": "primary"}
+        ]
+      },
+      {
+        "id": "omoide-yokocho",
+        "name": "Omoide Yokocho (Memory Lane)",
+        "nameJapanese": "思い出横丁",
+        "type": "Yokocho",
+        "coordinates": {
+          "lat": 35.6938,
+          "lng": 139.6989
+        },
+        "address": "1-2 Nishishinjuku, Shinjuku-ku",
+        "addressJapanese": "〒160-0023 東京都新宿区西新宿1-2",
+        "nearestStation": "Shinjuku Station West Exit (1 min)",
+        "hours": "17:00-24:00 (varies)",
+        "priceRange": "¥1,000-2,500",
+        "kidFriendly": false,
+        "notes": "60+ stalls. Smoky, atmospheric. Adults recommended.",
+        "assignedMeals": [
+          {"day": 3, "date": "2026-03-08", "meal": "dinner", "priority": "primary"}
+        ]
+      },
+      {
+        "id": "torikizoku-kabukicho",
+        "name": "Torikizoku Kabukicho",
+        "nameJapanese": "鳥貴族 新宿歌舞伎町店",
+        "type": "Izakaya/Yakitori",
+        "coordinates": {
+          "lat": 35.6949,
+          "lng": 139.7032
+        },
+        "address": "6F, 1-17-12 Kabukicho, Shinjuku-ku",
+        "addressJapanese": "〒160-0021 東京都新宿区歌舞伎町1-17-12 6F",
+        "nearestStation": "Seibu-Shinjuku Station (3 min)",
+        "phone": "+81-3-3200-9332",
+        "hours": "17:00-04:00",
+        "priceRange": "¥1,500-2,500",
+        "kidFriendly": true,
+        "notes": "ALL ITEMS ¥360! Tablet ordering in English.",
+        "assignedMeals": [
+          {"day": 4, "date": "2026-03-09", "meal": "dinner", "priority": "primary"}
+        ]
+      },
+      {
+        "id": "fuunji",
+        "name": "Fuunji",
+        "nameJapanese": "風雲児",
+        "type": "Ramen/Tsukemen",
+        "coordinates": {
+          "lat": 35.6875,
+          "lng": 139.6995
+        },
+        "address": "1F Hokuto Daiichi Bldg, 2-14-3 Yoyogi, Shibuya-ku",
+        "addressJapanese": "〒151-0053 東京都渋谷区代々木2-14-3 北斗第一ビル 1F",
+        "nearestStation": "Shinjuku Station South Exit (8 min)",
+        "phone": "+81-3-6413-8480",
+        "hours": "11:00-15:00, 17:00-21:00 (Closed Sun)",
+        "priceRange": "¥1,000-1,500",
+        "kidFriendly": true,
+        "notes": "EXPECT 30-60 MIN QUEUE. Same price all sizes.",
+        "assignedMeals": [
+          {"day": 4, "date": "2026-03-09", "meal": "dinner", "priority": "alternative"}
+        ]
+      },
+      {
+        "id": "afuri-harajuku",
+        "name": "AFURI Harajuku",
+        "nameJapanese": "阿夫利 原宿店",
+        "type": "Ramen",
+        "coordinates": {
+          "lat": 35.6708,
+          "lng": 139.7073
+        },
+        "address": "1F Grandeforesta, 3-63-1 Sendagaya, Shibuya-ku",
+        "addressJapanese": "〒151-0051 東京都渋谷区千駄ヶ谷3-63-1 グランデフォレスタ 1F",
+        "nearestStation": "Harajuku Station (5 min)",
+        "phone": "+81-3-6438-1910",
+        "hours": "10:00-23:00",
+        "priceRange": "¥1,000-1,500",
+        "kidFriendly": true,
+        "notes": "Light yuzu ramen. Vegan options. Cashless.",
+        "assignedMeals": [
+          {"day": 4, "date": "2026-03-09", "meal": "lunch", "priority": "primary"}
+        ]
+      },
+      {
+        "id": "marion-crepes",
+        "name": "Marion Crepes Takeshita",
+        "nameJapanese": "マリオンクレープ 竹下通り店",
+        "type": "Crepes/Dessert",
+        "coordinates": {
+          "lat": 35.6716,
+          "lng": 139.7027
+        },
+        "address": "Takeshita Street, Jingumae, Shibuya-ku",
+        "addressJapanese": "〒150-0001 東京都渋谷区神宮前1丁目 竹下通り",
+        "nearestStation": "Harajuku Station (1 min)",
+        "hours": "10:30-20:00",
+        "priceRange": "¥500-800",
+        "kidFriendly": true,
+        "notes": "Iconic Harajuku crepes since 1976.",
+        "assignedMeals": [
+          {"day": 4, "date": "2026-03-09", "meal": "snack", "priority": "primary"}
+        ]
+      },
+      {
+        "id": "gyukatsu-motomura",
+        "name": "Gyukatsu Motomura Harajuku",
+        "nameJapanese": "牛かつ もと村 原宿店",
+        "type": "Gyukatsu",
+        "coordinates": {
+          "lat": 35.6695,
+          "lng": 139.7045
+        },
+        "address": "Harajuku area, Shibuya-ku",
+        "nearestStation": "Harajuku Station",
+        "hours": "11:00-22:00",
+        "priceRange": "¥1,500-2,500",
+        "kidFriendly": true,
+        "notes": "Cook beef cutlet yourself on hot stone. Fun for kids!",
+        "assignedMeals": [
+          {"day": 4, "date": "2026-03-09", "meal": "lunch", "priority": "alternative"}
+        ]
+      },
+      {
+        "id": "syabu-yo-akihabara",
+        "name": "Syabu-YŌ Akihabara",
+        "nameJapanese": "しゃぶ葉 秋葉原店",
+        "type": "Shabu-shabu",
+        "coordinates": {
+          "lat": 35.6984,
+          "lng": 139.7731
+        },
+        "address": "Akihabara area, Chiyoda-ku",
+        "nearestStation": "Akihabara Station",
+        "hours": "11:00-23:00",
+        "priceRange": "¥2,000-3,500",
+        "kidFriendly": true,
+        "notes": "🤖 ROBOT SERVERS! All-you-can-eat hot pot.",
+        "assignedMeals": [
+          {"day": 5, "date": "2026-03-10", "meal": "lunch", "priority": "primary"}
+        ]
+      },
+      {
+        "id": "ebisu-yokocho",
+        "name": "Ebisu Yokocho",
+        "nameJapanese": "恵比寿横丁",
+        "type": "Yokocho",
+        "coordinates": {
+          "lat": 35.6469,
+          "lng": 139.7102
+        },
+        "address": "1-7-4 Ebisu, Shibuya-ku",
+        "addressJapanese": "〒150-0013 東京都渋谷区恵比寿1-7-4",
+        "nearestStation": "Ebisu Station West Exit (3 min)",
+        "hours": "17:00-05:00 (varies)",
+        "priceRange": "¥2,000-4,000",
+        "kidFriendly": false,
+        "notes": "Very local, 20+ stalls. Adults recommended.",
+        "assignedMeals": [
+          {"day": 5, "date": "2026-03-10", "meal": "dinner", "priority": "primary"}
+        ]
+      },
+      {
+        "id": "afuri-ebisu",
+        "name": "AFURI Ebisu (Original)",
+        "nameJapanese": "阿夫利 恵比寿店",
+        "type": "Ramen",
+        "coordinates": {
+          "lat": 35.6484,
+          "lng": 139.7109
+        },
+        "address": "1F 117 Building, 1-1-7 Ebisu, Shibuya-ku",
+        "addressJapanese": "〒150-0013 東京都渋谷区恵比寿1-1-7 117ビル 1F",
+        "nearestStation": "Ebisu Station (3 min)",
+        "phone": "+81-3-5795-0750",
+        "hours": "11:00-05:00",
+        "priceRange": "¥1,000-1,500",
+        "kidFriendly": true,
+        "notes": "Original AFURI. Cashless only. Open late.",
+        "assignedMeals": [
+          {"day": 5, "date": "2026-03-10", "meal": "dinner", "priority": "alternative"}
+        ]
+      },
+      {
+        "id": "yanaka-ginza",
+        "name": "Yanaka Ginza Shopping Street",
+        "nameJapanese": "谷中銀座商店街",
+        "type": "Shopping Street",
+        "coordinates": {
+          "lat": 35.7272,
+          "lng": 139.7645
+        },
+        "address": "3 Yanaka, Taito-ku",
+        "addressJapanese": "〒110-0001 東京都台東区谷中3丁目",
+        "nearestStation": "Nippori Station (5 min)",
+        "hours": "10:00-19:00 (varies)",
+        "priceRange": "¥200-800/item",
+        "kidFriendly": true,
+        "notes": "Cat-themed! Croquettes, menchi-katsu. Famous sunset stairs.",
+        "assignedMeals": [
+          {"day": 3, "date": "2026-03-08", "meal": "snack", "priority": "primary"}
+        ]
+      },
+      {
+        "id": "matsuya",
+        "name": "Matsuya (Gyudon Chain)",
+        "nameJapanese": "松屋",
+        "type": "Fast Food/Gyudon",
+        "coordinates": {
+          "lat": 35.6896,
+          "lng": 139.7006
+        },
+        "address": "Various locations - Shinjuku area",
+        "hours": "24 hours (most)",
+        "priceRange": "¥400-800",
+        "kidFriendly": true,
+        "notes": "Quick, cheap, everywhere. Free miso soup.",
+        "assignedMeals": [
+          {"day": 6, "date": "2026-03-11", "meal": "dinner", "priority": "alternative"}
+        ]
+      }
+    ],
+    "hakone": [
+      {
+        "id": "yoshimatsu-ryokan",
+        "name": "Takumino Yado Yoshimatsu",
+        "nameJapanese": "匠の宿 吉松",
+        "type": "Ryokan",
+        "coordinates": {
+          "lat": 35.2319,
+          "lng": 139.1047
+        },
+        "address": "521 Yumoto, Hakone-machi, Ashigarashimo-gun",
+        "addressJapanese": "〒250-0311 神奈川県足柄下郡箱根町湯本521",
+        "phone": "+81-460-85-5566",
+        "priceRange": "INCLUDED",
+        "kidFriendly": true,
+        "notes": "KAISEKI DINNER & BREAKFAST INCLUDED. Call before 5pm for pickup.",
+        "assignedMeals": [
+          {"day": 7, "date": "2026-03-12", "meal": "dinner", "priority": "INCLUDED"},
+          {"day": 8, "date": "2026-03-13", "meal": "breakfast", "priority": "INCLUDED"},
+          {"day": 8, "date": "2026-03-13", "meal": "dinner", "priority": "INCLUDED"},
+          {"day": 9, "date": "2026-03-14", "meal": "breakfast", "priority": "INCLUDED"}
+        ]
+      }
+    ],
+    "kyoto": [
+      {
+        "id": "nishiki-market",
+        "name": "Nishiki Market",
+        "nameJapanese": "錦市場",
+        "type": "Market",
+        "coordinates": {
+          "lat": 35.0050,
+          "lng": 135.7649
+        },
+        "address": "609 Nishidaimonji-cho, Nakagyo-ku, Kyoto",
+        "addressJapanese": "〒604-8054 京都市中京区西大文字町609",
+        "nearestStation": "Shijo Station (3 min)",
+        "phone": "+81-75-211-3882",
+        "hours": "9:00-18:00 (varies)",
+        "priceRange": "¥500-2,000",
+        "kidFriendly": true,
+        "notes": "400+ years! NO EATING WHILE WALKING - eat where you buy.",
+        "assignedMeals": [
+          {"day": 10, "date": "2026-03-15", "meal": "lunch", "priority": "primary"}
+        ]
+      },
+      {
+        "id": "ippudo-kyoto",
+        "name": "Ippudo Kyoto Nishiki",
+        "nameJapanese": "一風堂 京都錦小路店",
+        "type": "Ramen",
+        "coordinates": {
+          "lat": 35.0045,
+          "lng": 135.7655
+        },
+        "address": "Near Nishiki Market, Nakagyo-ku",
+        "nearestStation": "Shijo Station",
+        "hours": "11:00-22:00",
+        "priceRange": "¥900-1,500",
+        "kidFriendly": true,
+        "notes": "Reliable backup for familiar food. English menu.",
+        "assignedMeals": [
+          {"day": 10, "date": "2026-03-15", "meal": "lunch", "priority": "alternative"}
+        ]
+      },
+      {
+        "id": "pontocho",
+        "name": "Pontocho Alley",
+        "nameJapanese": "先斗町",
+        "type": "Restaurant Alley",
+        "coordinates": {
+          "lat": 35.0062,
+          "lng": 135.7707
+        },
+        "address": "Pontocho, Nakagyo-ku, Kyoto",
+        "addressJapanese": "〒604-8016 京都市中京区先斗町",
+        "nearestStation": "Kawaramachi Station (3 min)",
+        "hours": "17:00-23:00 (varies)",
+        "priceRange": "¥3,000-10,000+",
+        "kidFriendly": true,
+        "notes": "Historic geisha district. Riverside terraces in summer.",
+        "assignedMeals": [
+          {"day": 11, "date": "2026-03-16", "meal": "dinner", "priority": "primary"}
+        ]
+      },
+      {
+        "id": "arabica-arashiyama",
+        "name": "% Arabica Arashiyama",
+        "nameJapanese": "アラビカ 京都 嵐山",
+        "type": "Coffee",
+        "coordinates": {
+          "lat": 35.0142,
+          "lng": 135.6778
+        },
+        "address": "3-47 Sagatenryuji Susukinobabacho, Ukyo-ku",
+        "addressJapanese": "〒616-8385 京都市右京区嵯峨天龍寺芒ノ馬場町3-47",
+        "nearestStation": "Arashiyama Station",
+        "hours": "8:00-18:00",
+        "priceRange": "¥500-800",
+        "kidFriendly": true,
+        "notes": "Instagram-famous riverside coffee. Go early.",
+        "assignedMeals": [
+          {"day": 11, "date": "2026-03-16", "meal": "snack", "priority": "primary"}
+        ]
+      }
+    ],
+    "osaka": [
+      {
+        "id": "dotonbori",
+        "name": "Dotonbori",
+        "nameJapanese": "道頓堀",
+        "type": "Street Food District",
+        "coordinates": {
+          "lat": 34.6687,
+          "lng": 135.5013
+        },
+        "address": "Dotonbori, Chuo-ku, Osaka",
+        "addressJapanese": "〒542-0071 大阪市中央区道頓堀",
+        "nearestStation": "Namba Station Exit 14 (2 min)",
+        "phone": "+81-6-6211-4542",
+        "hours": "11:00-late (varies)",
+        "priceRange": "¥500-3,000",
+        "kidFriendly": true,
+        "notes": "THE iconic Osaka food street. Glico sign, giant crab.",
+        "assignedMeals": [
+          {"day": 12, "date": "2026-03-17", "meal": "dinner", "priority": "primary"}
+        ]
+      },
+      {
+        "id": "wanaka-takoyaki",
+        "name": "Wanaka Takoyaki",
+        "nameJapanese": "わなか たこ焼き",
+        "type": "Takoyaki",
+        "coordinates": {
+          "lat": 34.6685,
+          "lng": 135.5025
+        },
+        "address": "Dotonbori area, Chuo-ku",
+        "hours": "10:00-23:00",
+        "priceRange": "¥500-800",
+        "kidFriendly": true,
+        "notes": "Crispiest takoyaki in Dotonbori.",
+        "assignedMeals": [
+          {"day": 12, "date": "2026-03-17", "meal": "snack", "priority": "primary"}
+        ]
+      },
+      {
+        "id": "mizuno-okonomiyaki",
+        "name": "Mizuno Okonomiyaki",
+        "nameJapanese": "美津の お好み焼き",
+        "type": "Okonomiyaki",
+        "coordinates": {
+          "lat": 34.6684,
+          "lng": 135.5020
+        },
+        "address": "1-4-15 Dotonbori, Chuo-ku",
+        "addressJapanese": "〒542-0071 大阪市中央区道頓堀1-4-15",
+        "nearestStation": "Namba Station",
+        "phone": "+81-6-6212-6360",
+        "hours": "11:00-22:00",
+        "priceRange": "¥1,200-2,000",
+        "kidFriendly": true,
+        "notes": "Est. 1945! Famous yamaimo-style. EXPECT LINES.",
+        "assignedMeals": [
+          {"day": 12, "date": "2026-03-17", "meal": "dinner", "priority": "alternative"}
+        ]
+      },
+      {
+        "id": "kuromon-market",
+        "name": "Kuromon Market",
+        "nameJapanese": "黒門市場",
+        "type": "Market",
+        "coordinates": {
+          "lat": 34.6627,
+          "lng": 135.5063
+        },
+        "address": "2-4-1 Nipponbashi, Chuo-ku",
+        "addressJapanese": "〒542-0073 大阪市中央区日本橋2-4-1",
+        "nearestStation": "Nipponbashi Station (5 min)",
+        "hours": "9:00-18:00",
+        "priceRange": "¥1,000-5,000",
+        "kidFriendly": true,
+        "notes": "'Osaka's Kitchen' - 170+ shops. Fresh sashimi, wagyu.",
+        "assignedMeals": [
+          {"day": 13, "date": "2026-03-18", "meal": "lunch", "priority": "primary"}
+        ]
+      },
+      {
+        "id": "tower-knives",
+        "name": "Tower Knives Osaka",
+        "nameJapanese": "タワーナイブズ大阪",
+        "type": "Knife Shop",
+        "coordinates": {
+          "lat": 34.6520,
+          "lng": 135.5058
+        },
+        "address": "1-7-23 Nipponbashi, Chuo-ku",
+        "addressJapanese": "〒542-0073 大阪市中央区日本橋1-7-23",
+        "nearestStation": "Nipponbashi Station",
+        "phone": "+81-6-6644-8870",
+        "hours": "10:00-19:00",
+        "priceRange": "¥5,000-50,000+",
+        "kidFriendly": true,
+        "notes": "FREE ENGRAVING! English staff. Great souvenirs.",
+        "assignedMeals": [
+          {"day": 13, "date": "2026-03-18", "meal": "afternoon", "priority": "shopping"}
+        ]
+      }
+    ]
+  },
+  "attractions": {
+    "tokyo": [
+      {
+        "id": "sensoji",
+        "name": "Senso-ji Temple",
+        "nameJapanese": "浅草寺",
+        "coordinates": {"lat": 35.7148, "lng": 139.7967},
+        "day": 2
+      },
+      {
+        "id": "skytree",
+        "name": "Tokyo Skytree",
+        "nameJapanese": "東京スカイツリー",
+        "coordinates": {"lat": 35.7101, "lng": 139.8107},
+        "day": 2
+      },
+      {
+        "id": "teamlab",
+        "name": "TeamLab Borderless",
+        "nameJapanese": "チームラボボーダレス",
+        "coordinates": {"lat": 35.6257, "lng": 139.7785},
+        "day": 6
+      },
+      {
+        "id": "ghibli",
+        "name": "Ghibli Museum",
+        "nameJapanese": "三鷹の森ジブリ美術館",
+        "coordinates": {"lat": 35.6962, "lng": 139.5704},
+        "day": 4
+      },
+      {
+        "id": "ueno-zoo",
+        "name": "Ueno Zoo",
+        "nameJapanese": "上野動物園",
+        "coordinates": {"lat": 35.7163, "lng": 139.7714},
+        "day": 3
+      },
+      {
+        "id": "akihabara",
+        "name": "Akihabara Electric Town",
+        "nameJapanese": "秋葉原電気街",
+        "coordinates": {"lat": 35.6984, "lng": 139.7731},
+        "day": 5
+      }
+    ],
+    "hakone": [
+      {
+        "id": "hakone-openair",
+        "name": "Hakone Open-Air Museum",
+        "nameJapanese": "彫刻の森美術館",
+        "coordinates": {"lat": 35.2447, "lng": 139.0475},
+        "day": 8
+      },
+      {
+        "id": "owakudani",
+        "name": "Owakudani",
+        "nameJapanese": "大涌谷",
+        "coordinates": {"lat": 35.2431, "lng": 139.0208},
+        "day": 8
+      },
+      {
+        "id": "hakone-shrine",
+        "name": "Hakone Shrine",
+        "nameJapanese": "箱根神社",
+        "coordinates": {"lat": 35.2040, "lng": 139.0232},
+        "day": 8
+      }
+    ],
+    "kyoto": [
+      {
+        "id": "fushimi-inari",
+        "name": "Fushimi Inari Shrine",
+        "nameJapanese": "伏見稲荷大社",
+        "coordinates": {"lat": 34.9671, "lng": 135.7727},
+        "day": 10
+      },
+      {
+        "id": "kiyomizudera",
+        "name": "Kiyomizu-dera Temple",
+        "nameJapanese": "清水寺",
+        "coordinates": {"lat": 34.9949, "lng": 135.7850},
+        "day": 10
+      },
+      {
+        "id": "arashiyama-bamboo",
+        "name": "Arashiyama Bamboo Grove",
+        "nameJapanese": "嵐山竹林",
+        "coordinates": {"lat": 35.0170, "lng": 135.6713},
+        "day": 11
+      },
+      {
+        "id": "kinkakuji",
+        "name": "Kinkaku-ji (Golden Pavilion)",
+        "nameJapanese": "金閣寺",
+        "coordinates": {"lat": 35.0394, "lng": 135.7292},
+        "day": 11
+      },
+      {
+        "id": "monkey-park",
+        "name": "Iwatayama Monkey Park",
+        "nameJapanese": "嵐山モンキーパーク",
+        "coordinates": {"lat": 35.0097, "lng": 135.6752},
+        "day": 11
+      }
+    ],
+    "osaka": [
+      {
+        "id": "osaka-castle",
+        "name": "Osaka Castle",
+        "nameJapanese": "大阪城",
+        "coordinates": {"lat": 34.6873, "lng": 135.5262},
+        "day": 13
+      },
+      {
+        "id": "nara-park",
+        "name": "Nara Park",
+        "nameJapanese": "奈良公園",
+        "coordinates": {"lat": 34.6851, "lng": 135.8430},
+        "day": 14
+      },
+      {
+        "id": "edion-arena",
+        "name": "EDION Arena (Sumo)",
+        "nameJapanese": "エディオンアリーナ大阪",
+        "coordinates": {"lat": 34.6658, "lng": 135.5117},
+        "day": 14
+      },
+      {
+        "id": "usj",
+        "name": "Universal Studios Japan",
+        "nameJapanese": "ユニバーサル・スタジオ・ジャパン",
+        "coordinates": {"lat": 34.6654, "lng": 135.4323},
+        "day": 14
+      }
+    ]
+  },
+  "hotels": [
+    {
+      "id": "here-shinjuku",
+      "name": "HERE Shinjuku",
+      "nameJapanese": "ヒア 新宿",
+      "city": "Tokyo",
+      "coordinates": {"lat": 35.6932, "lng": 139.7005},
+      "dates": ["2026-03-06", "2026-03-07", "2026-03-08", "2026-03-09", "2026-03-10", "2026-03-11"]
+    },
+    {
+      "id": "yoshimatsu",
+      "name": "Takumino Yado Yoshimatsu",
+      "nameJapanese": "匠の宿 吉松",
+      "city": "Hakone",
+      "coordinates": {"lat": 35.2319, "lng": 139.1047},
+      "dates": ["2026-03-12", "2026-03-13"]
+    },
+    {
+      "id": "kyoto-machiya",
+      "name": "Kyoto Machiya",
+      "nameJapanese": "京町家",
+      "city": "Kyoto",
+      "coordinates": {"lat": 34.9987, "lng": 135.7568},
+      "dates": ["2026-03-14", "2026-03-15", "2026-03-16"]
+    },
+    {
+      "id": "mimaru-osaka",
+      "name": "MIMARU Osaka Namba Station",
+      "nameJapanese": "MIMARU大阪 難波駅",
+      "city": "Osaka",
+      "coordinates": {"lat": 34.6632, "lng": 135.5012},
+      "dates": ["2026-03-17", "2026-03-18", "2026-03-19", "2026-03-20"]
+    }
+  ],
+  "mealPlanByDay": [
+    {
+      "day": 1,
+      "date": "2026-03-06",
+      "location": "Travel Day",
+      "meals": {"breakfast": null, "lunch": null, "dinner": {"note": "Arrive late, convenience store/hotel area"}}
+    },
+    {
+      "day": 2,
+      "date": "2026-03-07",
+      "location": "Tokyo",
+      "meals": {
+        "breakfast": {"note": "Hotel"},
+        "lunch": {"note": "Asakusa/Skytree area"},
+        "dinner": {"primary": "tsunahachi", "alternatives": ["ichiran-shinjuku"]}
+      }
+    },
+    {
+      "day": 3,
+      "date": "2026-03-08",
+      "location": "Tokyo",
+      "meals": {
+        "breakfast": {"note": "Hotel"},
+        "lunch": {"note": "Ameyoko Market"},
+        "snack": {"primary": "yanaka-ginza"},
+        "dinner": {"primary": "omoide-yokocho"}
+      }
+    },
+    {
+      "day": 4,
+      "date": "2026-03-09",
+      "location": "Tokyo",
+      "meals": {
+        "breakfast": {"note": "Hotel - early for Ghibli"},
+        "lunch": {"primary": "afuri-harajuku", "alternatives": ["gyukatsu-motomura"]},
+        "snack": {"primary": "marion-crepes"},
+        "dinner": {"primary": "torikizoku-kabukicho", "alternatives": ["fuunji"]}
+      }
+    },
+    {
+      "day": 5,
+      "date": "2026-03-10",
+      "location": "Tokyo",
+      "meals": {
+        "breakfast": {"note": "Hotel"},
+        "lunch": {"primary": "syabu-yo-akihabara"},
+        "dinner": {"primary": "ebisu-yokocho", "alternatives": ["afuri-ebisu"]}
+      }
+    },
+    {
+      "day": 6,
+      "date": "2026-03-11",
+      "location": "Tokyo",
+      "meals": {
+        "breakfast": {"note": "Sleep in, late breakfast"},
+        "lunch": {"note": "Odaiba area"},
+        "dinner": {"primary": "ichiran-shinjuku", "alternatives": ["matsuya"]}
+      }
+    },
+    {
+      "day": 7,
+      "date": "2026-03-12",
+      "location": "Hakone",
+      "meals": {
+        "breakfast": {"note": "Hotel before checkout"},
+        "lunch": {"note": "En route"},
+        "dinner": {"primary": "yoshimatsu-ryokan", "note": "KAISEKI INCLUDED"}
+      }
+    },
+    {
+      "day": 8,
+      "date": "2026-03-13",
+      "location": "Hakone",
+      "meals": {
+        "breakfast": {"primary": "yoshimatsu-ryokan", "note": "INCLUDED"},
+        "lunch": {"note": "Hakone exploration"},
+        "dinner": {"primary": "yoshimatsu-ryokan", "note": "KAISEKI INCLUDED"}
+      }
+    },
+    {
+      "day": 9,
+      "date": "2026-03-14",
+      "location": "Hakone → Kyoto",
+      "meals": {
+        "breakfast": {"primary": "yoshimatsu-ryokan", "note": "INCLUDED"},
+        "lunch": {"note": "Shinkansen bento"},
+        "dinner": {"note": "Near Kyoto machiya"}
+      }
+    },
+    {
+      "day": 10,
+      "date": "2026-03-15",
+      "location": "Kyoto",
+      "meals": {
+        "breakfast": {"note": "Machiya or local"},
+        "lunch": {"primary": "nishiki-market", "alternatives": ["ippudo-kyoto"]},
+        "dinner": {"note": "Gion area"}
+      }
+    },
+    {
+      "day": 11,
+      "date": "2026-03-16",
+      "location": "Kyoto",
+      "meals": {
+        "breakfast": {"note": "Early start"},
+        "snack": {"primary": "arabica-arashiyama"},
+        "lunch": {"note": "Arashiyama area"},
+        "dinner": {"primary": "pontocho"}
+      }
+    },
+    {
+      "day": 12,
+      "date": "2026-03-17",
+      "location": "Kyoto → Osaka",
+      "meals": {
+        "breakfast": {"note": "Machiya checkout"},
+        "lunch": {"note": "En route"},
+        "snack": {"primary": "wanaka-takoyaki"},
+        "dinner": {"primary": "dotonbori", "alternatives": ["mizuno-okonomiyaki"]}
+      }
+    },
+    {
+      "day": 13,
+      "date": "2026-03-18",
+      "location": "Osaka",
+      "meals": {
+        "breakfast": {"note": "MIMARU"},
+        "lunch": {"primary": "kuromon-market"},
+        "afternoon": {"primary": "tower-knives", "type": "shopping"},
+        "dinner": {"note": "Shinsaibashi area"}
+      }
+    },
+    {
+      "day": 14,
+      "date": "2026-03-19",
+      "location": "Osaka - Nara/Sumo",
+      "meals": {
+        "breakfast": {"note": "MIMARU"},
+        "lunch": {"note": "Nara area"},
+        "dinner": {"note": "Emma's Birthday - TBD"}
+      }
+    },
+    {
+      "day": 15,
+      "date": "2026-03-20",
+      "location": "Osaka",
+      "meals": {
+        "breakfast": {"note": "MIMARU"},
+        "lunch": {"note": "Shopping area"},
+        "dinner": {"note": "Final Osaka meal"}
+      }
+    },
+    {
+      "day": 16,
+      "date": "2026-03-21",
+      "location": "Departure",
+      "meals": {
+        "breakfast": {"note": "Early checkout"},
+        "lunch": {"note": "Airport/flight"}
+      }
+    }
+  ],
+  "pwaHelpers": {
+    "getRestaurantById": "function(id) { return restaurants.tokyo.concat(restaurants.hakone, restaurants.kyoto, restaurants.osaka).find(r => r.id === id); }",
+    "getMealsForDay": "function(day) { return mealPlanByDay.find(m => m.day === day); }",
+    "getCoordinatesForId": "function(id) { const r = getRestaurantById(id); return r ? r.coordinates : null; }",
+    "mapPinColors": {
+      "restaurant": "#FF6B6B",
+      "attraction": "#4ECDC4",
+      "hotel": "#45B7D1",
+      "market": "#96CEB4",
+      "shopping": "#FFEAA7"
+    },
+    "defaultZoom": {
+      "city": 13,
+      "district": 15,
+      "venue": 17
+    }
+  }
+}
