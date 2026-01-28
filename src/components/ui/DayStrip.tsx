@@ -7,7 +7,6 @@ interface DayStripProps {
   selectedDay: number;
   currentDay: number | null;
   onDayChange: (day: number) => void;
-  isPending?: boolean;
 }
 
 // City data with colors
@@ -60,7 +59,7 @@ function getDate(dayNumber: number): string {
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
-export function DayStrip({ selectedDay, currentDay, onDayChange, isPending = false }: DayStripProps) {
+export function DayStrip({ selectedDay, currentDay, onDayChange }: DayStripProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const selectedRef = useRef<HTMLButtonElement>(null);
 
@@ -88,9 +87,7 @@ export function DayStrip({ selectedDay, currentDay, onDayChange, isPending = fal
       {/* Scrollable container */}
       <div
         ref={scrollRef}
-        className={`overflow-x-auto scrollbar-hide ${
-          isPending ? 'opacity-70 pointer-events-none' : ''
-        }`}
+        className="overflow-x-auto scrollbar-hide"
         role="listbox"
         aria-label="Trip days"
       >
@@ -129,21 +126,20 @@ export function DayStrip({ selectedDay, currentDay, onDayChange, isPending = fal
                 <button
                   key={day}
                   ref={isSelected ? selectedRef : undefined}
-                  onClick={() => !isPending && onDayChange(day)}
-                  disabled={isPending}
+                  onClick={() => onDayChange(day)}
                   role="option"
                   aria-selected={isSelected}
                   aria-label={`Day ${day}, ${getDate(day)}, ${city}${isCurrent ? ', Today' : ''}`}
                   className={`
                     flex-shrink-0 flex flex-col items-center justify-center
                     h-14 rounded-xl transition-all duration-fast relative snap-center
+                    cursor-pointer active:scale-95
                     ${isSelected
                       ? `${cityData.bgLight} text-white shadow-lg`
                       : isCurrent
                         ? `${cityData.bgMuted} ring-2 ring-primary ${cityData.textMuted}`
                         : `${cityData.bgMuted} ${cityData.textMuted} hover:opacity-80`
                     }
-                    ${isPending ? 'cursor-wait' : 'cursor-pointer active:scale-95'}
                   `}
                   style={{ width: `${DAY_WIDTH}px` }}
                 >

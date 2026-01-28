@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useCallback, Suspense, useTransition, useEffect } from 'react';
+import { useState, useCallback, Suspense, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Map, PinLegend, PinInfo, Directions } from '@/components/maps';
 import { DayStrip } from '@/components/ui';
 import { useGeolocation } from '@/lib/hooks/useGeolocation';
-import { useActivitiesWithTransit, useCurrentDayNumber } from '@/db/hooks';
+import { useActivitiesWithTransit, useCurrentDayNumber, useAccommodationsForDay } from '@/db/hooks';
 import { useAppStore } from '@/stores/app-store';
-import type { ActivityWithTransit } from '@/types/database';
+import type { ActivityWithTransit, Accommodation } from '@/types/database';
 import Link from 'next/link';
 
 function MapContent() {
@@ -36,7 +36,6 @@ function MapContent() {
 
   const [selectedActivity, setSelectedActivity] = useState<ActivityWithTransit | null>(null);
   const [showDirections, setShowDirections] = useState(false);
-  const [isPending, startTransition] = useTransition();
 
   // Get user location
   const { lat, lng, isTracking, startTracking, error: geoError } = useGeolocation();
@@ -45,8 +44,39 @@ function MapContent() {
   // Load activities for selected day using the hook
   const activitiesWithTransit = useActivitiesWithTransit(selectedDay);
 
+  // Load accommodations for this day (last night's hotel and tonight's hotel)
+  const accommodations = useAccommodationsForDay(selectedDay);
+
+  // Convert accommodation to activity-like object for map display
+  const accommodationToActivity = (acc: Accommodation, label: string): ActivityWithTransit => ({
+    id: `hotel-${acc.id}`,
+    dayNumber: selectedDay,
+    date: acc.startDate,
+    startTime: acc.checkInTime ?? '15:00',
+    durationMinutes: null,
+    name: `${label}: ${acc.name}`,
+    category: 'hotel',
+    locationName: acc.name,
+    locationAddress: acc.address,
+    locationAddressJp: acc.addressJp,
+    locationLat: acc.locationLat,
+    locationLng: acc.locationLng,
+    googleMapsUrl: acc.googleMapsUrl,
+    websiteUrl: null,
+    description: acc.instructions,
+    tips: acc.pinCode ? `Pin: ${acc.pinCode}` : null,
+    whatToOrder: null,
+    backupAlternative: null,
+    isHardDeadline: false,
+    isKidFriendly: true,
+    sortOrder: 0,
+    createdAt: acc.createdAt,
+    updatedAt: acc.updatedAt,
+    transit: null,
+  });
+
   // Flatten transit data for components that expect it
-  const activities = activitiesWithTransit?.map((a) => ({
+  const dayActivities = activitiesWithTransit?.map((a) => ({
     ...a,
     leaveBy: a.transit?.leaveBy,
     walkToStationMinutes: a.transit?.walkToStationMinutes,
@@ -60,6 +90,20 @@ function MapContent() {
     bufferMinutes: a.transit?.bufferMinutes,
     transitSteps: a.transit?.steps,
   })) ?? [];
+
+  // Combine activities with hotel markers
+  const hotelMarkers: ActivityWithTransit[] = [];
+  if (accommodations?.lastNight && accommodations.lastNight.locationLat && accommodations.lastNight.locationLng) {
+    // Only add if different from tonight's hotel
+    if (!accommodations.tonight || accommodations.lastNight.id !== accommodations.tonight.id) {
+      hotelMarkers.push(accommodationToActivity(accommodations.lastNight, 'Last Night'));
+    }
+  }
+  if (accommodations?.tonight && accommodations.tonight.locationLat && accommodations.tonight.locationLng) {
+    hotelMarkers.push(accommodationToActivity(accommodations.tonight, 'Tonight'));
+  }
+
+  const activities = [...dayActivities, ...hotelMarkers];
 
   // Handle pin click
   const handlePinClick = useCallback((activity: ActivityWithTransit) => {
@@ -78,13 +122,11 @@ function MapContent() {
     setShowDirections(false);
   }, []);
 
-  // Change day with non-blocking transition
+  // Change day
   const handleDayChange = (newDay: number) => {
-    startTransition(() => {
-      setGlobalSelectedDay(newDay);
-      setSelectedActivity(null);
-      setShowDirections(false);
-    });
+    setGlobalSelectedDay(newDay);
+    setSelectedActivity(null);
+    setShowDirections(false);
   };
 
   return (
@@ -120,7 +162,6 @@ function MapContent() {
             selectedDay={selectedDay}
             currentDay={currentTripDay}
             onDayChange={handleDayChange}
-            isPending={isPending}
           />
         </div>
       </header>

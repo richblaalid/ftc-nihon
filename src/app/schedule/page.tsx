@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useTransition, useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useActivitiesWithTransit, useCurrentActivity, useCurrentDayNumber, useDayInfo } from '@/db/hooks';
 import { DayStrip } from '@/components/ui';
@@ -32,13 +32,10 @@ function ScheduleContent() {
 
   // Effective day: store value takes precedence, otherwise current day, otherwise day 1
   const selectedDay = globalSelectedDay ?? currentDayNumber ?? 1;
-  const [isPending, startTransition] = useTransition();
 
-  // Update store when day changes
+  // Update store when day changes (direct call, no useTransition needed)
   const handleDayChange = (day: number) => {
-    startTransition(() => {
-      setGlobalSelectedDay(day);
-    });
+    setGlobalSelectedDay(day);
   };
 
   // Fetch activities for selected day
@@ -73,8 +70,7 @@ function ScheduleContent() {
           {!isToday && currentDayNumber && (
             <button
               onClick={() => handleDayChange(currentDayNumber)}
-              disabled={isPending}
-              className={`rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary ${isPending ? 'opacity-70 cursor-wait' : ''}`}
+              className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary"
             >
               Today
             </button>
@@ -88,7 +84,6 @@ function ScheduleContent() {
             selectedDay={selectedDay}
             currentDay={currentDayNumber}
             onDayChange={handleDayChange}
-            isPending={isPending}
           />
         </div>
       </header>
