@@ -86,7 +86,7 @@ export function EmergencySheet({ tripInfo, isOpen, onClose }: EmergencySheetProp
   ];
 
   return (
-    <div className="fixed inset-0 z-50">
+    <div className="fixed inset-0 z-[200]">
       {/* Backdrop */}
       <div
         className={`
@@ -104,13 +104,14 @@ export function EmergencySheet({ tripInfo, isOpen, onClose }: EmergencySheetProp
         aria-modal="true"
         aria-labelledby="emergency-sheet-title"
         className={`
-          absolute bottom-0 left-0 right-0
+          absolute left-0 right-0
           bg-background dark:bg-surface rounded-t-3xl
           shadow-2xl
           transform transition-transform duration-300 ease-out
           ${isAnimating ? 'translate-y-0' : 'translate-y-full'}
-          max-h-[90vh] overflow-y-auto
+          max-h-[85vh] overflow-y-auto
         `}
+        style={{ bottom: 0 }}
       >
         {/* Handle bar */}
         <div className="flex justify-center pt-3 pb-2">
@@ -138,7 +139,7 @@ export function EmergencySheet({ tripInfo, isOpen, onClose }: EmergencySheetProp
           </div>
         </div>
 
-        <div className="p-5 pb-safe space-y-5">
+        <div className="p-5 space-y-5" style={{ paddingBottom: 'calc(5rem + env(safe-area-inset-bottom, 0px))' }}>
           {/* Guide Contact - Primary */}
           {tripInfo.guideName && (
             <div className="p-4 bg-gradient-to-br from-coral-50 to-amber-50 dark:from-coral-950/30 dark:to-amber-950/30 rounded-2xl border border-coral-200 dark:border-coral-800">
@@ -237,7 +238,7 @@ export function EmergencyButton({ onClick, className = '' }: EmergencyButtonProp
     <button
       onClick={onClick}
       className={`
-        fixed bottom-20 right-4 z-40
+        fixed right-4 z-[100]
         w-12 h-12 rounded-full
         bg-gradient-to-br from-red-500 to-red-600
         shadow-lg shadow-red-500/30
@@ -247,6 +248,7 @@ export function EmergencyButton({ onClick, className = '' }: EmergencyButtonProp
         active:scale-95 transition-all duration-200
         ${className}
       `}
+      style={{ bottom: 'calc(5rem + env(safe-area-inset-bottom, 0px) + 1rem)' }}
       aria-label="Emergency contacts"
       title="Emergency contacts"
     >

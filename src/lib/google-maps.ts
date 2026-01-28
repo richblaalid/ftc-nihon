@@ -77,16 +77,22 @@ export const JAPAN_BOUNDS = {
   east: 153.9,
 };
 
+// Simple LatLng type (avoids dependency on google.maps being loaded)
+export interface LatLngLiteral {
+  lat: number;
+  lng: number;
+}
+
 // City centers for the trip
-export const CITY_CENTERS: Record<string, google.maps.LatLngLiteral> = {
+export const CITY_CENTERS: Record<string, LatLngLiteral> = {
   Tokyo: { lat: 35.6762, lng: 139.6503 },
   Hakone: { lat: 35.2324, lng: 139.1069 },
   Kyoto: { lat: 35.0116, lng: 135.7681 },
   Osaka: { lat: 34.6937, lng: 135.5023 },
 };
 
-// Default map options for Japan
-export const DEFAULT_MAP_OPTIONS: google.maps.MapOptions = {
+// Default map options for Japan (typed as partial to avoid google.maps dependency at module level)
+export const DEFAULT_MAP_OPTIONS: Partial<google.maps.MapOptions> & { center: LatLngLiteral } = {
   center: JAPAN_CENTER,
   zoom: 12,
   minZoom: 5,

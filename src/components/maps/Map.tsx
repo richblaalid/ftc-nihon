@@ -7,6 +7,7 @@ import {
   DEFAULT_MAP_OPTIONS,
   CITY_CENTERS,
 } from '@/lib/google-maps';
+import { useSyncStore } from '@/stores/sync-store';
 import type { ActivityWithTransit, ActivityCategory } from '@/types/database';
 import { DAY_CITIES } from '@/types/database';
 
@@ -338,8 +339,30 @@ export function Map({
     });
   }, [isLoaded, userLocation]);
 
-  // Error state (config error or runtime error)
+  // Check if offline
+  const isOnline = useSyncStore((state) => state.isOnline);
+
+  // Error state (config error, runtime error, or offline)
   const displayError = !isConfigured ? 'Google Maps API key not configured' : error;
+
+  // Show offline message if offline and map hasn't loaded
+  if (!isOnline && !isLoaded) {
+    return (
+      <div className={`flex items-center justify-center bg-background-secondary ${className}`}>
+        <div className="text-center p-4 max-w-xs">
+          <span className="text-4xl">📍</span>
+          <p className="mt-2 font-medium text-foreground">Map unavailable offline</p>
+          <p className="mt-1 text-sm text-foreground-secondary">
+            Google Maps requires an internet connection to load map tiles.
+          </p>
+          <p className="mt-3 text-xs text-foreground-tertiary">
+            Your activity locations are still saved. Connect to the internet to view the map.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   if (displayError) {
     return (
       <div className={`flex items-center justify-center bg-background-secondary ${className}`}>
