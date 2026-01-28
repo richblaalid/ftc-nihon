@@ -34,8 +34,14 @@ export function Directions({ activity, userLocation, onClose }: DirectionsProps)
   // Parse transit steps from JSON if available
   const transitSteps: TransitStep[] = activity.transitSteps || [];
 
-  // Build Google Maps directions URL
+  // Get Google Maps URL - prefer stored URL, fall back to coordinates
   const getGoogleMapsUrl = () => {
+    // Prefer the stored Google Maps URL for better accuracy
+    if (activity.googleMapsUrl) {
+      return activity.googleMapsUrl;
+    }
+
+    // Fall back to coordinates if no stored URL
     if (!activity.locationLat || !activity.locationLng) return null;
 
     const destination = `${activity.locationLat},${activity.locationLng}`;
@@ -216,8 +222,14 @@ export function Directions({ activity, userLocation, onClose }: DirectionsProps)
  * Compact directions card for embedding
  */
 export function DirectionsCard({ activity, userLocation }: { activity: ActivityWithTransit; userLocation?: { lat: number; lng: number } | null }) {
-  // Build Google Maps directions URL
+  // Get Google Maps URL - prefer stored URL, fall back to coordinates
   const getGoogleMapsUrl = () => {
+    // Prefer the stored Google Maps URL for better accuracy
+    if (activity.googleMapsUrl) {
+      return activity.googleMapsUrl;
+    }
+
+    // Fall back to coordinates if no stored URL
     if (!activity.locationLat || !activity.locationLng) return null;
 
     const destination = `${activity.locationLat},${activity.locationLng}`;
