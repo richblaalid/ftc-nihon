@@ -1,20 +1,36 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import type { Accommodation } from '@/types/database';
 
 interface AccommodationCardProps {
   accommodation: Accommodation;
   isCurrent?: boolean;
+  /** When true, this card starts expanded (used for deep linking from map) */
+  isExpandedFromUrl?: boolean;
 }
 
 /**
  * Accommodation card with expandable details
  * Shows hotel info, addresses, and contact details
  */
-export function AccommodationCard({ accommodation, isCurrent = false }: AccommodationCardProps) {
-  const [isExpanded, setIsExpanded] = useState(isCurrent);
+export function AccommodationCard({ accommodation, isCurrent = false, isExpandedFromUrl = false }: AccommodationCardProps) {
+  const [isExpanded, setIsExpanded] = useState(isCurrent || isExpandedFromUrl);
   const [copied, setCopied] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  // Expand and scroll into view when deep-linked from map
+  useEffect(() => {
+    if (isExpandedFromUrl) {
+      setIsExpanded(true);
+      // Small delay to let the page render first
+      if (cardRef.current) {
+        setTimeout(() => {
+          cardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+      }
+    }
+  }, [isExpandedFromUrl]);
 
   // Format date range (parse as local date to avoid timezone issues)
   const formatDateRange = () => {
@@ -63,9 +79,10 @@ export function AccommodationCard({ accommodation, isCurrent = false }: Accommod
 
   return (
     <div
+      ref={cardRef}
       className={`card overflow-hidden transition-all ${
         isCurrent ? 'ring-2 ring-primary' : ''
-      }`}
+      } ${isExpandedFromUrl ? 'ring-2 ring-primary' : ''}`}
     >
       {/* Header - always visible */}
       <button

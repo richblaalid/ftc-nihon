@@ -1,14 +1,17 @@
 'use client';
 
+import { Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useAccommodations } from '@/db/hooks';
 import { AccommodationCard } from '@/components/reservations';
 import { PageHeader } from '@/components/ui';
 
 /**
- * Reservations page showing all accommodations
- * Current accommodation is highlighted and expanded by default
+ * Inner content component that uses useSearchParams
  */
-export default function ReservationsPage() {
+function ReservationsContent() {
+  const searchParams = useSearchParams();
+  const hotelParam = searchParams.get('hotel');
   const accommodations = useAccommodations();
 
   // Determine current accommodation based on today's date
@@ -85,11 +88,51 @@ export default function ReservationsPage() {
                 key={accommodation.id}
                 accommodation={accommodation}
                 isCurrent={currentAccommodation?.id === accommodation.id}
+                isExpandedFromUrl={hotelParam === accommodation.id}
               />
             ))}
           </div>
         )}
       </main>
     </div>
+  );
+}
+
+/**
+ * Loading fallback for Suspense
+ */
+function ReservationsLoading() {
+  return (
+    <div className="flex min-h-screen flex-col bg-background pb-safe">
+      <PageHeader title="Reservations" />
+      <main className="flex-1 p-4 space-y-4">
+        <div className="space-y-4">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="card animate-pulse p-4">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-background-secondary" />
+                <div className="flex-1">
+                  <div className="h-5 w-40 bg-background-secondary rounded" />
+                  <div className="h-4 w-24 bg-background-secondary rounded mt-2" />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </main>
+    </div>
+  );
+}
+
+/**
+ * Reservations page showing all accommodations
+ * Current accommodation is highlighted and expanded by default
+ * Supports ?hotel=<id> parameter to expand a specific hotel
+ */
+export default function ReservationsPage() {
+  return (
+    <Suspense fallback={<ReservationsLoading />}>
+      <ReservationsContent />
+    </Suspense>
   );
 }

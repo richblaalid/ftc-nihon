@@ -76,7 +76,11 @@ export function PinInfo({ activity, onClose, onNavigate }: PinInfoProps) {
         {/* Actions */}
         <div className="mt-4 flex gap-2">
           <Link
-            href={`/schedule/${activity.id}`}
+            href={
+              activity.category === 'hotel'
+                ? `/reservations?hotel=${activity.id.replace('hotel-', '')}`
+                : `/schedule/${activity.id}`
+            }
             className="flex-1 btn btn-secondary text-sm py-2"
           >
             View Details
