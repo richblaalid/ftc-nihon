@@ -81,14 +81,12 @@ export function PinInfo({ activity, onClose, onNavigate }: PinInfoProps) {
           >
             View Details
           </Link>
-          {(activity.googleMapsUrl || (activity.locationLat && activity.locationLng)) && (
-            <button
-              onClick={onNavigate}
-              className="flex-1 btn btn-primary text-sm py-2"
-            >
-              Directions
-            </button>
-          )}
+          <button
+            onClick={onNavigate}
+            className="flex-1 btn btn-primary text-sm py-2"
+          >
+            Directions
+          </button>
         </div>
       </div>
     </div>

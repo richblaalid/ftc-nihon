@@ -34,31 +34,20 @@ export function Directions({ activity, userLocation, onClose }: DirectionsProps)
   // Parse transit steps from JSON if available
   const transitSteps: TransitStep[] = activity.transitSteps || [];
 
-  // Get Google Maps URL - prefer stored URL, fall back to coordinates
+  // Get Google Maps URL - prefer stored URL, fall back to name search
   const getGoogleMapsUrl = () => {
-    // Prefer the stored Google Maps URL for better accuracy
+    // Prefer the stored Google Maps URL for verified accuracy
     if (activity.googleMapsUrl) {
       return activity.googleMapsUrl;
     }
 
-    // Fall back to coordinates if no stored URL
-    if (!activity.locationLat || !activity.locationLng) return null;
+    // Fall back to search by name (let Google resolve the location)
+    const searchQuery = activity.locationName || activity.name;
+    if (!searchQuery) return null;
 
-    const destination = `${activity.locationLat},${activity.locationLng}`;
-    const origin = userLocation ? `${userLocation.lat},${userLocation.lng}` : '';
-
-    // Use transit mode for Japan
-    const params = new URLSearchParams({
-      api: '1',
-      destination,
-      travelmode: 'transit',
-    });
-
-    if (origin) {
-      params.set('origin', origin);
-    }
-
-    return `https://www.google.com/maps/dir/?${params.toString()}`;
+    // Add "Japan" to help Google find the right place
+    const query = encodeURIComponent(`${searchQuery} Japan`);
+    return `https://www.google.com/maps/search/?api=1&query=${query}`;
   };
 
   const googleMapsUrl = getGoogleMapsUrl();
@@ -221,31 +210,21 @@ export function Directions({ activity, userLocation, onClose }: DirectionsProps)
 /**
  * Compact directions card for embedding
  */
-export function DirectionsCard({ activity, userLocation }: { activity: ActivityWithTransit; userLocation?: { lat: number; lng: number } | null }) {
-  // Get Google Maps URL - prefer stored URL, fall back to coordinates
+export function DirectionsCard({ activity }: { activity: ActivityWithTransit }) {
+  // Get Google Maps URL - prefer stored URL, fall back to name search
   const getGoogleMapsUrl = () => {
-    // Prefer the stored Google Maps URL for better accuracy
+    // Prefer the stored Google Maps URL for verified accuracy
     if (activity.googleMapsUrl) {
       return activity.googleMapsUrl;
     }
 
-    // Fall back to coordinates if no stored URL
-    if (!activity.locationLat || !activity.locationLng) return null;
+    // Fall back to search by name (let Google resolve the location)
+    const searchQuery = activity.locationName || activity.name;
+    if (!searchQuery) return null;
 
-    const destination = `${activity.locationLat},${activity.locationLng}`;
-    const origin = userLocation ? `${userLocation.lat},${userLocation.lng}` : '';
-
-    const params = new URLSearchParams({
-      api: '1',
-      destination,
-      travelmode: 'transit',
-    });
-
-    if (origin) {
-      params.set('origin', origin);
-    }
-
-    return `https://www.google.com/maps/dir/?${params.toString()}`;
+    // Add "Japan" to help Google find the right place
+    const query = encodeURIComponent(`${searchQuery} Japan`);
+    return `https://www.google.com/maps/search/?api=1&query=${query}`;
   };
 
   const googleMapsUrl = getGoogleMapsUrl();
