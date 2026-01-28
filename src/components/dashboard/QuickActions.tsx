@@ -3,8 +3,31 @@
 import { CurrencyConverter, useCurrencyConverter } from '@/components/ui/CurrencyConverter';
 import { WeatherWidgetCompact } from './WeatherWidget';
 
-// Google Translate URL - English to Japanese by default
-const GOOGLE_TRANSLATE_URL = 'https://translate.google.com/?sl=en&tl=ja&op=translate';
+// Google Translate URLs
+const GOOGLE_TRANSLATE_WEB_URL = 'https://translate.google.com/?sl=en&tl=ja&op=translate';
+// Google Translate app URL scheme (iOS)
+const GOOGLE_TRANSLATE_APP_URL = 'googletranslate://?sl=en&tl=ja';
+
+/**
+ * Try to open Google Translate app, fall back to web if not installed
+ */
+function openGoogleTranslate() {
+  // Create a hidden iframe to try opening the app
+  // This prevents the "can't open" error from showing
+  const start = Date.now();
+
+  // Try to open the app
+  window.location.href = GOOGLE_TRANSLATE_APP_URL;
+
+  // If we're still here after a short delay, the app didn't open
+  // Fall back to web version
+  setTimeout(() => {
+    // If less than 2 seconds passed, the app probably didn't open
+    if (Date.now() - start < 2000) {
+      window.open(GOOGLE_TRANSLATE_WEB_URL, '_blank');
+    }
+  }, 500);
+}
 
 /**
  * Utility widget button - matches card style of weather widget
@@ -70,10 +93,9 @@ export function QuickActions() {
           testId="quick-action-currency"
         />
         <UtilityWidget
-          href={GOOGLE_TRANSLATE_URL}
           icon="話す"
           label="Translate"
-          external
+          onClick={openGoogleTranslate}
           testId="quick-action-translate"
         />
       </div>
