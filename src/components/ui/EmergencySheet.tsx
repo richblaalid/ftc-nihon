@@ -9,9 +9,12 @@ interface EmergencySheetProps {
   onClose: () => void;
 }
 
+// WhatsApp group chat link
+const WHATSAPP_GROUP_LINK = 'https://chat.whatsapp.com/DQwB6Ga88xzGcVDE21jIG8';
+
 /**
- * Emergency contact sheet - bottom drawer pattern
- * Shows guide contact and emergency numbers with tap-to-call
+ * Contacts sheet - bottom drawer pattern
+ * Shows guide contact, group chat, and emergency numbers
  */
 export function EmergencySheet({ tripInfo, isOpen, onClose }: EmergencySheetProps) {
   const [isVisible, setIsVisible] = useState(false);
@@ -123,9 +126,9 @@ export function EmergencySheet({ tripInfo, isOpen, onClose }: EmergencySheetProp
           <div className="flex items-center justify-between">
             <div>
               <h2 id="emergency-sheet-title" className="text-xl font-bold text-foreground">
-                Emergency Contacts
+                Contacts
               </h2>
-              <p className="text-sm text-foreground-secondary">Tap any number to call</p>
+              <p className="text-sm text-foreground-secondary">Tap to call or message</p>
             </div>
             <button
               onClick={onClose}
@@ -140,7 +143,7 @@ export function EmergencySheet({ tripInfo, isOpen, onClose }: EmergencySheetProp
         </div>
 
         <div className="p-5 space-y-5" style={{ paddingBottom: 'calc(5rem + env(safe-area-inset-bottom, 0px))' }}>
-          {/* Guide Contact - Primary */}
+          {/* Guide Contact - Mico */}
           {tripInfo.guideName && (
             <div className="p-4 bg-gradient-to-br from-coral-50 to-amber-50 dark:from-coral-950/30 dark:to-amber-950/30 rounded-2xl border border-coral-200 dark:border-coral-800">
               <div className="flex items-start gap-4">
@@ -175,6 +178,30 @@ export function EmergencySheet({ tripInfo, isOpen, onClose }: EmergencySheetProp
               </div>
             </div>
           )}
+
+          {/* WhatsApp Group Chat */}
+          <a
+            href={WHATSAPP_GROUP_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block p-4 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 rounded-2xl border border-green-200 dark:border-green-800 hover:shadow-md transition-shadow"
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full flex items-center justify-center text-2xl shadow-lg">
+                💬
+              </div>
+              <div className="flex-1">
+                <p className="text-xs text-green-600 dark:text-green-400 uppercase tracking-wider font-medium">
+                  Group Chat
+                </p>
+                <p className="text-lg font-bold text-foreground">FTC WhatsApp</p>
+                <p className="text-sm text-foreground-secondary">Message the group</p>
+              </div>
+              <svg className="w-5 h-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+              </svg>
+            </div>
+          </a>
 
           {/* Emergency Numbers Grid */}
           <div>
@@ -226,33 +253,35 @@ export function EmergencySheet({ tripInfo, isOpen, onClose }: EmergencySheetProp
 }
 
 /**
- * Floating emergency button - always accessible
+ * Floating contacts button - always accessible
  */
-interface EmergencyButtonProps {
+interface ContactsButtonProps {
   onClick: () => void;
   className?: string;
 }
 
-export function EmergencyButton({ onClick, className = '' }: EmergencyButtonProps) {
+export function EmergencyButton({ onClick, className = '' }: ContactsButtonProps) {
   return (
     <button
       onClick={onClick}
       className={`
         fixed right-4 z-[100]
         w-12 h-12 rounded-full
-        bg-gradient-to-br from-red-500 to-red-600
-        shadow-lg shadow-red-500/30
+        bg-gradient-to-br from-coral-500 to-amber-500
+        shadow-lg shadow-coral-500/30
         flex items-center justify-center
-        text-white text-xl
-        hover:from-red-600 hover:to-red-700
+        text-white
+        hover:from-coral-600 hover:to-amber-600
         active:scale-95 transition-all duration-200
         ${className}
       `}
       style={{ bottom: 'calc(4rem + env(safe-area-inset-bottom, 0px) + 0.5rem)' }}
-      aria-label="Emergency contacts"
-      title="Emergency contacts"
+      aria-label="Contacts"
+      title="Contacts"
     >
-      🆘
+      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+      </svg>
     </button>
   );
 }
