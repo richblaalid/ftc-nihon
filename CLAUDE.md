@@ -106,7 +106,7 @@ npm run test:e2e   # Run Playwright E2E tests
 ```
 
 **Test files:** Co-located with source files as `*.test.ts` or `*.test.tsx`
-**Coverage target:** 90% (configured in vitest.config.ts)
+**Coverage target:** ~11% current (configured in vitest.config.ts, increase as coverage grows)
 
 ### Claude Code Skills
 
