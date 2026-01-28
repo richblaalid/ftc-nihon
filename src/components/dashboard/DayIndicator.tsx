@@ -6,12 +6,13 @@ import { TRIP_START_DATE, DAY_CITIES } from '@/types/database';
 import { DaySelector } from './DaySelector';
 
 /**
- * Format date for display
+ * Format date for display (Day 0 = TRIP_START_DATE)
  */
 function formatDate(dayNumber: number): string {
-  const startDate = new Date(TRIP_START_DATE);
-  const date = new Date(startDate);
-  date.setDate(date.getDate() + dayNumber - 1);
+  // Parse as local date to avoid UTC timezone issues
+  const [year, month, day] = TRIP_START_DATE.split('-').map(Number);
+  const date = new Date(year!, month! - 1, day!);
+  date.setDate(date.getDate() + dayNumber);
 
   return date.toLocaleDateString('en-US', {
     weekday: 'short',

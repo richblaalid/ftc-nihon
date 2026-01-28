@@ -9,12 +9,13 @@ interface DayNavProps {
 }
 
 /**
- * Format date for display
+ * Format date for display (Day 0 = TRIP_START_DATE)
  */
 function formatDate(dayNumber: number): string {
-  const startDate = new Date(TRIP_START_DATE);
-  const date = new Date(startDate);
-  date.setDate(date.getDate() + dayNumber - 1);
+  // Parse as local date to avoid UTC timezone issues
+  const [year, month, day] = TRIP_START_DATE.split('-').map(Number);
+  const date = new Date(year!, month! - 1, day!);
+  date.setDate(date.getDate() + dayNumber);
 
   return date.toLocaleDateString('en-US', {
     weekday: 'short',
@@ -25,8 +26,8 @@ function formatDate(dayNumber: number): string {
 
 export function DayNav({ currentDay, onDayChange, isPending = false }: DayNavProps) {
   const city = DAY_CITIES[currentDay] ?? 'Japan';
-  const canGoPrev = currentDay > 1 && !isPending;
-  const canGoNext = currentDay < TRIP_DAYS && !isPending;
+  const canGoPrev = currentDay > 0 && !isPending;
+  const canGoNext = currentDay < TRIP_DAYS - 1 && !isPending;
 
   return (
     <nav

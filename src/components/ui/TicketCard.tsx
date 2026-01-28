@@ -17,10 +17,16 @@ export function TicketCard({ ticket, className = '', showPurchaseReminder = true
   const confirmations = ticket.confirmations ? JSON.parse(ticket.confirmations) : [];
   const tips = ticket.tips ? JSON.parse(ticket.tips) : [];
 
+  // Parse date string as local date (avoids UTC timezone issues)
+  const parseLocalDate = (dateStr: string) => {
+    const [year, month, day] = dateStr.split('-').map(Number);
+    return new Date(year!, month! - 1, day!);
+  };
+
   // Calculate days until ticket sale for unpurchased tickets
   const getDaysUntilSale = () => {
     if (!ticket.purchaseSaleDate) return null;
-    const saleDate = new Date(ticket.purchaseSaleDate);
+    const saleDate = parseLocalDate(ticket.purchaseSaleDate);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     saleDate.setHours(0, 0, 0, 0);
@@ -33,9 +39,9 @@ export function TicketCard({ ticket, className = '', showPurchaseReminder = true
   const isUrgent = daysUntilSale !== null && daysUntilSale <= 7;
   const isPast = daysUntilSale !== null && daysUntilSale < 0;
 
-  // Format date for display
+  // Format date for display (parse as local to avoid timezone issues)
   const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
+    const date = parseLocalDate(dateStr);
     return date.toLocaleDateString('en-US', {
       weekday: 'short',
       month: 'short',

@@ -16,10 +16,15 @@ export function AccommodationCard({ accommodation, isCurrent = false }: Accommod
   const [isExpanded, setIsExpanded] = useState(isCurrent);
   const [copied, setCopied] = useState(false);
 
-  // Format date range
+  // Format date range (parse as local date to avoid timezone issues)
   const formatDateRange = () => {
-    const start = new Date(accommodation.startDate);
-    const end = new Date(accommodation.endDate);
+    // Parse YYYY-MM-DD as local date (add T12:00 to avoid UTC midnight issues)
+    const parseLocalDate = (dateStr: string) => {
+      const [year, month, day] = dateStr.split('-').map(Number);
+      return new Date(year!, month! - 1, day!);
+    };
+    const start = parseLocalDate(accommodation.startDate);
+    const end = parseLocalDate(accommodation.endDate);
     const options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric' };
     return `${start.toLocaleDateString('en-US', options)} - ${end.toLocaleDateString('en-US', options)}`;
   };

@@ -395,22 +395,22 @@ export const TRIP_START_DATE = '2026-03-06'; // Departure from Minneapolis
 export const TRIP_END_DATE = '2026-03-21';
 export const TRIP_DAYS = 16; // Day 0 (departure) through Day 15
 
-// City mapping for each day
+// City mapping for each day (based on accommodation - where you sleep that night)
 export const DAY_CITIES: Record<number, string> = {
-  0: 'Travel', // Departure from Minneapolis
-  1: 'Tokyo',  // Arrive Tokyo
-  2: 'Tokyo',
-  3: 'Tokyo',
-  4: 'Tokyo',
-  5: 'Tokyo',
-  6: 'Tokyo',
-  7: 'Hakone',
-  8: 'Hakone',
-  9: 'Kyoto',
-  10: 'Kyoto',
-  11: 'Kyoto',
-  12: 'Osaka',
-  13: 'Osaka',
-  14: 'Osaka',
-  15: 'Osaka', // Departure from Japan
+  0: 'Travel',  // Departure from Minneapolis (on plane)
+  1: 'Tokyo',   // Arrive Tokyo, night at &Here Shinjuku
+  2: 'Tokyo',   // Night at &Here Shinjuku
+  3: 'Tokyo',   // Night at &Here Shinjuku
+  4: 'Tokyo',   // Night at &Here Shinjuku
+  5: 'Tokyo',   // Night at &Here Shinjuku (last Tokyo night)
+  6: 'Hakone',  // Travel to Hakone, night at Yoshimatsu Ryokan
+  7: 'Hakone',  // Night at Yoshimatsu Ryokan (last Hakone night)
+  8: 'Kyoto',   // Travel to Kyoto, night at Fujinoma Machiya
+  9: 'Kyoto',   // Night at Fujinoma Machiya
+  10: 'Kyoto',  // Night at Fujinoma Machiya (last Kyoto night)
+  11: 'Osaka',  // Travel to Osaka, night at MIMARU
+  12: 'Osaka',  // Night at MIMARU
+  13: 'Osaka',  // Night at MIMARU
+  14: 'Osaka',  // Night at MIMARU (last night in Japan)
+  15: 'Travel', // Departure from Japan
 };

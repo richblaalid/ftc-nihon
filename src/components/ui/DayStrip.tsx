@@ -20,22 +20,24 @@ const CITIES = {
 
 type CityName = keyof typeof CITIES;
 
-// City segments with day ranges
+// City segments with day ranges (based on accommodation nights)
 const CITY_SEGMENTS: { city: CityName; startDay: number; endDay: number }[] = [
   { city: 'Travel', startDay: 0, endDay: 0 },
-  { city: 'Tokyo', startDay: 1, endDay: 6 },
-  { city: 'Hakone', startDay: 7, endDay: 8 },
-  { city: 'Kyoto', startDay: 9, endDay: 11 },
-  { city: 'Osaka', startDay: 12, endDay: 15 },
+  { city: 'Tokyo', startDay: 1, endDay: 5 },
+  { city: 'Hakone', startDay: 6, endDay: 7 },
+  { city: 'Kyoto', startDay: 8, endDay: 10 },
+  { city: 'Osaka', startDay: 11, endDay: 14 },
+  { city: 'Travel', startDay: 15, endDay: 15 },
 ];
 
-// Map day number to city
+// Map day number to city (based on where you sleep that night)
 const DAY_TO_CITY: Record<number, CityName> = {
   0: 'Travel',
-  1: 'Tokyo', 2: 'Tokyo', 3: 'Tokyo', 4: 'Tokyo', 5: 'Tokyo', 6: 'Tokyo',
-  7: 'Hakone', 8: 'Hakone',
-  9: 'Kyoto', 10: 'Kyoto', 11: 'Kyoto',
-  12: 'Osaka', 13: 'Osaka', 14: 'Osaka', 15: 'Osaka',
+  1: 'Tokyo', 2: 'Tokyo', 3: 'Tokyo', 4: 'Tokyo', 5: 'Tokyo',
+  6: 'Hakone', 7: 'Hakone',
+  8: 'Kyoto', 9: 'Kyoto', 10: 'Kyoto',
+  11: 'Osaka', 12: 'Osaka', 13: 'Osaka', 14: 'Osaka',
+  15: 'Travel',
 };
 
 // Day column width (w-11 = 44px) + gap (4px)
@@ -43,12 +45,19 @@ const DAY_WIDTH = 44;
 const DAY_GAP = 4;
 
 /**
+ * Parse TRIP_START_DATE as local date (avoids UTC timezone issues)
+ */
+function getTripStartLocal(): Date {
+  const [year, month, day] = TRIP_START_DATE.split('-').map(Number);
+  return new Date(year!, month! - 1, day!);
+}
+
+/**
  * Get weekday abbreviation for a day number
  * Day 0 = TRIP_START_DATE
  */
 function getWeekday(dayNumber: number): string {
-  const startDate = new Date(TRIP_START_DATE);
-  const date = new Date(startDate);
+  const date = getTripStartLocal();
   date.setDate(date.getDate() + dayNumber);
   return date.toLocaleDateString('en-US', { weekday: 'short' }).slice(0, 2);
 }
@@ -58,8 +67,7 @@ function getWeekday(dayNumber: number): string {
  * Day 0 = TRIP_START_DATE
  */
 function getDate(dayNumber: number): string {
-  const startDate = new Date(TRIP_START_DATE);
-  const date = new Date(startDate);
+  const date = getTripStartLocal();
   date.setDate(date.getDate() + dayNumber);
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
@@ -69,8 +77,7 @@ function getDate(dayNumber: number): string {
  * Day 0 = TRIP_START_DATE
  */
 function getShortDate(dayNumber: number): string {
-  const startDate = new Date(TRIP_START_DATE);
-  const date = new Date(startDate);
+  const date = getTripStartLocal();
   date.setDate(date.getDate() + dayNumber);
   return `${date.getMonth() + 1}/${date.getDate()}`;
 }
@@ -118,7 +125,7 @@ export function DayStrip({ selectedDay, currentDay, onDayChange }: DayStripProps
 
               return (
                 <div
-                  key={segment.city}
+                  key={`${segment.city}-${segment.startDay}`}
                   className={`${cityData.bgLight} rounded-full flex items-center justify-center h-7`}
                   style={{ width: `${barWidth}px` }}
                 >

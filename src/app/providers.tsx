@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { initializeSync, subscribeToChanges } from '@/lib/sync';
 import { useSyncStore, initOnlineListeners } from '@/stores/sync-store';
-import { seedDatabase } from '@/db/seed';
+import { seedDatabase, reseedDatabase } from '@/db/seed';
 
 interface ProvidersProps {
   children: React.ReactNode;
@@ -25,6 +25,12 @@ export function Providers({ children }: ProvidersProps) {
 
     // Initialize online/offline listeners
     const cleanupOnlineListeners = initOnlineListeners();
+
+    // Expose reseed function for development
+    if (typeof window !== 'undefined') {
+      (window as unknown as { reseedDatabase: typeof reseedDatabase }).reseedDatabase = reseedDatabase;
+      console.log('[Dev] Call window.reseedDatabase() to force reseed');
+    }
 
     // Seed database with trip data if empty (development/first load)
     const seedIfNeeded = async () => {
