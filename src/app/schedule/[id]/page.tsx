@@ -154,7 +154,7 @@ export default function ActivityDetailPage({ params }: PageProps) {
               )}
               {(activity.locationLat && activity.locationLng) && (
                 <Link
-                  href={`/map?lat=${activity.locationLat}&lng=${activity.locationLng}&name=${encodeURIComponent(activity.name)}`}
+                  href={`/map?day=${activity.dayNumber}&activity=${activity.id}`}
                   className="btn-secondary inline-flex items-center gap-2 text-sm"
                 >
                   <span>📍</span>

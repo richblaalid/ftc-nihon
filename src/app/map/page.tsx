@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, Suspense, useEffect } from 'react';
+import { useState, useCallback, Suspense, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Map, PinLegend, PinInfo, Directions } from '@/components/maps';
 import { DayStrip, PageHeader } from '@/components/ui';
@@ -12,6 +12,7 @@ import type { ActivityWithTransit, Accommodation } from '@/types/database';
 function MapContent() {
   const searchParams = useSearchParams();
   const dayParam = searchParams.get('day');
+  const activityParam = searchParams.get('activity');
 
   // Global day selection from store
   const globalSelectedDay = useAppStore((state) => state.selectedDay);
@@ -35,6 +36,8 @@ function MapContent() {
 
   const [selectedActivity, setSelectedActivity] = useState<ActivityWithTransit | null>(null);
   const [showDirections, setShowDirections] = useState(false);
+  // Track if we've done the initial URL-based selection (to prevent re-selection on dismiss)
+  const [initialActivityHandled, setInitialActivityHandled] = useState(false);
 
   // Get user location
   const { lat, lng, isTracking, startTracking, stopTracking, error: geoError } = useGeolocation();
@@ -47,7 +50,7 @@ function MapContent() {
   const accommodations = useAccommodationsForDay(selectedDay);
 
   // Convert accommodation to activity-like object for map display
-  const accommodationToActivity = (acc: Accommodation, label: string): ActivityWithTransit => ({
+  const accommodationToActivity = useCallback((acc: Accommodation, label: string): ActivityWithTransit => ({
     id: `hotel-${acc.id}`,
     dayNumber: selectedDay,
     date: acc.startDate,
@@ -72,37 +75,59 @@ function MapContent() {
     createdAt: acc.createdAt,
     updatedAt: acc.updatedAt,
     transit: null,
-  });
+  }), [selectedDay]);
 
-  // Flatten transit data for components that expect it
-  const dayActivities = activitiesWithTransit?.map((a) => ({
-    ...a,
-    leaveBy: a.transit?.leaveBy,
-    walkToStationMinutes: a.transit?.walkToStationMinutes,
-    stationName: a.transit?.stationName,
-    trainLine: a.transit?.trainLine,
-    suggestedDeparture: a.transit?.suggestedDeparture,
-    travelMinutes: a.transit?.travelMinutes,
-    transfers: a.transit?.transfers,
-    arrivalStation: a.transit?.arrivalStation,
-    walkToDestinationMinutes: a.transit?.walkToDestinationMinutes,
-    bufferMinutes: a.transit?.bufferMinutes,
-    transitSteps: a.transit?.steps,
-  })) ?? [];
+  // Memoize activities to prevent unnecessary re-renders and marker recreation
+  const activities = useMemo(() => {
+    // Flatten transit data for components that expect it
+    const dayActivities = activitiesWithTransit?.map((a) => ({
+      ...a,
+      leaveBy: a.transit?.leaveBy,
+      walkToStationMinutes: a.transit?.walkToStationMinutes,
+      stationName: a.transit?.stationName,
+      trainLine: a.transit?.trainLine,
+      suggestedDeparture: a.transit?.suggestedDeparture,
+      travelMinutes: a.transit?.travelMinutes,
+      transfers: a.transit?.transfers,
+      arrivalStation: a.transit?.arrivalStation,
+      walkToDestinationMinutes: a.transit?.walkToDestinationMinutes,
+      bufferMinutes: a.transit?.bufferMinutes,
+      transitSteps: a.transit?.steps,
+    })) ?? [];
 
-  // Combine activities with hotel markers
-  const hotelMarkers: ActivityWithTransit[] = [];
-  if (accommodations?.lastNight && accommodations.lastNight.locationLat && accommodations.lastNight.locationLng) {
-    // Only add if different from tonight's hotel
-    if (!accommodations.tonight || accommodations.lastNight.id !== accommodations.tonight.id) {
-      hotelMarkers.push(accommodationToActivity(accommodations.lastNight, 'Last Night'));
+    // Combine activities with hotel markers
+    const hotelMarkers: ActivityWithTransit[] = [];
+    if (accommodations?.lastNight && accommodations.lastNight.locationLat && accommodations.lastNight.locationLng) {
+      // Only add if different from tonight's hotel
+      if (!accommodations.tonight || accommodations.lastNight.id !== accommodations.tonight.id) {
+        hotelMarkers.push(accommodationToActivity(accommodations.lastNight, 'Last Night'));
+      }
     }
-  }
-  if (accommodations?.tonight && accommodations.tonight.locationLat && accommodations.tonight.locationLng) {
-    hotelMarkers.push(accommodationToActivity(accommodations.tonight, 'Tonight'));
-  }
+    if (accommodations?.tonight && accommodations.tonight.locationLat && accommodations.tonight.locationLng) {
+      hotelMarkers.push(accommodationToActivity(accommodations.tonight, 'Tonight'));
+    }
 
-  const activities = [...dayActivities, ...hotelMarkers];
+    return [...dayActivities, ...hotelMarkers];
+  }, [activitiesWithTransit, accommodations, accommodationToActivity]);
+
+  // Compute map center from selected activity
+  const mapCenter = useMemo(() => {
+    if (selectedActivity?.locationLat && selectedActivity?.locationLng) {
+      return { lat: selectedActivity.locationLat, lng: selectedActivity.locationLng };
+    }
+    return undefined;
+  }, [selectedActivity?.locationLat, selectedActivity?.locationLng]);
+
+  // Handle initial activity selection from URL (only once when activities load)
+  useEffect(() => {
+    if (!activityParam || initialActivityHandled || activities.length === 0) return;
+
+    const activity = activities.find(a => a.id === activityParam);
+    if (activity) {
+      setSelectedActivity(activity);
+    }
+    setInitialActivityHandled(true);
+  }, [activityParam, activities, initialActivityHandled]);
 
   // Handle pin click
   const handlePinClick = useCallback((activity: ActivityWithTransit) => {
@@ -164,6 +189,8 @@ function MapContent() {
             dayNumber={selectedDay}
             userLocation={userLocation}
             onPinClick={handlePinClick}
+            selectedActivityId={selectedActivity?.id}
+            center={mapCenter}
             className="h-full w-full"
           />
         </div>
@@ -178,7 +205,7 @@ function MapContent() {
 
         {/* Selected activity info */}
         {selectedActivity && !showDirections && (
-          <div className="absolute top-4 left-4 right-4 z-10">
+          <div className="absolute top-4 left-4 z-10 pointer-events-auto">
             <PinInfo
               activity={selectedActivity}
               onClose={handleClose}
