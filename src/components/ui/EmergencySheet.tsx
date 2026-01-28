@@ -10,7 +10,7 @@ interface EmergencySheetProps {
 }
 
 // WhatsApp group chat link
-const WHATSAPP_GROUP_LINK = 'https://chat.whatsapp.com/DQwB6Ga88xzGcVDE21jIG8';
+const WHATSAPP_GROUP_LINK = 'https://chat.whatsapp.com/DQwB6Ga88xzGcVDE21jIG8?mode=gi_t';
 
 /**
  * Contacts sheet - bottom drawer pattern
