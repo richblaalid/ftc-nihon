@@ -16,20 +16,20 @@ function MapContent() {
 
   // Global day selection from store
   const globalSelectedDay = useAppStore((state) => state.selectedDay);
-  const setGlobalSelectedDay = useAppStore((state) => state.setSelectedDay);
 
   // Default to current trip day or day 1
   const currentTripDay = useCurrentDayNumber();
 
-  // On mount, check URL param and sync to store if present
+  // On mount only, check URL param and sync to store if present
   useEffect(() => {
     if (dayParam) {
       const day = parseInt(dayParam, 10);
-      if (day >= 1 && day <= 15 && day !== globalSelectedDay) {
-        setGlobalSelectedDay(day);
+      if (day >= 1 && day <= 15) {
+        useAppStore.getState().setSelectedDay(day);
       }
     }
-  }, [dayParam, globalSelectedDay, setGlobalSelectedDay]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- Only run on mount/URL change, not on store changes
+  }, [dayParam]);
 
   // Effective day: store value takes precedence, otherwise current day, otherwise day 1
   const selectedDay = globalSelectedDay ?? currentTripDay ?? 1;
@@ -124,7 +124,7 @@ function MapContent() {
 
   // Change day
   const handleDayChange = (newDay: number) => {
-    setGlobalSelectedDay(newDay);
+    useAppStore.getState().setSelectedDay(newDay);
     setSelectedActivity(null);
     setShowDirections(false);
   };
