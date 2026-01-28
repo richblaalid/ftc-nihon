@@ -57,6 +57,7 @@ export function RestaurantDetail({
       {hasCoordinates && (
         <div className="relative h-48 rounded-xl overflow-hidden bg-background-secondary">
           {/* Static map image from Google Maps Static API */}
+          {/* eslint-disable-next-line @next/next/no-img-element -- external dynamic API image */}
           <img
             src={`https://maps.googleapis.com/maps/api/staticmap?center=${restaurant.locationLat},${restaurant.locationLng}&zoom=16&size=600x300&maptype=roadmap&markers=color:red%7C${restaurant.locationLat},${restaurant.locationLng}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''}`}
             alt={`Map showing ${restaurant.name}`}

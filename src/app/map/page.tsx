@@ -28,7 +28,6 @@ function MapContent() {
         useAppStore.getState().setSelectedDay(day);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- Only run on mount/URL change, not on store changes
   }, [dayParam]);
 
   // Effective day: store value takes precedence, otherwise current day, otherwise day 1
@@ -111,6 +110,7 @@ function MapContent() {
   }, [activitiesWithTransit, accommodations, accommodationToActivity]);
 
   // Compute map center from selected activity
+  // eslint-disable-next-line react-hooks/preserve-manual-memoization -- intentional: only recompute when lat/lng actually change
   const mapCenter = useMemo(() => {
     if (selectedActivity?.locationLat && selectedActivity?.locationLng) {
       return { lat: selectedActivity.locationLat, lng: selectedActivity.locationLng };
@@ -124,6 +124,7 @@ function MapContent() {
 
     const activity = activities.find(a => a.id === activityParam);
     if (activity) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional for URL-based initial selection
       setSelectedActivity(activity);
     }
     setInitialActivityHandled(true);

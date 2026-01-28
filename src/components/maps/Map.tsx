@@ -267,6 +267,7 @@ export function Map({
     }
   // Note: center is intentionally NOT a dependency - changing selection should not recreate markers
   // The separate pan-to-center effect handles centering on selected activity
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- center excluded per above comment
   }, [isLoaded, activities, onPinClick]);
 
   // Update marker styling when selection changes (efficient: only updates affected markers)

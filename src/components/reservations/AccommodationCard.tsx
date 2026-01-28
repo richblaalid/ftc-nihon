@@ -22,6 +22,7 @@ export function AccommodationCard({ accommodation, isCurrent = false, isExpanded
   // Expand and scroll into view when deep-linked from map
   useEffect(() => {
     if (isExpandedFromUrl) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional for deep link handling
       setIsExpanded(true);
     }
   }, [isExpandedFromUrl]);

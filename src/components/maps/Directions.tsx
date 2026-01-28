@@ -28,7 +28,7 @@ function formatTime(time: string): string {
  * Step-by-step directions component
  * Shows transit steps with walking and train segments
  */
-export function Directions({ activity, userLocation, onClose }: DirectionsProps) {
+export function Directions({ activity, onClose }: DirectionsProps) {
   const [isExpanded, setIsExpanded] = useState(true);
 
   // Parse transit steps from JSON if available

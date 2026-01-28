@@ -15,7 +15,7 @@
 - Phase 4: [x] Complete
 - Phase 5: [x] Complete
 - **MVP Status:** Complete
-- Phase 5.5: [ ] Not Started - Quick Utility Features
+- Phase 5.5: [ ] In Progress - Quick Utility Features
 - Phase 6: [ ] Not Started - AI Assistant + Tour Guide
 - Phase 7: [ ] Not Started - Push Notifications
 - Phase 8: [ ] Not Started - Admin Panel
@@ -561,7 +561,7 @@
 
 ### 5.5.1 Google Translate Link
 
-- [ ] 5.5.1.1: Add Google Translate to Quick Actions
+- [x] 5.5.1.1: Add Google Translate to Quick Actions
   - Files: src/components/dashboard/QuickActions.tsx
   - Action: Opens Google Translate app (if installed) or website
   - URL: `https://translate.google.com/?sl=auto&tl=en&op=translate` (or deep link to app)
@@ -569,27 +569,27 @@
 
 ### 5.5.2 Currency Converter
 
-- [ ] 5.5.2.1: Create exchange rate service with daily caching
+- [x] 5.5.2.1: Create exchange rate service with daily caching
   - Files: src/lib/currency.ts
   - API: Free exchange rate API (e.g., exchangerate-api.com or similar)
   - Cache: Store rate in IndexedDB with timestamp, refresh if > 24 hours old
   - Fallback: Use last cached rate when offline
   - Test: Rate fetches and caches correctly
 
-- [ ] 5.5.2.2: Create currency converter modal component
+- [x] 5.5.2.2: Create currency converter modal component
   - Files: src/components/ui/CurrencyConverter.tsx
   - UI: Input field, swap button for direction, converted amount display
   - Features: Two-way conversion (JPY ↔ USD), numeric keypad friendly
   - Style: Modal triggered from Quick Actions, large touch targets
   - Test: Conversion calculates correctly both directions
 
-- [ ] 5.5.2.3: Add currency converter to Quick Actions
+- [x] 5.5.2.3: Add currency converter to Quick Actions
   - Files: src/components/dashboard/QuickActions.tsx
   - Action: Opens CurrencyConverter modal
   - Icon: Currency/yen symbol
   - Test: Button opens modal, conversion works
 
-- [ ] 5.5.2.4: Add exchange rate display to converter
+- [x] 5.5.2.4: Add exchange rate display to converter
   - Files: src/components/ui/CurrencyConverter.tsx
   - Display: Current rate and "Last updated" timestamp
   - Indicator: Show when using cached/offline rate

@@ -9,6 +9,7 @@ import {
   WeatherWidget,
   TimeWidget,
   AlertBanner,
+  QuickActions,
 } from '@/components/dashboard';
 import { useSyncStore, formatLastSyncTime } from '@/stores/sync-store';
 import {
@@ -99,6 +100,9 @@ export default function Home() {
     >
       {/* Alert banner - shows urgent alerts and approaching deadlines */}
       <AlertBanner />
+
+      {/* Quick action buttons */}
+      <QuickActions />
 
       {/* Flight info on relevant days */}
       {relevantFlight && (

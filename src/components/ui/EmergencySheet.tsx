@@ -23,6 +23,7 @@ export function EmergencySheet({ tripInfo, isOpen, onClose }: EmergencySheetProp
   // Handle open/close animations
   useEffect(() => {
     if (isOpen) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional for animation
       setIsVisible(true);
       requestAnimationFrame(() => {
         setIsAnimating(true);

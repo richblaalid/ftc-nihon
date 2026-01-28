@@ -26,7 +26,6 @@ function ScheduleContent() {
         useAppStore.getState().setSelectedDay(day);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- Only run on mount/URL change, not on store changes
   }, [dayParam]);
 
   // Effective day: store value takes precedence, otherwise current day, otherwise day 1
