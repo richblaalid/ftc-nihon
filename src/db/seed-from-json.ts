@@ -1,8 +1,9 @@
 /**
- * Transforms trip-itinerary.json into database-ready format
+ * @deprecated This file is no longer used.
+ * The single source of truth is now src/db/seed-data.ts
+ * This file remains for reference but is not imported anywhere.
  *
- * This is the SINGLE SOURCE OF TRUTH for trip data.
- * Edit src/data/trip-itinerary.json, not this file.
+ * Original purpose: Transformed trip-itinerary.json into database-ready format
  */
 
 import tripData from '@/data/trip-itinerary.json';

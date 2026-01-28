@@ -4,7 +4,7 @@
  */
 
 import { db } from './database';
-// Import from JSON-based seed file (single source of truth)
+// Import from TypeScript seed file (single source of truth)
 import {
   accommodations,
   activities,
@@ -19,7 +19,7 @@ import {
   phrases,
   transportRoutes,
   checklistItems,
-} from './seed-from-json';
+} from './seed-data';
 
 /**
  * Check if database is already seeded
