@@ -123,24 +123,90 @@ Supabase real-time subscriptions → Update IndexedDB → UI refreshes
 - Build restaurant detail cards with "what to order" tips
 - Verify: All 4 accommodations display, Japanese text copyable
 
+### Phase 5.5: Quick Utility Features
+
+**Goal:** High-value utility features that enhance daily usability
+**Depends on:** Phase 5
+
+- Add Google Translate link to Quick Actions (opens external app/site)
+- Build currency converter: daily-cached exchange rate, two-way Yen ↔ USD
+- Create context-aware Japanese phrase system tied to activity categories
+- Build phrase display component with preview + expandable full list
+- Populate phrase database for all 6 categories (restaurant, transit, shopping, temple, hotel, emergency)
+- Verify: All utilities work offline, phrases appear contextually on activity details
+
 ---
 
 ## MVP Boundary
 
 **MVP includes:** Phases 0-5 (P1 features from PRD)
-**Post-MVP:** AI Assistant, Push Notifications, Group Location Sharing, Admin Panel
+**Post-MVP:** Quick Utilities (5.5), AI Assistant + Tour Guide (6), Push Notifications (7), Admin Panel (8), Group Location Sharing (9)
 
 **MVP is complete when:**
 
-- [ ] Dashboard loads in < 2 seconds with cached data
-- [ ] "Now" activity updates automatically based on time
-- [ ] "Leave by" times displayed for all transit segments
-- [ ] All 15 days of itinerary accessible and navigable
-- [ ] GPS location shows on map with day pins
-- [ ] All 4 accommodations display with Japanese addresses
-- [ ] App works fully offline after initial data load
-- [ ] PWA installable on iOS 16.4+ devices
-- [ ] All Phase 0-5 checkpoints pass
+- [x] Dashboard loads in < 2 seconds with cached data
+- [x] "Now" activity updates automatically based on time
+- [x] "Leave by" times displayed for all transit segments
+- [x] All 15 days of itinerary accessible and navigable
+- [x] GPS location shows on map with day pins
+- [x] All 4 accommodations display with Japanese addresses
+- [x] App works fully offline after initial data load
+- [x] PWA installable on iOS 16.4+ devices
+- [x] All Phase 0-5 checkpoints pass
+
+## Post-MVP Phases
+
+### Phase 6: AI Assistant + Tour Guide
+
+**Goal:** Context-aware AI chat and location-based tour guide with audio
+**Depends on:** Phase 5.5
+
+- Create AI chat interface with trip context injection
+- Integrate Claude API with system prompt (current location, time, group composition)
+- Pre-cache common Q&A responses for offline fallback
+- Add chat history persistence in IndexedDB
+- Build "Tell me about this place" tour guide feature for cultural sites
+- Pre-generate tour content for temples, shrines, landmarks (~20 locations)
+- Create city overview content for Tokyo, Hakone, Kyoto, Osaka
+- Implement hybrid online/offline: live AI when connected, cached content when offline
+- Add browser Text-to-Speech (TTS) for audio playback of tour content
+- Verify: AI chat responds with context, tour guide works offline, TTS plays correctly
+
+### Phase 7: Push Notifications
+
+**Goal:** Proactive reminders via PWA push notifications
+**Depends on:** Phase 6
+
+- Set up Web Push with VAPID keys
+- Create notification permission flow
+- Implement morning briefing notifications (8:00 AM JST)
+- Implement departure reminders (30 min before "leave by")
+- Implement hard deadline alerts (60 min before)
+- Verify: Notifications work on iOS 16.4+ PWA
+
+### Phase 8: Admin Panel
+
+**Goal:** Mobile-friendly admin interface for Rich to edit itinerary
+**Depends on:** Phase 6
+
+- Implement Supabase Auth (magic link for Rich)
+- Create admin route protection
+- Build activity edit forms (time, details, tips)
+- Build alert creation form
+- Implement optimistic updates with Supabase sync
+- Verify: Edits sync to all devices in real-time
+
+### Phase 9: Group Location Sharing
+
+**Goal:** Simple check-in system for group coordination
+**Depends on:** Phase 8
+
+- Create "I'm here" location share button
+- Build group map view showing all adults
+- Add meeting point feature
+- Verify: Location shares visible to all users
+
+---
 
 ## External Dependencies
 
@@ -186,6 +252,14 @@ This plan implements the following PRD sections:
 - **Section 4.2.5**: Turn-by-Turn Directions → Phase 4
 - **Section 4.2.6**: Reservations Display → Phase 5
 - **Section 7.4-7.5**: Offline Architecture → Phase 0-1
+- **Section 4.3.1**: AI Travel Concierge → Phase 6 (enhanced with Tour Guide)
+- **Section 4.3.3**: Push Notifications → Phase 7
+- **Section 4.3.5**: Admin Panel → Phase 8
+- **Section 4.3.4**: Group Location Sharing → Phase 9
+- **Section 4.4.1**: Japanese Phrase Helper → Phase 5.5 (enhanced with context-awareness)
+- **New Feature**: Google Translate Link → Phase 5.5
+- **New Feature**: Currency Converter → Phase 5.5
+- **New Feature**: AI Tour Guide with Audio → Phase 6
 
 ## Notes for Implementation
 

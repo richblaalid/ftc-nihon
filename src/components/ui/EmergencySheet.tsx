@@ -248,7 +248,7 @@ export function EmergencyButton({ onClick, className = '' }: EmergencyButtonProp
         active:scale-95 transition-all duration-200
         ${className}
       `}
-      style={{ bottom: 'calc(5rem + env(safe-area-inset-bottom, 0px) + 1rem)' }}
+      style={{ bottom: 'calc(4rem + env(safe-area-inset-bottom, 0px) + 0.5rem)' }}
       aria-label="Emergency contacts"
       title="Emergency contacts"
     >

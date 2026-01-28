@@ -14,7 +14,12 @@
 - Phase 3: [x] Complete
 - Phase 4: [x] Complete
 - Phase 5: [x] Complete
-- **MVP Status:** Ready for User Testing
+- **MVP Status:** Complete
+- Phase 5.5: [ ] Not Started - Quick Utility Features
+- Phase 6: [ ] Not Started - AI Assistant + Tour Guide
+- Phase 7: [ ] Not Started - Push Notifications
+- Phase 8: [ ] Not Started - Admin Panel
+- Phase 9: [ ] Not Started - Group Location Sharing
 
 ---
 
@@ -550,38 +555,367 @@
 
 ---
 
+## Phase 5.5: Quick Utility Features
+
+> High-value utility features that enhance daily usability. All work offline.
+
+### 5.5.1 Google Translate Link
+
+- [ ] 5.5.1.1: Add Google Translate to Quick Actions
+  - Files: src/components/dashboard/QuickActions.tsx
+  - Action: Opens Google Translate app (if installed) or website
+  - URL: `https://translate.google.com/?sl=auto&tl=en&op=translate` (or deep link to app)
+  - Test: Button visible, opens Google Translate correctly on iOS
+
+### 5.5.2 Currency Converter
+
+- [ ] 5.5.2.1: Create exchange rate service with daily caching
+  - Files: src/lib/currency.ts
+  - API: Free exchange rate API (e.g., exchangerate-api.com or similar)
+  - Cache: Store rate in IndexedDB with timestamp, refresh if > 24 hours old
+  - Fallback: Use last cached rate when offline
+  - Test: Rate fetches and caches correctly
+
+- [ ] 5.5.2.2: Create currency converter modal component
+  - Files: src/components/ui/CurrencyConverter.tsx
+  - UI: Input field, swap button for direction, converted amount display
+  - Features: Two-way conversion (JPY ↔ USD), numeric keypad friendly
+  - Style: Modal triggered from Quick Actions, large touch targets
+  - Test: Conversion calculates correctly both directions
+
+- [ ] 5.5.2.3: Add currency converter to Quick Actions
+  - Files: src/components/dashboard/QuickActions.tsx
+  - Action: Opens CurrencyConverter modal
+  - Icon: Currency/yen symbol
+  - Test: Button opens modal, conversion works
+
+- [ ] 5.5.2.4: Add exchange rate display to converter
+  - Files: src/components/ui/CurrencyConverter.tsx
+  - Display: Current rate and "Last updated" timestamp
+  - Indicator: Show when using cached/offline rate
+  - Test: Rate and timestamp display correctly
+
+### 5.5.3 Context-Aware Japanese Phrases
+
+- [ ] 5.5.3.1: Create phrases database schema and types
+  - Files: src/db/database.ts, src/db/types.ts, src/types/database.ts
+  - Schema: phrases table with id, category, context, english, romaji, japanese, sortOrder
+  - Categories: restaurant, transit, shopping, temple, hotel, emergency
+  - Test: Schema compiles, migrations work
+
+- [ ] 5.5.3.2: Populate phrases database with initial content
+  - Files: src/db/seed-phrases.ts (or Supabase seed)
+  - Content: 8-12 phrases per category (~60 total)
+  - Categories:
+    - Restaurant: ordering, allergies, party size, payment, compliments
+    - Transit: directions, platforms, confirmation
+    - Shopping: price, sizes, payment
+    - Temple/Shrine: etiquette, photos, greetings
+    - Hotel: reservations, breakfast, checkout
+    - Emergency: help, medical, lost items
+  - Test: Phrases load from database
+
+- [ ] 5.5.3.3: Create usePhrases hook
+  - Files: src/db/hooks.ts
+  - Hook: usePhrases(category?) - returns phrases filtered by category
+  - Hook: usePhrasesByContext(activityCategory) - maps activity category to phrase categories
+  - Test: Hooks return correct phrases
+
+- [ ] 5.5.3.4: Create PhraseCard component
+  - Files: src/components/ui/PhraseCard.tsx
+  - Display: English phrase, Romaji (pronunciation), Japanese characters
+  - Features: Tap to expand/copy, "Show to staff" large text mode
+  - Style: Clean card with clear typography hierarchy
+  - Test: Card displays all three text formats correctly
+
+- [ ] 5.5.3.5: Create PhraseList component with category tabs
+  - Files: src/components/phrases/PhraseList.tsx
+  - UI: Horizontal scrolling category tabs, list of PhraseCards
+  - Features: Filter by category, expand all option
+  - Test: Category filtering works
+
+- [ ] 5.5.3.6: Create contextual phrases preview component
+  - Files: src/components/phrases/ContextualPhrases.tsx
+  - Display: 2-3 most relevant phrases for current activity type
+  - Features: "See all phrases" button to expand full list
+  - Logic: Map activity category to phrase categories (food→restaurant, temple→temple, etc.)
+  - Test: Preview shows relevant phrases based on activity
+
+- [ ] 5.5.3.7: Add phrases preview to activity detail page
+  - Files: src/app/schedule/[id]/page.tsx or src/components/schedule/ActivityDetail.tsx
+  - Integration: Show ContextualPhrases component below activity details
+  - Condition: Only show for relevant categories (food, temple, shopping, hotel)
+  - Test: Phrases appear contextually on activity details
+
+- [ ] 5.5.3.8: Create dedicated phrases page
+  - Files: src/app/phrases/page.tsx
+  - UI: Full PhraseList with all categories
+  - Access: From "See all phrases" button or navigation
+  - Test: All phrases accessible and browsable
+
+**Phase 5.5 Checkpoint:**
+
+- [ ] Google Translate link works from dashboard
+- [ ] Currency converter fetches rate daily, works offline with cached rate
+- [ ] Two-way JPY ↔ USD conversion works
+- [ ] Phrases appear contextually on activity details
+- [ ] All 6 phrase categories populated and accessible
+- [ ] "Show to staff" large text mode works
+- [ ] All features work offline
+- [ ] Commit: "feat: complete quick utility features (Phase 5.5)"
+
+---
+
 ## Post-MVP Tasks
 
-> Do not start these until MVP checkpoints are all verified.
+> Do not start these until Phase 5.5 is complete.
 
-### Phase 6: AI Assistant (P2)
+### Phase 6: AI Assistant + Tour Guide
 
-- [ ] 6.1.1: Create AI chat interface
-- [ ] 6.1.2: Integrate Claude API with trip context
-- [ ] 6.1.3: Pre-cache common responses for offline
+> Context-aware AI chat and location-based tour guide with audio playback.
+
+#### 6.1 AI Chat Interface
+
+- [ ] 6.1.1: Create AI chat page and layout
+  - Files: src/app/ai/page.tsx, src/components/ai/ChatLayout.tsx
+  - UI: Chat message list, input field, send button
+  - Style: iOS Messages-like interface, large touch targets
+  - Test: Page renders, can type messages
+
+- [ ] 6.1.2: Create chat message components
+  - Files: src/components/ai/ChatMessage.tsx, src/components/ai/ChatInput.tsx
+  - Display: User messages (right), AI messages (left), timestamps
+  - Features: Loading indicator while AI responds
+  - Test: Messages display correctly
+
+- [ ] 6.1.3: Integrate Claude API with trip context
+  - Files: src/lib/ai.ts, src/app/api/chat/route.ts
+  - System prompt: Current location, time, activity, group composition, today's itinerary
+  - Context injection: Dynamically build prompt based on current state
+  - Model: Claude 3.5 Sonnet
+  - Test: AI responds with context-aware answers
+
 - [ ] 6.1.4: Add chat history persistence
+  - Files: src/db/database.ts, src/db/types.ts, src/db/hooks.ts
+  - Schema: chatHistory table with id, role, content, timestamp
+  - Hook: useChatHistory() - returns chat messages
+  - Retention: Keep last 50 messages, clear on request
+  - Test: Chat history persists across sessions
 
-### Phase 7: Push Notifications (P2)
+- [ ] 6.1.5: Pre-cache common Q&A responses for offline
+  - Files: src/db/seed-ai-cache.ts
+  - Content: Top 20-30 anticipated questions with pre-generated responses
+  - Categories: Etiquette, location history, practical tips, schedule questions
+  - Matching: Fuzzy match user question to cached patterns
+  - Test: Offline questions return cached responses
+
+- [ ] 6.1.6: Add offline detection and graceful fallback
+  - Files: src/lib/ai.ts, src/components/ai/ChatLayout.tsx
+  - Logic: Check online status, try cache first, then API
+  - UI: Show "offline mode" indicator, explain limitations
+  - Test: Graceful degradation when offline
+
+#### 6.2 AI Tour Guide
+
+- [ ] 6.2.1: Pre-generate tour content for cultural sites
+  - Files: src/db/seed-tour-content.ts, Supabase seed
+  - Content: ~20 locations (temples, shrines, landmarks on itinerary)
+  - Format: 2-3 paragraphs of history, significance, interesting facts
+  - Storage: tourContent table in IndexedDB with locationId, title, content
+  - Test: Tour content loads for cultural sites
+
+- [ ] 6.2.2: Create city overview content
+  - Files: src/db/seed-tour-content.ts
+  - Cities: Tokyo, Hakone, Kyoto, Osaka
+  - Content: Brief description, cultural facts, main attractions, local food specialties
+  - Test: City overviews accessible
+
+- [ ] 6.2.3: Create TourGuide component
+  - Files: src/components/ai/TourGuide.tsx
+  - UI: "Tell me about this place" button, expandable content area
+  - Display: Title, content text, audio play button
+  - Features: Loading state for live AI generation
+  - Test: Component renders with content
+
+- [ ] 6.2.4: Implement hybrid online/offline tour content
+  - Files: src/lib/tour-guide.ts
+  - Logic: Check online → if yes, generate fresh content via Claude → cache result
+  - Fallback: If offline, serve pre-cached content
+  - Caching: Store AI-generated content for future offline use
+  - Test: Works both online and offline
+
+- [ ] 6.2.5: Implement browser Text-to-Speech (TTS)
+  - Files: src/lib/tts.ts, src/components/ai/TourGuide.tsx
+  - API: Web Speech API (speechSynthesis)
+  - Features: Play/pause/stop, speech rate control
+  - Voice: Use device's Japanese-capable voice or English fallback
+  - Test: TTS reads tour content aloud, works offline
+
+- [ ] 6.2.6: Add Tour Guide to activity detail page
+  - Files: src/app/schedule/[id]/page.tsx or src/components/schedule/ActivityDetail.tsx
+  - Integration: Show TourGuide component for cultural site categories (temple, activity with landmarks)
+  - Condition: Only show for locations with tour content
+  - Test: Tour guide appears on cultural site activity details
+
+- [ ] 6.2.7: Create city overview access point
+  - Files: src/components/dashboard/CityOverview.tsx or integrate into existing component
+  - Access: From dashboard or day header when in a new city
+  - Display: City name, "About this city" button → TourGuide with city content
+  - Test: City overviews accessible from dashboard
+
+**Phase 6 Checkpoint:**
+
+- [ ] AI chat responds with trip context
+- [ ] Chat history persists across sessions
+- [ ] Offline questions return cached responses
+- [ ] Tour guide shows on cultural site activity details
+- [ ] "Tell me about this place" generates or loads content
+- [ ] TTS reads tour content aloud
+- [ ] City overviews accessible for all 4 cities
+- [ ] Online/offline hybrid works correctly
+- [ ] Commit: "feat: complete AI assistant and tour guide (Phase 6)"
+
+### Phase 7: Push Notifications
+
+> Proactive reminders via PWA push notifications on iOS 16.4+.
 
 - [ ] 7.1.1: Set up Web Push with VAPID keys
-- [ ] 7.1.2: Create notification permission flow
-- [ ] 7.1.3: Implement morning briefing notifications
-- [ ] 7.1.4: Implement departure reminders
-- [ ] 7.1.5: Implement deadline alerts
+  - Files: src/lib/push.ts, environment variables
+  - Setup: Generate VAPID key pair, configure in env
+  - Test: Keys configured correctly
 
-### Phase 8: Admin Panel (P2)
+- [ ] 7.1.2: Create notification permission flow
+  - Files: src/components/ui/NotificationPrompt.tsx, src/app/settings/page.tsx
+  - UI: Explain value, request permission, handle denial gracefully
+  - Fallback: In-app notification center if push denied
+  - Test: Permission flow works on iOS Safari
+
+- [ ] 7.1.3: Create notification scheduling service
+  - Files: src/lib/notifications.ts, src/app/api/notifications/route.ts
+  - Logic: Schedule notifications based on itinerary times
+  - Storage: Track scheduled notifications in IndexedDB
+  - Test: Notifications schedule correctly
+
+- [ ] 7.1.4: Implement morning briefing notifications
+  - Time: 8:00 AM JST daily
+  - Content: Today's highlights, weather, hard deadlines
+  - Test: Morning notification fires at correct time
+
+- [ ] 7.1.5: Implement departure reminders
+  - Time: 30 minutes before "leave by" time
+  - Content: "Time to head to [destination]"
+  - Test: Departure reminder fires correctly
+
+- [ ] 7.1.6: Implement deadline alerts
+  - Time: 60 minutes before hard deadlines
+  - Content: "[Activity] in 1 hour - head back!"
+  - Test: Deadline alert fires correctly
+
+- [ ] 7.1.7: Add notification preferences to settings
+  - Files: src/app/settings/page.tsx
+  - Options: Toggle each notification type on/off
+  - Persistence: Store preferences in IndexedDB
+  - Test: Preferences save and apply
+
+**Phase 7 Checkpoint:**
+
+- [ ] Push notifications work on iOS 16.4+ PWA
+- [ ] Morning briefing fires at 8:00 AM JST
+- [ ] Departure reminders fire 30 min before leave time
+- [ ] Deadline alerts fire 60 min before deadlines
+- [ ] Notification preferences configurable
+- [ ] Commit: "feat: complete push notifications (Phase 7)"
+
+### Phase 8: Admin Panel
+
+> Mobile-friendly admin interface for Rich to edit itinerary in real-time.
 
 - [ ] 8.1.1: Implement Supabase Auth for Rich
-- [ ] 8.1.2: Create admin route protection
-- [ ] 8.1.3: Build activity edit forms
-- [ ] 8.1.4: Build alert creation form
-- [ ] 8.1.5: Implement optimistic updates with sync
+  - Files: src/lib/supabase-auth.ts, src/app/api/auth/route.ts
+  - Method: Magic link (email) authentication
+  - Setup: Create Rich's account in Supabase Auth dashboard
+  - Test: Magic link login works
 
-### Phase 9: Group Location Sharing (P2)
+- [ ] 8.1.2: Create admin route protection
+  - Files: src/middleware.ts or src/components/AdminGuard.tsx
+  - Logic: Check auth state, redirect to login if not authenticated
+  - Routes: /admin/* protected
+  - Test: Unauthenticated users cannot access admin
+
+- [ ] 8.1.3: Create admin dashboard
+  - Files: src/app/admin/page.tsx, src/components/admin/AdminDashboard.tsx
+  - UI: Links to edit activities, alerts, restaurants, checklist
+  - Style: Mobile-first, large touch targets
+  - Test: Dashboard renders for authenticated admin
+
+- [ ] 8.1.4: Build activity edit forms
+  - Files: src/app/admin/activities/page.tsx, src/components/admin/ActivityForm.tsx
+  - Features: Edit time, name, details, tips, links
+  - CRUD: Add new activity, edit existing, delete
+  - Test: Activity edits save correctly
+
+- [ ] 8.1.5: Build alert creation form
+  - Files: src/app/admin/alerts/page.tsx, src/components/admin/AlertForm.tsx
+  - Features: Create banner visible to all users, set type and expiry
+  - Test: Alerts create and display to all users
+
+- [ ] 8.1.6: Implement optimistic updates with sync
+  - Files: src/lib/admin-sync.ts
+  - Logic: Write to IndexedDB immediately, push to Supabase
+  - Conflict: Handle sync failures, show retry option
+  - Test: Edits appear instantly, sync to server
+
+- [ ] 8.1.7: Add real-time sync to other devices
+  - Files: src/lib/sync.ts (enhance existing)
+  - Logic: Supabase real-time subscriptions push admin edits to all users
+  - UI: Show "Updated" toast when content changes
+  - Test: Edits appear on other devices within seconds
+
+**Phase 8 Checkpoint:**
+
+- [ ] Rich can log in via magic link
+- [ ] Admin routes protected
+- [ ] Can edit activity times and details
+- [ ] Can create alerts visible to all users
+- [ ] Edits sync to all devices in real-time
+- [ ] Commit: "feat: complete admin panel (Phase 8)"
+
+### Phase 9: Group Location Sharing
+
+> Simple check-in system for group coordination when separated.
 
 - [ ] 9.1.1: Create "I'm here" location share button
+  - Files: src/components/ui/ShareLocationButton.tsx
+  - Action: Captures current GPS, pushes to Supabase location_shares
+  - UI: Confirmation toast, timestamp of share
+  - Privacy: Only shares when user explicitly taps
+  - Test: Location shares to database
+
 - [ ] 9.1.2: Build group map view
+  - Files: src/app/group/page.tsx, src/components/maps/GroupMap.tsx
+  - Display: Map with pin for each adult's last shared location
+  - Info: Name, timestamp of last share
+  - Real-time: Supabase subscription updates pins live
+  - Test: All 4 adults visible on map
+
 - [ ] 9.1.3: Add meeting point feature
+  - Files: src/components/maps/MeetingPoint.tsx
+  - Features: Set a meeting point, show distance from each person
+  - UI: Tap to set point, share with group
+  - Test: Meeting point visible to all, distances calculate
+
+- [ ] 9.1.4: Add group location to Quick Actions
+  - Files: src/components/dashboard/QuickActions.tsx
+  - Button: "Group" or "Find Everyone" → opens group map
+  - Test: Quick access from dashboard
+
+**Phase 9 Checkpoint:**
+
+- [ ] "I'm here" shares location to group
+- [ ] Group map shows all adults' locations
+- [ ] Meeting point feature works
+- [ ] Real-time updates when someone shares
+- [ ] Commit: "feat: complete group location sharing (Phase 9)"
 
 ---
 

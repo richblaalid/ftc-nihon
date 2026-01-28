@@ -1,6 +1,6 @@
 'use client';
 
-import { use } from 'react';
+import { Suspense, use } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useActivityWithTransit } from '@/db/hooks';
@@ -8,6 +8,34 @@ import { CategoryIcon, getCategoryPillClass } from '@/components/ui/CategoryIcon
 
 interface PageProps {
   params: Promise<{ id: string }>;
+}
+
+/**
+ * Loading skeleton for activity detail
+ */
+function ActivityDetailLoading() {
+  return (
+    <div className="flex min-h-screen flex-col bg-background">
+      <header className="sticky top-0 z-10 border-b border-background-secondary bg-background px-4 pb-3 pt-safe">
+        <div className="flex items-center gap-3 pt-2">
+          <Link
+            href="/schedule"
+            className="flex min-h-touch min-w-touch items-center justify-center rounded-full text-foreground-secondary hover:bg-background-secondary"
+          >
+            <span className="text-xl">←</span>
+          </Link>
+          <div className="h-6 w-32 animate-pulse rounded bg-background-secondary" />
+        </div>
+      </header>
+      <main className="flex-1 p-4">
+        <div className="animate-pulse space-y-4">
+          <div className="h-8 w-48 rounded bg-background-secondary" />
+          <div className="h-4 w-32 rounded bg-background-secondary" />
+          <div className="h-20 rounded bg-background-secondary" />
+        </div>
+      </main>
+    </div>
+  );
 }
 
 /**
@@ -32,7 +60,10 @@ function formatDuration(minutes: number): string {
   return mins > 0 ? `${hours}h ${mins}m` : `${hours} hour${hours > 1 ? 's' : ''}`;
 }
 
-export default function ActivityDetailPage({ params }: PageProps) {
+/**
+ * Inner content component that uses the params
+ */
+function ActivityDetailContent({ params }: PageProps) {
   const { id } = use(params);
   const router = useRouter();
   const activity = useActivityWithTransit(id);
@@ -259,5 +290,16 @@ export default function ActivityDetailPage({ params }: PageProps) {
         )}
       </main>
     </div>
+  );
+}
+
+/**
+ * Activity detail page with Suspense boundary
+ */
+export default function ActivityDetailPage({ params }: PageProps) {
+  return (
+    <Suspense fallback={<ActivityDetailLoading />}>
+      <ActivityDetailContent params={params} />
+    </Suspense>
   );
 }
