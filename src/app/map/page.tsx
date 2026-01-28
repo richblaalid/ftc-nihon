@@ -37,7 +37,7 @@ function MapContent() {
   const [showDirections, setShowDirections] = useState(false);
 
   // Get user location
-  const { lat, lng, isTracking, startTracking, error: geoError } = useGeolocation();
+  const { lat, lng, isTracking, startTracking, stopTracking, error: geoError } = useGeolocation();
   const userLocation = lat && lng ? { lat, lng } : null;
 
   // Load activities for selected day using the hook
@@ -135,8 +135,8 @@ function MapContent() {
         title={`Day ${selectedDay} Map`}
         rightAction={
           <button
-            onClick={() => !isTracking && startTracking()}
-            aria-label={isTracking ? 'Location tracking enabled' : 'Enable location tracking'}
+            onClick={() => isTracking ? stopTracking() : startTracking()}
+            aria-label={isTracking ? 'Disable location tracking' : 'Enable location tracking'}
             className={`p-2 rounded-lg transition-colors ${isTracking ? 'bg-primary/10 text-primary' : 'bg-background-secondary text-foreground-secondary hover:bg-background-tertiary'}`}
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
