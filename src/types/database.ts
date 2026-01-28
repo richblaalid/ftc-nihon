@@ -391,18 +391,19 @@ export interface ActivityWithTransit extends Activity {
 }
 
 // Trip constants
-export const TRIP_START_DATE = '2026-03-06';
+export const TRIP_START_DATE = '2026-03-06'; // Departure from Minneapolis
 export const TRIP_END_DATE = '2026-03-21';
-export const TRIP_DAYS = 15;
+export const TRIP_DAYS = 16; // Day 0 (departure) through Day 15
 
 // City mapping for each day
 export const DAY_CITIES: Record<number, string> = {
-  1: 'Tokyo',
+  0: 'Travel', // Departure from Minneapolis
+  1: 'Tokyo',  // Arrive Tokyo
   2: 'Tokyo',
   3: 'Tokyo',
   4: 'Tokyo',
   5: 'Tokyo',
-  6: 'Tokyo', // Day trip possible
+  6: 'Tokyo',
   7: 'Hakone',
   8: 'Hakone',
   9: 'Kyoto',
@@ -411,5 +412,5 @@ export const DAY_CITIES: Record<number, string> = {
   12: 'Osaka',
   13: 'Osaka',
   14: 'Osaka',
-  15: 'Osaka', // Departure
+  15: 'Osaka', // Departure from Japan
 };

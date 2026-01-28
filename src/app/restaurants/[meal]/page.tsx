@@ -31,7 +31,7 @@ function parseMealParam(param: string): { dayNumber: number; meal: MealType } | 
   const dayNumber = parseInt(match[1], 10);
   const mealStr = match[2] as MealType;
 
-  if (isNaN(dayNumber) || dayNumber < 1 || dayNumber > 15) return null;
+  if (isNaN(dayNumber) || dayNumber < 0 || dayNumber > 15) return null;
   if (!['breakfast', 'lunch', 'dinner', 'snack', 'afternoon'].includes(mealStr)) return null;
 
   return { dayNumber, meal: mealStr };

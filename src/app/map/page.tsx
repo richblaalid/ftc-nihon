@@ -24,7 +24,7 @@ function MapContent() {
   useEffect(() => {
     if (dayParam) {
       const day = parseInt(dayParam, 10);
-      if (day >= 1 && day <= 15) {
+      if (day >= 0 && day <= 15) {
         useAppStore.getState().setSelectedDay(day);
       }
     }
@@ -231,7 +231,7 @@ function MapLoading() {
         <div className="mt-2 -mx-4 flex gap-2 overflow-hidden px-4 py-2">
           <div className="h-5 w-12 animate-pulse rounded-full bg-background-secondary" />
           {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="h-14 w-11 animate-pulse rounded-xl bg-background-secondary" />
+            <div key={i} className="h-16 w-11 animate-pulse rounded-xl bg-background-secondary" />
           ))}
         </div>
       </header>

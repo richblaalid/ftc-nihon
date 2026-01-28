@@ -11,6 +11,7 @@ interface DayStripProps {
 
 // City data with colors
 const CITIES = {
+  Travel: { bgLight: 'bg-slate-500', bgMuted: 'bg-slate-100 dark:bg-slate-900/40', textMuted: 'text-slate-700 dark:text-slate-300' },
   Tokyo: { bgLight: 'bg-coral-500', bgMuted: 'bg-coral-100 dark:bg-coral-900/40', textMuted: 'text-coral-700 dark:text-coral-300' },
   Hakone: { bgLight: 'bg-emerald-500', bgMuted: 'bg-emerald-100 dark:bg-emerald-900/40', textMuted: 'text-emerald-700 dark:text-emerald-300' },
   Kyoto: { bgLight: 'bg-violet-500', bgMuted: 'bg-violet-100 dark:bg-violet-900/40', textMuted: 'text-violet-700 dark:text-violet-300' },
@@ -21,6 +22,7 @@ type CityName = keyof typeof CITIES;
 
 // City segments with day ranges
 const CITY_SEGMENTS: { city: CityName; startDay: number; endDay: number }[] = [
+  { city: 'Travel', startDay: 0, endDay: 0 },
   { city: 'Tokyo', startDay: 1, endDay: 6 },
   { city: 'Hakone', startDay: 7, endDay: 8 },
   { city: 'Kyoto', startDay: 9, endDay: 11 },
@@ -29,6 +31,7 @@ const CITY_SEGMENTS: { city: CityName; startDay: number; endDay: number }[] = [
 
 // Map day number to city
 const DAY_TO_CITY: Record<number, CityName> = {
+  0: 'Travel',
   1: 'Tokyo', 2: 'Tokyo', 3: 'Tokyo', 4: 'Tokyo', 5: 'Tokyo', 6: 'Tokyo',
   7: 'Hakone', 8: 'Hakone',
   9: 'Kyoto', 10: 'Kyoto', 11: 'Kyoto',
@@ -41,22 +44,35 @@ const DAY_GAP = 4;
 
 /**
  * Get weekday abbreviation for a day number
+ * Day 0 = TRIP_START_DATE
  */
 function getWeekday(dayNumber: number): string {
   const startDate = new Date(TRIP_START_DATE);
   const date = new Date(startDate);
-  date.setDate(date.getDate() + dayNumber - 1);
+  date.setDate(date.getDate() + dayNumber);
   return date.toLocaleDateString('en-US', { weekday: 'short' }).slice(0, 2);
 }
 
 /**
- * Get full date for a day number
+ * Get full date for a day number (for aria-label)
+ * Day 0 = TRIP_START_DATE
  */
 function getDate(dayNumber: number): string {
   const startDate = new Date(TRIP_START_DATE);
   const date = new Date(startDate);
-  date.setDate(date.getDate() + dayNumber - 1);
+  date.setDate(date.getDate() + dayNumber);
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+/**
+ * Get short date for display (e.g., "3/6")
+ * Day 0 = TRIP_START_DATE
+ */
+function getShortDate(dayNumber: number): string {
+  const startDate = new Date(TRIP_START_DATE);
+  const date = new Date(startDate);
+  date.setDate(date.getDate() + dayNumber);
+  return `${date.getMonth() + 1}/${date.getDate()}`;
 }
 
 export function DayStrip({ selectedDay, currentDay, onDayChange }: DayStripProps) {
@@ -77,7 +93,8 @@ export function DayStrip({ selectedDay, currentDay, onDayChange }: DayStripProps
     }
   }, [selectedDay]);
 
-  const days = Array.from({ length: TRIP_DAYS }, (_, i) => i + 1);
+  // Days 0-15 (Day 0 is departure, Days 1-15 are in Japan)
+  const days = Array.from({ length: TRIP_DAYS }, (_, i) => i);
 
   // Calculate total content width
   const totalWidth = TRIP_DAYS * DAY_WIDTH + (TRIP_DAYS - 1) * DAY_GAP;
@@ -122,6 +139,8 @@ export function DayStrip({ selectedDay, currentDay, onDayChange }: DayStripProps
               const city = DAY_TO_CITY[day] ?? 'Tokyo';
               const cityData = CITIES[city];
 
+              const shortDate = getShortDate(day);
+
               return (
                 <button
                   key={day}
@@ -132,7 +151,7 @@ export function DayStrip({ selectedDay, currentDay, onDayChange }: DayStripProps
                   aria-label={`Day ${day}, ${getDate(day)}, ${city}${isCurrent ? ', Today' : ''}`}
                   className={`
                     flex-shrink-0 flex flex-col items-center justify-center
-                    h-14 rounded-xl transition-all duration-fast relative snap-center
+                    h-16 rounded-xl transition-all duration-fast relative snap-center
                     cursor-pointer active:scale-95
                     ${isSelected
                       ? `${cityData.bgLight} text-white shadow-lg`
@@ -148,7 +167,10 @@ export function DayStrip({ selectedDay, currentDay, onDayChange }: DayStripProps
                       {weekday}
                     </span>
                   )}
-                  <span className={`font-bold ${isSelected ? 'text-xl' : 'text-lg'}`}>{day}</span>
+                  <span className={`font-bold ${isSelected ? 'text-xl' : 'text-lg'} leading-tight`}>{day}</span>
+                  <span className={`text-[10px] ${isSelected ? 'opacity-80' : 'opacity-60'}`}>
+                    {shortDate}
+                  </span>
                   {isCurrent && !isSelected && (
                     <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
                   )}

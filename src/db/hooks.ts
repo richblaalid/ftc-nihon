@@ -315,7 +315,8 @@ export function useIncompleteChecklist(): ChecklistItem[] | undefined {
 }
 
 /**
- * Calculate the current trip day number (1-15)
+ * Calculate the current trip day number (0-15)
+ * Day 0 = departure from MSP, Day 1 = arrival in Tokyo
  * Returns null if outside trip dates
  */
 export function useCurrentDayNumber(): number | null {
@@ -330,16 +331,17 @@ export function useCurrentDayNumber(): number | null {
   const diffTime = todayDate.getTime() - tripStart.getTime();
   const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
-  // Day 1 starts on TRIP_START_DATE
-  const dayNumber = diffDays + 1;
+  // Day 0 starts on TRIP_START_DATE (departure day)
+  const dayNumber = diffDays;
 
-  if (dayNumber < 1 || dayNumber > 15) return null;
+  if (dayNumber < 0 || dayNumber > 15) return null;
 
   return dayNumber;
 }
 
 /**
  * Get date string for a given day number (timezone-safe)
+ * Day 0 = TRIP_START_DATE
  */
 function getDateForDay(dayNumber: number): string {
   // Parse TRIP_START_DATE as local date to avoid timezone issues
@@ -349,7 +351,7 @@ function getDateForDay(dayNumber: number): string {
   // Create date in local timezone (noon to avoid DST issues)
   const tripStart = new Date(year, month - 1, day, 12, 0, 0);
   const targetDate = new Date(tripStart);
-  targetDate.setDate(tripStart.getDate() + dayNumber - 1);
+  targetDate.setDate(tripStart.getDate() + dayNumber);
 
   // Format as YYYY-MM-DD
   const y = targetDate.getFullYear();
