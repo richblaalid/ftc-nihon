@@ -10,6 +10,8 @@ import {
   WeatherWidgetCompact,
   AlertBanner,
   QuickActions,
+  TripCountdown,
+  TripPrepCard,
 } from '@/components/dashboard';
 import { useSyncStore, formatLastSyncTime } from '@/stores/sync-store';
 import { forceResync } from '@/lib/sync';
@@ -41,18 +43,33 @@ export default function Home() {
   // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional for hydration fix
   useEffect(() => setHasMounted(true), []);
 
-  // Handle manual refresh
-  const handleRefresh = async () => {
-    if (isSyncing || !isOnline) return;
+  // Sync feedback state
+  const [syncFeedback, setSyncFeedback] = useState<'idle' | 'syncing' | 'success' | 'error'>('idle');
 
+  // Handle manual refresh with visible feedback
+  const handleRefresh = async () => {
+    if (syncFeedback === 'syncing' || !isOnline) return;
+
+    setSyncFeedback('syncing');
     setIsSyncing(true);
+
+    // Minimum display time so user sees feedback
+    const minDisplayTime = new Promise((resolve) => setTimeout(resolve, 800));
+
     try {
-      const result = await forceResync();
+      const [result] = await Promise.all([forceResync(), minDisplayTime]);
       if (result.success) {
         setLastSyncedAt(new Date().toISOString());
+        setSyncFeedback('success');
+      } else {
+        setSyncFeedback('error');
       }
+    } catch {
+      setSyncFeedback('error');
     } finally {
       setIsSyncing(false);
+      // Reset feedback after showing result
+      setTimeout(() => setSyncFeedback('idle'), 2000);
     }
   };
 
@@ -91,35 +108,74 @@ export default function Home() {
       {/* Alert banner - shows urgent alerts and approaching deadlines */}
       <AlertBanner />
 
-      {/* Flight info on relevant days */}
-      {relevantFlight && (
-        <section aria-labelledby="flight-heading">
-          <h2 id="flight-heading" className="sr-only">
-            {isDepartureDay ? 'Departure Flight' : isReturnDay ? 'Return Flight' : 'Upcoming Flight'}
-          </h2>
-          <FlightCard flight={relevantFlight} />
-        </section>
+      {/* PRE-TRIP CONTENT */}
+      {isPreTrip && (
+        <>
+          {/* Countdown to trip */}
+          <TripCountdown />
+
+          {/* Flight info */}
+          {outboundFlight && (
+            <section aria-labelledby="flight-heading">
+              <h2 id="flight-heading" className="sr-only">Upcoming Flight</h2>
+              <FlightCard flight={outboundFlight} />
+            </section>
+          )}
+
+          {/* Trip preparation checklist */}
+          <TripPrepCard />
+
+          {/* Unpurchased tickets reminder */}
+          {unpurchasedTickets && unpurchasedTickets.length > 0 && (
+            <section aria-labelledby="tickets-heading" className="card">
+              <h2 id="tickets-heading" className="text-sm font-semibold text-foreground-secondary uppercase tracking-wider mb-3 flex items-center gap-2">
+                <span className="text-amber-500">🎫</span>
+                Tickets to Purchase
+              </h2>
+              <div className="space-y-2">
+                {unpurchasedTickets.map((ticket) => (
+                  <TicketCardCompact key={ticket.id} ticket={ticket} />
+                ))}
+              </div>
+            </section>
+          )}
+        </>
       )}
 
-      {/* NOW widget - current activity */}
-      <NowWidget />
+      {/* DURING-TRIP CONTENT */}
+      {!isPreTrip && (
+        <>
+          {/* Flight info on relevant days */}
+          {relevantFlight && (
+            <section aria-labelledby="flight-heading">
+              <h2 id="flight-heading" className="sr-only">
+                {isDepartureDay ? 'Departure Flight' : isReturnDay ? 'Return Flight' : 'Flight Info'}
+              </h2>
+              <FlightCard flight={relevantFlight} />
+            </section>
+          )}
 
-      {/* NEXT widget - upcoming activity with leave by time */}
-      <NextWidget />
+          {/* NOW widget - current activity */}
+          <NowWidget />
 
-      {/* Unpurchased tickets reminder */}
-      {unpurchasedTickets && unpurchasedTickets.length > 0 && (
-        <section aria-labelledby="tickets-heading" className="card">
-          <h2 id="tickets-heading" className="text-sm font-semibold text-foreground-secondary uppercase tracking-wider mb-3 flex items-center gap-2">
-            <span className="text-amber-500">🎫</span>
-            Tickets to Purchase
-          </h2>
-          <div className="space-y-2">
-            {unpurchasedTickets.map((ticket) => (
-              <TicketCardCompact key={ticket.id} ticket={ticket} />
-            ))}
-          </div>
-        </section>
+          {/* NEXT widget - upcoming activity with leave by time */}
+          <NextWidget />
+
+          {/* Unpurchased tickets reminder */}
+          {unpurchasedTickets && unpurchasedTickets.length > 0 && (
+            <section aria-labelledby="tickets-heading" className="card">
+              <h2 id="tickets-heading" className="text-sm font-semibold text-foreground-secondary uppercase tracking-wider mb-3 flex items-center gap-2">
+                <span className="text-amber-500">🎫</span>
+                Tickets to Purchase
+              </h2>
+              <div className="space-y-2">
+                {unpurchasedTickets.map((ticket) => (
+                  <TicketCardCompact key={ticket.id} ticket={ticket} />
+                ))}
+              </div>
+            </section>
+          )}
+        </>
       )}
 
       {/* Utility widgets row: Weather, Currency, Translate */}
@@ -135,14 +191,24 @@ export default function Home() {
       {hasMounted && (
         <button
           onClick={handleRefresh}
-          disabled={isSyncing || !isOnline}
+          disabled={syncFeedback === 'syncing' || !isOnline}
           className="w-full py-3 text-sm text-foreground-tertiary hover:text-foreground-secondary active:bg-background-secondary rounded-lg transition-all disabled:opacity-50"
           data-testid="sync-status"
         >
-          {isSyncing ? (
-            <span className="flex items-center justify-center gap-2">
+          {syncFeedback === 'syncing' ? (
+            <span className="flex items-center justify-center gap-2 text-primary">
               <span className="h-2 w-2 rounded-full bg-primary animate-ping" aria-hidden="true" />
               Refreshing data...
+            </span>
+          ) : syncFeedback === 'success' ? (
+            <span className="flex items-center justify-center gap-2 text-success">
+              <span className="h-2 w-2 rounded-full bg-success" aria-hidden="true" />
+              Sync complete!
+            </span>
+          ) : syncFeedback === 'error' ? (
+            <span className="flex items-center justify-center gap-2 text-error">
+              <span className="h-2 w-2 rounded-full bg-error" aria-hidden="true" />
+              Sync failed - tap to retry
             </span>
           ) : !isOnline ? (
             <span className="flex items-center justify-center gap-2">
