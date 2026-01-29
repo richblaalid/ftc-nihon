@@ -6,7 +6,8 @@ import {
   DashboardLayout,
   NowWidget,
   NextWidget,
-  TimeWidget,
+  TimeWidgetCompact,
+  PhrasesWidget,
   AlertBanner,
   QuickActions,
 } from '@/components/dashboard';
@@ -134,8 +135,11 @@ export default function Home() {
       {/* Utility widgets row: Weather, Currency, Translate */}
       <QuickActions />
 
-      {/* Time widget */}
-      <TimeWidget />
+      {/* Time and Phrases - 2-column layout */}
+      <div className="grid grid-cols-2 gap-3">
+        <TimeWidgetCompact />
+        <PhrasesWidget />
+      </div>
 
       {/* Emergency button - floating action */}
       {tripInfo && <EmergencyButton onClick={emergencySheet.open} />}

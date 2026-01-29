@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 interface TimeZoneDisplay {
   label: string;
@@ -81,5 +82,66 @@ export function TimeWidget() {
         ))}
       </div>
     </div>
+  );
+}
+
+/**
+ * Compact time widget for 2-column layout
+ * Shows Japan time prominently with US time smaller below
+ */
+export function TimeWidgetCompact() {
+  const [now, setNow] = useState<Date | null>(null);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional for hydration fix
+    setNow(new Date());
+
+    const interval = setInterval(() => {
+      setNow(new Date());
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  if (!now) {
+    return (
+      <div className="card p-3">
+        <div className="h-4 w-12 rounded bg-background-secondary animate-pulse" />
+        <div className="h-6 w-16 mt-1 rounded bg-background-secondary animate-pulse" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="card p-3">
+      {/* Japan time - prominent */}
+      <div className="flex items-center gap-1.5 mb-1">
+        <span className="text-sm" aria-hidden="true">🇯🇵</span>
+        <span className="text-lg font-semibold text-foreground">
+          {formatTime(now, 'Asia/Tokyo')}
+        </span>
+      </div>
+      {/* US time - smaller */}
+      <div className="flex items-center gap-1.5 text-xs text-foreground-tertiary">
+        <span aria-hidden="true">🇺🇸</span>
+        <span>{formatTime(now, 'America/Chicago')}</span>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Phrases quick link widget for 2-column layout
+ */
+export function PhrasesWidget() {
+  return (
+    <Link
+      href="/phrases"
+      className="card p-3 flex flex-col items-center justify-center text-center hover:bg-background-secondary transition-colors active:scale-95"
+    >
+      <span className="text-2xl mb-1" aria-hidden="true">🗣️</span>
+      <span className="text-sm font-medium text-foreground">Phrases</span>
+      <span className="text-xs text-foreground-tertiary">Japanese</span>
+    </Link>
   );
 }

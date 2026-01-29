@@ -46,17 +46,17 @@ export function PhraseCard({ phrase, className = '', expanded = false }: PhraseC
           {phrase.meaning}
         </p>
 
-        {/* Japanese text */}
-        <p className="text-2xl font-bold text-primary mt-2 leading-tight" lang="ja">
-          {phrase.japanese}
-        </p>
-
-        {/* Romaji pronunciation */}
+        {/* Romaji pronunciation - how to say it */}
         {phrase.romaji && (
-          <p className="text-base text-foreground-secondary mt-1 italic">
+          <p className="text-lg text-primary mt-1 font-medium italic">
             {phrase.romaji}
           </p>
         )}
+
+        {/* Japanese text - smaller reference */}
+        <p className="text-sm text-foreground-secondary mt-1" lang="ja">
+          {phrase.japanese}
+        </p>
 
         {/* Expand indicator */}
         <div className="flex items-center justify-between mt-3">
@@ -115,13 +115,13 @@ export function PhraseCardCompact({ phrase, className = '' }: Omit<PhraseCardPro
     >
       <div className="flex-1 min-w-0">
         <p className="font-medium text-foreground truncate">{phrase.meaning}</p>
-        <p className="text-base font-bold text-primary truncate" lang="ja">{phrase.japanese}</p>
+        {phrase.romaji && (
+          <p className="text-sm text-primary italic truncate">{phrase.romaji}</p>
+        )}
       </div>
-      {phrase.romaji && (
-        <span className="shrink-0 text-xs text-foreground-secondary italic">
-          {phrase.romaji}
-        </span>
-      )}
+      <span className="shrink-0 text-xs text-foreground-secondary" lang="ja">
+        {phrase.japanese}
+      </span>
     </div>
   );
 }
@@ -201,24 +201,21 @@ export function QuickPhrase({ phrase, onClose, className = '' }: QuickPhraseProp
         {phrase.category}
       </span>
 
-      {/* Japanese - hero text */}
-      <p className="text-4xl font-bold leading-tight mb-2">
-        {phrase.japanese}
+      {/* English meaning - hero text */}
+      <p className="text-3xl font-bold leading-tight mb-2">
+        {phrase.meaning}
       </p>
 
-      {/* Romaji */}
+      {/* Romaji - how to say it */}
       {phrase.romaji && (
-        <p className="text-lg text-white/80 italic mb-4">
+        <p className="text-xl text-white/90 italic mb-2">
           {phrase.romaji}
         </p>
       )}
 
-      {/* Divider */}
-      <div className="h-px bg-white/20 my-4" />
-
-      {/* English meaning */}
-      <p className="text-xl font-medium mb-2">
-        {phrase.meaning}
+      {/* Japanese - small reference */}
+      <p className="text-sm text-white/70 mb-4" lang="ja">
+        {phrase.japanese}
       </p>
 
       {/* Context */}
