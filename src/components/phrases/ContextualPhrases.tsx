@@ -71,6 +71,7 @@ export function ContextualPhrases({ activityCategory, limit = 3 }: ContextualPhr
  */
 export function getCategoryLabel(category: string): string {
   const labels: Record<string, string> = {
+    basics: 'Basics',
     restaurant: 'Restaurant',
     transit: 'Transit',
     shopping: 'Shopping',

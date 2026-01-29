@@ -41,22 +41,22 @@ export function PhraseCard({ phrase, className = '', expanded = false }: PhraseC
         className="w-full text-left p-4"
         aria-expanded={isExpanded}
       >
-        {/* Japanese text - large and prominent */}
-        <p className="text-2xl font-bold text-foreground leading-tight">
+        {/* English meaning - large and prominent for English speakers */}
+        <p className="text-xl font-bold text-foreground leading-tight">
+          {phrase.meaning}
+        </p>
+
+        {/* Japanese text */}
+        <p className="text-2xl font-bold text-primary mt-2 leading-tight" lang="ja">
           {phrase.japanese}
         </p>
 
         {/* Romaji pronunciation */}
         {phrase.romaji && (
-          <p className="text-sm text-rose-600 dark:text-rose-400 font-medium mt-1 italic">
+          <p className="text-base text-foreground-secondary mt-1 italic">
             {phrase.romaji}
           </p>
         )}
-
-        {/* English meaning */}
-        <p className="text-base text-foreground-secondary mt-2">
-          {phrase.meaning}
-        </p>
 
         {/* Expand indicator */}
         <div className="flex items-center justify-between mt-3">
@@ -114,11 +114,11 @@ export function PhraseCardCompact({ phrase, className = '' }: Omit<PhraseCardPro
       `}
     >
       <div className="flex-1 min-w-0">
-        <p className="font-bold text-foreground truncate">{phrase.japanese}</p>
-        <p className="text-xs text-foreground-secondary truncate">{phrase.meaning}</p>
+        <p className="font-medium text-foreground truncate">{phrase.meaning}</p>
+        <p className="text-base font-bold text-primary truncate" lang="ja">{phrase.japanese}</p>
       </div>
       {phrase.romaji && (
-        <span className="shrink-0 text-xs text-rose-600 dark:text-rose-400 italic">
+        <span className="shrink-0 text-xs text-foreground-secondary italic">
           {phrase.romaji}
         </span>
       )}
