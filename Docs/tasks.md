@@ -15,8 +15,8 @@
 - Phase 4: [x] Complete
 - Phase 5: [x] Complete
 - **MVP Status:** Complete
-- Phase 5.5: [ ] In Progress - Quick Utility Features
-- Phase 6: [ ] Not Started - AI Assistant + Tour Guide
+- Phase 5.5: [x] Complete - Quick Utility Features
+- Phase 6: [ ] In Progress - AI Assistant + Tour Guide
 - Phase 7: [ ] Not Started - Push Notifications
 - Phase 8: [ ] Not Started - Admin Panel
 - Phase 9: [ ] Not Started - Group Location Sharing
@@ -655,14 +655,14 @@
 
 **Phase 5.5 Checkpoint:**
 
-- [ ] Google Translate link works from dashboard
-- [ ] Currency converter fetches rate daily, works offline with cached rate
-- [ ] Two-way JPY ↔ USD conversion works
-- [ ] Phrases appear contextually on activity details
-- [ ] All 6 phrase categories populated and accessible
-- [ ] "Show to staff" large text mode works
-- [ ] All features work offline
-- [ ] Commit: "feat: complete quick utility features (Phase 5.5)"
+- [x] Google Translate link works from dashboard
+- [x] Currency converter fetches rate daily, works offline with cached rate
+- [x] Two-way JPY ↔ USD conversion works
+- [x] Phrases appear contextually on activity details
+- [x] All 6 phrase categories populated and accessible
+- [x] "Show to staff" large text mode works
+- [x] All features work offline
+- [x] Commit: "feat: complete quick utility features (Phase 5.5)"
 
 ---
 
@@ -676,7 +676,7 @@
 
 #### 6.1 AI Chat Interface
 
-- [ ] 6.1.1: Create AI chat page and layout
+- [x] 6.1.1: Create AI chat page and layout
   - Files: src/app/ai/page.tsx, src/components/ai/ChatLayout.tsx
   - UI: Chat message list, input field, send button
   - Style: iOS Messages-like interface, large touch targets
