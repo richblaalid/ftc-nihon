@@ -730,34 +730,34 @@
   - Content: Brief description, cultural facts, main attractions, local food specialties
   - Test: City overviews accessible
 
-- [ ] 6.2.3: Create TourGuide component
+- [x] 6.2.3: Create TourGuide component
   - Files: src/components/ai/TourGuide.tsx
   - UI: "Tell me about this place" button, expandable content area
   - Display: Title, content text, audio play button
   - Features: Loading state for live AI generation
   - Test: Component renders with content
 
-- [ ] 6.2.4: Implement hybrid online/offline tour content
+- [x] 6.2.4: Implement hybrid online/offline tour content
   - Files: src/lib/tour-guide.ts
   - Logic: Check online → if yes, generate fresh content via Claude → cache result
   - Fallback: If offline, serve pre-cached content
   - Caching: Store AI-generated content for future offline use
   - Test: Works both online and offline
 
-- [ ] 6.2.5: Implement browser Text-to-Speech (TTS)
+- [x] 6.2.5: Implement browser Text-to-Speech (TTS)
   - Files: src/lib/tts.ts, src/components/ai/TourGuide.tsx
   - API: Web Speech API (speechSynthesis)
   - Features: Play/pause/stop, speech rate control
   - Voice: Use device's Japanese-capable voice or English fallback
   - Test: TTS reads tour content aloud, works offline
 
-- [ ] 6.2.6: Add Tour Guide to activity detail page
+- [x] 6.2.6: Add Tour Guide to activity detail page
   - Files: src/app/schedule/[id]/page.tsx or src/components/schedule/ActivityDetail.tsx
   - Integration: Show TourGuide component for cultural site categories (temple, activity with landmarks)
   - Condition: Only show for locations with tour content
   - Test: Tour guide appears on cultural site activity details
 
-- [ ] 6.2.7: Create city overview access point
+- [x] 6.2.7: Create city overview access point
   - Files: src/components/dashboard/CityOverview.tsx or integrate into existing component
   - Access: From dashboard or day header when in a new city
   - Display: City name, "About this city" button → TourGuide with city content
@@ -765,15 +765,15 @@
 
 **Phase 6 Checkpoint:**
 
-- [ ] AI chat responds with trip context
-- [ ] Chat history persists across sessions
-- [ ] Offline questions return cached responses
-- [ ] Tour guide shows on cultural site activity details
-- [ ] "Tell me about this place" generates or loads content
-- [ ] TTS reads tour content aloud
-- [ ] City overviews accessible for all 4 cities
-- [ ] Online/offline hybrid works correctly
-- [ ] Commit: "feat: complete AI assistant and tour guide (Phase 6)"
+- [x] AI chat responds with trip context
+- [x] Chat history persists across sessions
+- [x] Offline questions return cached responses
+- [x] Tour guide shows on cultural site activity details
+- [x] "Tell me about this place" generates or loads content
+- [x] TTS reads tour content aloud
+- [x] City overviews accessible for all 4 cities
+- [x] Online/offline hybrid works correctly
+- [x] Commit: "feat: complete AI assistant and tour guide (Phase 6)"
 
 ### Phase 7: Push Notifications
 
