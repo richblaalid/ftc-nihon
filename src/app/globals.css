@@ -691,20 +691,11 @@
       -apple-system,
       BlinkMacSystemFont,
       sans-serif;
-    min-height: 100vh;
-    min-height: -webkit-fill-available;
-
-    /* iOS safe area support */
-    padding-top: env(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-bottom);
-    padding-left: env(safe-area-inset-left);
-    padding-right: env(safe-area-inset-right);
-
-    /* Prevent pull-to-refresh on iOS PWA */
-    overscroll-behavior-y: contain;
-
-    /* Smooth scrolling */
-    scroll-behavior: smooth;
+    /* Fixed height - layout handles scrolling */
+    height: 100dvh;
+    height: 100vh; /* Fallback for older browsers */
+    overflow: hidden;
+    /* Safe areas handled by components, not body */
   }
 
   /* Reduce motion for accessibility */

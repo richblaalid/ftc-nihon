@@ -75,7 +75,7 @@ function RestaurantOptionsContent() {
   // Now check if parsing failed (after all hooks)
   if (!parsed) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
+      <div className="flex min-h-full items-center justify-center bg-background">
         <div className="text-center">
           <p className="text-lg text-foreground">Invalid URL</p>
           <Link href="/schedule" className="mt-2 text-primary underline">

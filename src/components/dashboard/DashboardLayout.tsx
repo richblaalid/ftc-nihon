@@ -13,8 +13,8 @@ interface DashboardLayoutProps {
  */
 export function DashboardLayout({ children, header }: DashboardLayoutProps) {
   return (
-    <div className="flex h-full flex-col bg-background">
-      {/* Header area with safe area inset */}
+    <div className="flex min-h-full flex-col bg-background">
+      {/* Header area with safe area inset - sticky within scroll container */}
       {header && (
         <header className="sticky top-0 z-10 bg-background/95 px-4 pb-2 pt-safe backdrop-blur-sm">
           {header}
@@ -22,9 +22,9 @@ export function DashboardLayout({ children, header }: DashboardLayoutProps) {
       )}
 
       {/* Main content area */}
-      <main className="flex-1 px-4 pb-safe">
+      <div className="flex-1 px-4 pb-4">
         <div className="mx-auto flex max-w-lg flex-col gap-4">{children}</div>
-      </main>
+      </div>
     </div>
   );
 }

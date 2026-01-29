@@ -17,7 +17,7 @@ export default function ActivityError({ error, reset }: ErrorProps) {
   }, [error]);
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="flex min-h-full flex-col bg-background">
       <header className="sticky top-0 z-10 border-b border-background-secondary bg-background px-4 pb-3 pt-safe">
         <div className="flex items-center gap-3 pt-2">
           <Link

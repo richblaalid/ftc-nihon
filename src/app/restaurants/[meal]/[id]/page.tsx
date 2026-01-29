@@ -66,7 +66,7 @@ function RestaurantDetailContent() {
   // Now check if parsing failed (after all hooks)
   if (!parsed) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
+      <div className="flex min-h-full items-center justify-center bg-background">
         <div className="text-center">
           <p className="text-lg text-foreground">Invalid URL</p>
           <Link href="/schedule" className="mt-2 text-primary underline">
@@ -85,7 +85,7 @@ function RestaurantDetailContent() {
   // Restaurant not found
   if (restaurant === null) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
+      <div className="flex min-h-full items-center justify-center bg-background">
         <div className="text-center">
           <p className="text-lg text-foreground">Restaurant not found</p>
           <Link href={`/restaurants/${mealParam}`} className="mt-2 text-primary underline">
@@ -97,7 +97,7 @@ function RestaurantDetailContent() {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-safe">
+    <div className="min-h-full bg-background pb-safe">
       {/* Header */}
       <header className="sticky top-0 z-10 bg-background/95 backdrop-blur-sm border-b border-border px-4 py-3">
         <div className="flex items-center gap-3">
@@ -146,7 +146,7 @@ function RestaurantDetailContent() {
 
 function RestaurantDetailLoading() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-full bg-background">
       <header className="px-4 py-3 border-b border-border">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 bg-background-secondary rounded-lg animate-pulse" />

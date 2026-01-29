@@ -16,7 +16,7 @@ interface PageProps {
  */
 function ActivityDetailLoading() {
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="flex min-h-full flex-col bg-background">
       <header className="sticky top-0 z-10 border-b border-background-secondary bg-background px-4 pb-3 pt-safe">
         <div className="flex items-center gap-3 pt-2">
           <Link
@@ -83,7 +83,7 @@ function ActivityDetailContent({ params }: PageProps) {
   // Loading state
   if (activity === undefined) {
     return (
-      <div className="flex min-h-screen flex-col bg-background">
+      <div className="flex min-h-full flex-col bg-background">
         <header className="sticky top-0 z-10 border-b border-background-secondary bg-background px-4 pb-3 pt-safe">
           <div className="flex items-center gap-3 pt-2">
             <Link
@@ -109,7 +109,7 @@ function ActivityDetailContent({ params }: PageProps) {
   // Not found
   if (!activity) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4">
+      <div className="flex min-h-full flex-col items-center justify-center bg-background p-4">
         <span className="text-4xl">🔍</span>
         <h1 className="mt-4 text-xl font-semibold text-foreground">Activity not found</h1>
         <Link href="/schedule" className="btn-primary mt-4">
@@ -120,7 +120,7 @@ function ActivityDetailContent({ params }: PageProps) {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="flex min-h-full flex-col bg-background">
       {/* Header */}
       <header className="sticky top-0 z-10 border-b border-background-secondary bg-background/95 px-4 pb-3 pt-safe backdrop-blur-sm">
         <div className="flex items-center gap-3 pt-2">

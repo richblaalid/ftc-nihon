@@ -29,7 +29,7 @@ function ReservationsContent() {
   const currentAccommodation = getCurrentAccommodation();
 
   return (
-    <div className="flex min-h-screen flex-col bg-background pb-safe">
+    <div className="flex min-h-full flex-col bg-background">
       {/* Header */}
       <PageHeader title="Reservations" />
 
@@ -103,7 +103,7 @@ function ReservationsContent() {
  */
 function ReservationsLoading() {
   return (
-    <div className="flex min-h-screen flex-col bg-background pb-safe">
+    <div className="flex min-h-full flex-col bg-background">
       <PageHeader title="Reservations" />
       <main className="flex-1 p-4 space-y-4">
         <div className="space-y-4">

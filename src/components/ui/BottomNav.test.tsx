@@ -97,19 +97,11 @@ describe('BottomNav', () => {
   });
 
   describe('styling', () => {
-    it('is fixed to the bottom', () => {
+    it('does not shrink in flex layout', () => {
       const { container } = render(<BottomNav />);
       const nav = container.querySelector('nav');
 
-      expect(nav).toHaveClass('fixed');
-      expect(nav).toHaveClass('bottom-0');
-    });
-
-    it('has high z-index', () => {
-      const { container } = render(<BottomNav />);
-      const nav = container.querySelector('nav');
-
-      expect(nav).toHaveClass('z-50');
+      expect(nav).toHaveClass('shrink-0');
     });
 
     it('has backdrop blur', () => {
@@ -117,6 +109,13 @@ describe('BottomNav', () => {
       const nav = container.querySelector('nav');
 
       expect(nav).toHaveClass('backdrop-blur-sm');
+    });
+
+    it('has safe area padding', () => {
+      const { container } = render(<BottomNav />);
+      const nav = container.querySelector('nav');
+
+      expect(nav).toHaveClass('pb-safe');
     });
   });
 });

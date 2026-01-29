@@ -19,7 +19,7 @@ export default function Error({ error, reset }: ErrorProps) {
   }, [error]);
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4">
+    <div className="flex min-h-full flex-col items-center justify-center bg-background p-4">
       <span className="text-5xl">😵</span>
       <h1 className="mt-4 text-xl font-bold text-foreground">Something went wrong</h1>
       <p className="mt-2 text-center text-foreground-secondary max-w-xs">

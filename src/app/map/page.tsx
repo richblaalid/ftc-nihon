@@ -155,7 +155,7 @@ function MapContent() {
   };
 
   return (
-    <div className="flex flex-col bg-background overflow-hidden" style={{ height: 'calc(100dvh - 4rem - env(safe-area-inset-bottom))' }}>
+    <div className="flex flex-col bg-background overflow-hidden" style={{ height: '100%' }}>
       {/* Header */}
       <PageHeader
         title={`Day ${selectedDay} Map`}
@@ -239,7 +239,7 @@ function MapContent() {
 
 function MapLoading() {
   return (
-    <div className="flex flex-col bg-background overflow-hidden" style={{ height: 'calc(100dvh - 4rem - env(safe-area-inset-bottom))' }}>
+    <div className="flex flex-col bg-background overflow-hidden" style={{ height: '100%' }}>
       <header className="flex-shrink-0 px-4 py-3 bg-background border-b border-border">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 bg-background-secondary rounded-lg animate-pulse" />

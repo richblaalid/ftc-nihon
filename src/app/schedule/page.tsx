@@ -53,7 +53,7 @@ function ScheduleContent() {
   const isToday = selectedDay === currentDayNumber;
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="flex min-h-full flex-col bg-background">
       {/* Header */}
       <PageHeader
         title="Schedule"
@@ -79,7 +79,7 @@ function ScheduleContent() {
       </PageHeader>
 
       {/* Main content */}
-      <main className="flex-1 px-4 py-4 pb-safe">
+      <main className="flex-1 px-4 py-4 pb-4">
         {activities === undefined ? (
           // Loading state
           <div className="flex flex-col gap-3">
@@ -115,7 +115,7 @@ function ScheduleContent() {
 
 function ScheduleLoading() {
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="flex min-h-full flex-col bg-background">
       <header className="sticky top-0 z-10 border-b border-background-secondary bg-background pb-2 pt-safe">
         <div className="flex items-center justify-between px-4 pt-2">
           <div className="h-10 w-10 animate-pulse rounded-full bg-background-secondary" />
