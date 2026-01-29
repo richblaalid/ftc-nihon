@@ -5,6 +5,7 @@ import { seedDatabase, reseedDatabase } from '@/db/seed';
 import { warmAllCaches } from '@/lib/cache-warmer';
 import { initOnlineListeners } from '@/stores/sync-store';
 import { seedAICache } from '@/db/seed-ai-cache';
+import { seedTourContent } from '@/db/seed-tour-content';
 
 interface ProvidersProps {
   children: React.ReactNode;
@@ -47,6 +48,7 @@ export function Providers({ children }: ProvidersProps) {
       // Seed AI cache for offline responses
       try {
         await seedAICache();
+        await seedTourContent();
       } catch (error) {
         console.warn('[Providers] AI cache seed failed:', error);
       }

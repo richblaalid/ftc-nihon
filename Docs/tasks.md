@@ -717,14 +717,14 @@
 
 #### 6.2 AI Tour Guide
 
-- [ ] 6.2.1: Pre-generate tour content for cultural sites
+- [x] 6.2.1: Pre-generate tour content for cultural sites
   - Files: src/db/seed-tour-content.ts, Supabase seed
   - Content: ~20 locations (temples, shrines, landmarks on itinerary)
   - Format: 2-3 paragraphs of history, significance, interesting facts
   - Storage: tourContent table in IndexedDB with locationId, title, content
   - Test: Tour content loads for cultural sites
 
-- [ ] 6.2.2: Create city overview content
+- [x] 6.2.2: Create city overview content
   - Files: src/db/seed-tour-content.ts
   - Cities: Tokyo, Hakone, Kyoto, Osaka
   - Content: Brief description, cultural facts, main attractions, local food specialties
