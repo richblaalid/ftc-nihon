@@ -57,6 +57,30 @@ export class FTCDatabase extends Dexie {
   constructor() {
     super('ftc-nihon');
 
+    // Version 4 - original schema with chat messages
+    this.version(4).stores({
+      activities: 'id, dayNumber, date, [dayNumber+sortOrder]',
+      transitSegments: 'id, activityId',
+      accommodations: 'id, sortOrder, startDate, endDate',
+      restaurants: 'id, dayNumber, city, meal',
+      alerts: 'id, active, type',
+      locationShares: 'id, userName',
+      aiCache: 'id, contextType, contextKey, questionPattern',
+      checklistItems: 'id, dueDate, isPreTrip, isCompleted, sortOrder',
+      syncMeta: 'id, &tableName',
+      flights: 'id, type',
+      tickets: 'id, date, status, sortOrder',
+      tripInfo: 'id',
+      dayInfo: 'id, dayNumber',
+      attractions: 'id, city, category',
+      shoppingLocations: 'id, city, category',
+      phrases: 'id, category, sortOrder',
+      transportRoutes: 'id',
+      mealSelections: 'id, dayNumber, restaurantId, [dayNumber+meal]',
+      chatMessages: 'id, timestamp',
+    });
+
+    // Version 5 - adds tourContent table
     this.version(5).stores({
       // Activities - main itinerary
       // Primary key: id, Indexes: dayNumber, date, sortOrder compound
