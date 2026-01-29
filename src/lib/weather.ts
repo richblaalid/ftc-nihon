@@ -5,6 +5,7 @@ export interface WeatherData {
   condition: string;
   icon: string;
   humidity: number;
+  precipitationChance: number; // percentage chance of rain today
   city: string;
   updatedAt: string;
 }
@@ -35,6 +36,7 @@ export function getCachedWeather(): WeatherData | null {
       condition: data.condition,
       icon: data.icon,
       humidity: data.humidity,
+      precipitationChance: data.precipitationChance ?? 0,
       city: data.city,
       updatedAt: data.updatedAt,
     };
@@ -138,7 +140,7 @@ export async function fetchWeather(city: string): Promise<WeatherData | null> {
   }
 
   try {
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${coords.lat}&longitude=${coords.lon}&current=temperature_2m,relative_humidity_2m,weather_code&daily=temperature_2m_max,temperature_2m_min&timezone=Asia/Tokyo&temperature_unit=fahrenheit&forecast_days=1`;
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${coords.lat}&longitude=${coords.lon}&current=temperature_2m,relative_humidity_2m,weather_code&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia/Tokyo&temperature_unit=fahrenheit&forecast_days=1`;
 
     const response = await fetch(url);
     if (!response.ok) {
@@ -158,6 +160,7 @@ export async function fetchWeather(city: string): Promise<WeatherData | null> {
       condition,
       icon,
       humidity: current.relative_humidity_2m,
+      precipitationChance: daily.precipitation_probability_max?.[0] ?? 0,
       city,
       updatedAt: new Date().toISOString(),
     };

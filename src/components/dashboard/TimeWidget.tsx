@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
 
 interface TimeZoneDisplay {
   label: string;
@@ -87,7 +86,7 @@ export function TimeWidget() {
 
 /**
  * Compact time widget for 2-column layout
- * Shows Japan time prominently with US time smaller below
+ * Shows both times side by side with larger content
  */
 export function TimeWidgetCompact() {
   const [now, setNow] = useState<Date | null>(null);
@@ -106,42 +105,38 @@ export function TimeWidgetCompact() {
   if (!now) {
     return (
       <div className="card p-3">
-        <div className="h-4 w-12 rounded bg-background-secondary animate-pulse" />
-        <div className="h-6 w-16 mt-1 rounded bg-background-secondary animate-pulse" />
+        <div className="flex justify-between gap-2">
+          <div className="h-6 w-16 rounded bg-background-secondary animate-pulse" />
+          <div className="h-6 w-16 rounded bg-background-secondary animate-pulse" />
+        </div>
       </div>
     );
   }
 
   return (
     <div className="card p-3">
-      {/* Japan time - prominent */}
-      <div className="flex items-center gap-1.5 mb-1">
-        <span className="text-sm" aria-hidden="true">🇯🇵</span>
-        <span className="text-lg font-semibold text-foreground">
-          {formatTime(now, 'Asia/Tokyo')}
-        </span>
-      </div>
-      {/* US time - smaller */}
-      <div className="flex items-center gap-1.5 text-xs text-foreground-tertiary">
-        <span aria-hidden="true">🇺🇸</span>
-        <span>{formatTime(now, 'America/Chicago')}</span>
+      <div className="flex justify-between gap-3">
+        {/* Japan time */}
+        <div className="text-center flex-1">
+          <div className="flex items-center justify-center gap-1.5">
+            <span className="text-sm" aria-hidden="true">🇯🇵</span>
+            <span className="text-sm font-medium text-foreground-secondary">Japan</span>
+          </div>
+          <p className="text-xl font-bold text-foreground">
+            {formatTime(now, 'Asia/Tokyo')}
+          </p>
+        </div>
+        {/* US time */}
+        <div className="text-center flex-1">
+          <div className="flex items-center justify-center gap-1.5">
+            <span className="text-sm" aria-hidden="true">🇺🇸</span>
+            <span className="text-sm font-medium text-foreground-secondary">Mpls</span>
+          </div>
+          <p className="text-xl font-bold text-foreground">
+            {formatTime(now, 'America/Chicago')}
+          </p>
+        </div>
       </div>
     </div>
-  );
-}
-
-/**
- * Phrases quick link widget for 2-column layout
- */
-export function PhrasesWidget() {
-  return (
-    <Link
-      href="/phrases"
-      className="card p-3 flex flex-col items-center justify-center text-center hover:bg-background-secondary transition-colors active:scale-95"
-    >
-      <span className="text-2xl mb-1" aria-hidden="true">🗣️</span>
-      <span className="text-sm font-medium text-foreground">Phrases</span>
-      <span className="text-xs text-foreground-tertiary">Japanese</span>
-    </Link>
   );
 }

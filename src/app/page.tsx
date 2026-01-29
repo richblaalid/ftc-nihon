@@ -7,11 +7,12 @@ import {
   NowWidget,
   NextWidget,
   TimeWidgetCompact,
-  PhrasesWidget,
+  WeatherWidgetCompact,
   AlertBanner,
   QuickActions,
 } from '@/components/dashboard';
 import { useSyncStore, formatLastSyncTime } from '@/stores/sync-store';
+import { forceResync } from '@/lib/sync';
 import {
   useTripInfo,
   useFlight,
@@ -24,7 +25,7 @@ import { EmergencySheet, EmergencyButton, useEmergencySheet } from '@/components
 
 export default function Home() {
   const [hasMounted, setHasMounted] = useState(false);
-  const { isSyncing, isOnline, lastSyncedAt } = useSyncStore();
+  const { isSyncing, isOnline, lastSyncedAt, setIsSyncing, setLastSyncedAt } = useSyncStore();
 
   // Enriched data hooks
   const tripInfo = useTripInfo();
@@ -39,6 +40,21 @@ export default function Home() {
   // Prevent hydration mismatch by only showing sync status after mount
   // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional for hydration fix
   useEffect(() => setHasMounted(true), []);
+
+  // Handle manual refresh
+  const handleRefresh = async () => {
+    if (isSyncing || !isOnline) return;
+
+    setIsSyncing(true);
+    try {
+      const result = await forceResync();
+      if (result.success) {
+        setLastSyncedAt(new Date().toISOString());
+      }
+    } finally {
+      setIsSyncing(false);
+    }
+  };
 
   // Determine which flight to show based on current day
   // Day 1 (or before trip): show outbound, Day 15-16: show return
@@ -69,32 +85,43 @@ export default function Home() {
             </span>
           </div>
 
-          {/* Sync status indicator - subtle, below header */}
-          <div
-            className="flex items-center gap-2 text-xs text-foreground-tertiary"
+          {/* Sync status indicator - tappable to refresh */}
+          <button
+            onClick={handleRefresh}
+            disabled={isSyncing || !isOnline}
+            className="flex items-center gap-2 text-xs text-foreground-tertiary hover:text-foreground-secondary active:scale-95 transition-all disabled:opacity-50"
             data-testid="sync-status"
             aria-live="polite"
+            title="Tap to refresh data"
           >
             {hasMounted && (
               <>
                 {isSyncing ? (
-                  <span className="animate-pulse">Syncing...</span>
+                  <span className="flex items-center gap-1">
+                    <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" aria-hidden="true" />
+                    Syncing...
+                  </span>
                 ) : !isOnline ? (
                   <span className="flex items-center gap-1">
                     <span className="h-1.5 w-1.5 rounded-full bg-warning" aria-hidden="true" />
                     Offline
                   </span>
                 ) : lastSyncedAt ? (
-                  <span className="flex items-center gap-1" title={`Last synced: ${new Date(lastSyncedAt).toLocaleString()}`}>
+                  <span className="flex items-center gap-1">
                     <span className="h-1.5 w-1.5 rounded-full bg-success" aria-hidden="true" />
                     <time dateTime={lastSyncedAt}>
                       {formatLastSyncTime(lastSyncedAt)}
                     </time>
+                    <span className="text-foreground-tertiary">↻</span>
                   </span>
-                ) : null}
+                ) : (
+                  <span className="flex items-center gap-1">
+                    Tap to sync ↻
+                  </span>
+                )}
               </>
             )}
-          </div>
+          </button>
         </div>
       }
     >
@@ -135,10 +162,10 @@ export default function Home() {
       {/* Utility widgets row: Weather, Currency, Translate */}
       <QuickActions />
 
-      {/* Time and Phrases - 2-column layout */}
+      {/* Weather and Time - 2-column layout */}
       <div className="grid grid-cols-2 gap-3">
+        <WeatherWidgetCompact />
         <TimeWidgetCompact />
-        <PhrasesWidget />
       </div>
 
       {/* Emergency button - floating action */}

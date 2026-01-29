@@ -1,7 +1,7 @@
 'use client';
 
+import Link from 'next/link';
 import { CurrencyConverter, useCurrencyConverter } from '@/components/ui/CurrencyConverter';
-import { WeatherWidgetCompact } from './WeatherWidget';
 
 // Google Translate URLs
 const GOOGLE_TRANSLATE_WEB_URL = 'https://translate.google.com/?sl=en&tl=ja&op=translate';
@@ -77,7 +77,23 @@ function UtilityWidget({ icon, label, onClick, href, external, testId }: Utility
 }
 
 /**
- * Row of 3 utility widgets: Weather, Currency, Translate
+ * Phrases link widget
+ */
+function PhrasesWidget() {
+  return (
+    <Link
+      href="/phrases"
+      className="card flex flex-col items-center justify-center p-3 transition-all active:scale-95 cursor-pointer hover:bg-background-secondary"
+      data-testid="quick-action-phrases"
+    >
+      <span className="text-2xl" aria-hidden="true">🗣️</span>
+      <p className="text-sm font-medium text-foreground-secondary mt-2">Phrases</p>
+    </Link>
+  );
+}
+
+/**
+ * Row of 3 utility widgets: Exchange, Phrases, Translate
  */
 export function QuickActions() {
   const currencyConverter = useCurrencyConverter();
@@ -85,13 +101,13 @@ export function QuickActions() {
   return (
     <>
       <div className="grid grid-cols-3 gap-3" data-testid="quick-actions">
-        <WeatherWidgetCompact />
         <UtilityWidget
           icon="¥ ↔ $"
-          label="Currency"
+          label="Exchange"
           onClick={currencyConverter.open}
           testId="quick-action-currency"
         />
+        <PhrasesWidget />
         <UtilityWidget
           icon="話す"
           label="Translate"

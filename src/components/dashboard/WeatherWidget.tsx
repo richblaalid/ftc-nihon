@@ -89,7 +89,8 @@ export function WeatherWidget() {
 }
 
 /**
- * Compact weather widget for use in utility row
+ * Compact weather widget for 2-column layout
+ * Shows city, icon, temperature, condition, high/low, and rain chance
  */
 export function WeatherWidgetCompact() {
   const [weather, setWeather] = useState<WeatherData | null>(null);
@@ -128,29 +129,55 @@ export function WeatherWidgetCompact() {
 
   if (isLoading && !weather) {
     return (
-      <div className="card flex flex-col items-center justify-center p-3 animate-pulse">
-        <div className="h-8 w-8 rounded-full bg-background-secondary" />
-        <div className="mt-2 h-5 w-14 rounded bg-background-secondary" />
-        <div className="mt-1 h-3 w-16 rounded bg-background-secondary" />
+      <div className="card p-3 animate-pulse">
+        <div className="flex justify-between">
+          <div className="flex items-center gap-2">
+            <div className="h-8 w-8 rounded-full bg-background-secondary" />
+            <div className="h-6 w-12 rounded bg-background-secondary" />
+          </div>
+          <div className="text-right">
+            <div className="h-4 w-16 rounded bg-background-secondary" />
+            <div className="mt-1 h-3 w-12 rounded bg-background-secondary ml-auto" />
+          </div>
+        </div>
       </div>
     );
   }
 
   if (!weather) {
     return (
-      <div className="card flex flex-col items-center justify-center p-3">
-        <span className="text-2xl">🌡️</span>
-        <p className="text-lg font-bold text-foreground">--°F</p>
-        <p className="text-xs text-foreground-tertiary">--° / --°</p>
+      <div className="card p-3">
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">🌡️</span>
+            <span className="text-xl font-bold text-foreground">--°</span>
+          </div>
+          <div className="text-right">
+            <p className="text-sm text-foreground-secondary">{city}</p>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="card flex flex-col items-center justify-center p-3">
-      <span className="text-2xl">{weather.icon}</span>
-      <p className="text-lg font-bold text-foreground">{weather.temperature}°F</p>
-      <p className="text-xs text-foreground-tertiary">{weather.tempHigh}° / {weather.tempLow}°</p>
+    <div className="card p-3">
+      {/* Top row: Icon + temp on left, city + condition on right */}
+      <div className="flex justify-evenly items-start">
+        <div className="flex items-center gap-2">
+          <span className="text-2xl">{weather.icon}</span>
+          <span className="text-2xl font-bold text-foreground">{weather.temperature}°</span>
+        </div>
+        <div className="text-right">
+          <p className="text-sm font-medium text-foreground-secondary">{weather.city}</p>
+          <p className="text-xs text-foreground-tertiary">{weather.condition}</p>
+        </div>
+      </div>
+      {/* Bottom row: High/Low on left, rain chance on right */}
+      <div className="flex justify-evenly items-center mt-2 text-xs text-foreground-tertiary">
+        <span>H: {weather.tempHigh}° L: {weather.tempLow}°</span>
+        <span>🌧️ {weather.precipitationChance}%</span>
+      </div>
     </div>
   );
 }
