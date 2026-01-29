@@ -19,6 +19,7 @@ import type {
   TransportRoute,
   MealSelection,
   ChatMessage,
+  TourContentEntry,
 } from '@/types/database';
 
 /**
@@ -50,11 +51,13 @@ export class FTCDatabase extends Dexie {
   mealSelections!: Table<MealSelection, string>;
   // Chat history (v4)
   chatMessages!: Table<ChatMessage, string>;
+  // Tour content (v5)
+  tourContent!: Table<TourContentEntry, string>;
 
   constructor() {
     super('ftc-nihon');
 
-    this.version(4).stores({
+    this.version(5).stores({
       // Activities - main itinerary
       // Primary key: id, Indexes: dayNumber, date, sortOrder compound
       activities: 'id, dayNumber, date, [dayNumber+sortOrder]',
@@ -142,6 +145,14 @@ export class FTCDatabase extends Dexie {
       // Chat messages - AI chat history
       // Primary key: id, Index: timestamp for ordering
       chatMessages: 'id, timestamp',
+
+      // =====================================================
+      // Tour content (v5)
+      // =====================================================
+
+      // Tour content - cultural/historical info about locations
+      // Primary key: locationId, Indexes: city, type
+      tourContent: 'locationId, city, type',
     });
   }
 
@@ -253,6 +264,7 @@ export class FTCDatabase extends Dexie {
         this.transportRoutes,
         this.mealSelections,
         this.chatMessages,
+        this.tourContent,
       ],
       async () => {
         await this.activities.clear();
@@ -274,6 +286,7 @@ export class FTCDatabase extends Dexie {
         await this.transportRoutes.clear();
         await this.mealSelections.clear();
         await this.chatMessages.clear();
+        await this.tourContent.clear();
       }
     );
   }

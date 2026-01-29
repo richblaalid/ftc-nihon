@@ -384,6 +384,28 @@ export interface ChatMessage {
   createdAt: string;
 }
 
+/**
+ * Type of tour content location
+ */
+export type TourContentType = 'temple' | 'shrine' | 'landmark' | 'museum' | 'city';
+
+/**
+ * Tour guide content for locations
+ * Pre-generated cultural and historical information about temples, shrines, landmarks, etc.
+ */
+export interface TourContentEntry {
+  locationId: string;
+  title: string;
+  titleJapanese?: string;
+  content: string;
+  type: TourContentType;
+  city: string;
+  highlights?: string[];
+  etiquetteTips?: string[];
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 // Activity with transit info joined (flattened for convenience)
 export interface ActivityWithTransit extends Activity {
   transit?: TransitSegment | null;

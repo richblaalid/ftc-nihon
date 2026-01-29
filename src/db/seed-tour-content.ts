@@ -478,3 +478,10 @@ export function getTourContentByCity(city: string): TourContent[] {
     (t) => t.city.toLowerCase() === city.toLowerCase() && t.type !== 'city'
   );
 }
+
+/**
+ * Get all available tour content location IDs
+ */
+export function getAllTourLocationIds(): string[] {
+  return TOUR_CONTENT.map((t) => t.locationId);
+}
