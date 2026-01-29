@@ -36,13 +36,22 @@ export function isSupabaseConfigured(): boolean {
  */
 export function getSupabaseClient(): SupabaseClient | null {
   // Return cached client if we have one (check global)
-  if (globalThis[GLOBAL_KEY]) {
-    return globalThis[GLOBAL_KEY];
+  const cachedClient = globalThis[GLOBAL_KEY];
+  if (cachedClient) {
+    console.log('[Supabase] Returning cached client from globalThis');
+    return cachedClient;
   }
 
   // Try to create client if env vars are available
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  console.log('[Supabase] getSupabaseClient called:', {
+    hasCachedClient: !!cachedClient,
+    hasUrl: !!supabaseUrl,
+    hasKey: !!supabaseAnonKey,
+    urlPrefix: supabaseUrl?.substring(0, 30),
+  });
 
   if (supabaseUrl && supabaseAnonKey) {
     console.log('[Supabase] Creating client...');
@@ -57,15 +66,11 @@ export function getSupabaseClient(): SupabaseClient | null {
         },
       },
     });
-    console.log('[Supabase] Client created successfully');
+    console.log('[Supabase] Client created and stored in globalThis');
     return globalThis[GLOBAL_KEY];
   }
 
-  console.warn('[Supabase] Missing env vars:', {
-    hasUrl: !!supabaseUrl,
-    hasKey: !!supabaseAnonKey,
-  });
-
+  console.warn('[Supabase] Cannot create client - missing env vars');
   return null;
 }
 
