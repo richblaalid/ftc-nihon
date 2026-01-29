@@ -688,7 +688,7 @@
   - Features: Loading indicator while AI responds
   - Test: Messages display correctly
 
-- [ ] 6.1.3: Integrate Claude API with trip context
+- [x] 6.1.3: Integrate Claude API with trip context
   - Files: src/lib/ai.ts, src/app/api/chat/route.ts
   - System prompt: Current location, time, activity, group composition, today's itinerary
   - Context injection: Dynamically build prompt based on current state

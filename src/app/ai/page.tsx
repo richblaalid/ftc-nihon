@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import {
   ChatLayout,
   ChatMessage,
@@ -9,6 +9,15 @@ import {
   type ChatMessageData,
 } from '@/components/ai';
 import { useSyncStore } from '@/stores/sync-store';
+import {
+  useCurrentActivity,
+  useNextActivity,
+  useActivities,
+  useCurrentDayNumber,
+  useAccommodationsForDay,
+} from '@/db/hooks';
+import { getCityForDay } from '@/lib/trip-dates';
+import type { TripContext } from '@/lib/ai';
 
 /**
  * AI Assistant chat page.
@@ -22,6 +31,24 @@ export default function AIPage() {
 
   // Track online status
   const isOnline = useSyncStore((state) => state.isOnline);
+
+  // Get trip context for AI
+  const currentDay = useCurrentDayNumber();
+  const currentActivity = useCurrentActivity();
+  const nextActivity = useNextActivity();
+  const todayActivities = useActivities(currentDay ?? undefined);
+  const accommodations = useAccommodationsForDay(currentDay ?? 1);
+  const currentCity = currentDay ? getCityForDay(currentDay) : null;
+
+  // Build trip context
+  const getTripContext = useCallback((): TripContext => ({
+    currentDay,
+    currentActivity: currentActivity ?? null,
+    nextActivity: nextActivity ?? null,
+    todayActivities: todayActivities ?? null,
+    currentCity,
+    accommodation: accommodations?.tonight ?? null,
+  }), [currentDay, currentActivity, nextActivity, todayActivities, currentCity, accommodations]);
 
   // Scroll to bottom when new messages arrive
   useEffect(() => {
@@ -45,20 +72,103 @@ export default function AIPage() {
     setIsLoading(true);
 
     try {
-      // TODO: Implement actual API call in task 6.1.3
-      // For now, show a placeholder response
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      if (!isOnline) {
+        // Offline fallback - show cached response
+        const offlineMessage: ChatMessageData = {
+          id: `assistant-${Date.now()}`,
+          role: 'assistant',
+          content: 'I\'m currently offline. Please try again when you have an internet connection, or ask about basic Japanese phrases and etiquette which I can answer from cached knowledge.',
+          timestamp: new Date(),
+        };
+        setMessages((prev) => [...prev, offlineMessage]);
+        return;
+      }
 
-      const assistantMessage: ChatMessageData = {
-        id: `assistant-${Date.now()}`,
-        role: 'assistant',
-        content: isOnline
-          ? 'I\'m your FTC Nihon AI assistant! I\'ll help you with trip questions, Japanese phrases, directions, and more. (API integration coming soon)'
-          : 'I\'m currently offline, so I can only answer questions from my cached knowledge. Try asking about Japanese etiquette, common phrases, or the itinerary!',
-        timestamp: new Date(),
-      };
+      // Convert messages to UI format for API
+      const uiMessages = [...messages, userMessage].map((m) => ({
+        id: m.id,
+        role: m.role as 'user' | 'assistant',
+        content: m.content,
+      }));
 
-      setMessages((prev) => [...prev, assistantMessage]);
+      // Call the API with streaming
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: uiMessages,
+          tripContext: getTripContext(),
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('API request failed');
+      }
+
+      // Handle streaming response
+      const reader = response.body?.getReader();
+      if (!reader) {
+        throw new Error('No response body');
+      }
+
+      // Create assistant message that will be updated
+      const assistantMessageId = `assistant-${Date.now()}`;
+      let assistantContent = '';
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: assistantMessageId,
+          role: 'assistant',
+          content: '',
+          timestamp: new Date(),
+        },
+      ]);
+
+      const decoder = new TextDecoder();
+      let done = false;
+
+      while (!done) {
+        const { value, done: readerDone } = await reader.read();
+        done = readerDone;
+
+        if (value) {
+          const chunk = decoder.decode(value);
+          // Parse the data stream format (0: prefix for text)
+          const lines = chunk.split('\n');
+          for (const line of lines) {
+            if (line.startsWith('0:')) {
+              try {
+                // The format is 0:"text content"
+                const textContent = JSON.parse(line.slice(2));
+                if (typeof textContent === 'string') {
+                  assistantContent += textContent;
+                  setMessages((prev) =>
+                    prev.map((m) =>
+                      m.id === assistantMessageId
+                        ? { ...m, content: assistantContent }
+                        : m
+                    )
+                  );
+                }
+              } catch {
+                // Ignore parsing errors for non-text chunks
+              }
+            }
+          }
+        }
+      }
+
+      // If we didn't get any content, show an error
+      if (!assistantContent) {
+        setMessages((prev) =>
+          prev.map((m) =>
+            m.id === assistantMessageId
+              ? { ...m, content: 'Sorry, I couldn\'t generate a response. Please try again.' }
+              : m
+          )
+        );
+      }
     } catch (error) {
       console.error('[AI] Error:', error);
       const errorMessage: ChatMessageData = {
@@ -85,7 +195,7 @@ export default function AIPage() {
               <ChatMessage key={message.id} message={message} />
             ))}
 
-            {isLoading && <ChatTypingIndicator />}
+            {isLoading && messages[messages.length - 1]?.content === '' && <ChatTypingIndicator />}
 
             <div ref={messagesEndRef} />
           </div>

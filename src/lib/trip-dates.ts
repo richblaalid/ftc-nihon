@@ -112,3 +112,15 @@ export const DAY_CITIES: Record<number, string> = {
   14: 'Osaka',
   15: 'Tokyo', // Return flight
 };
+
+/**
+ * Get the city for a specific trip day
+ */
+export function getCityForDay(dayNumber: number): string | null {
+  return DAY_CITIES[dayNumber] ?? null;
+}
+
+/**
+ * List of all cities on the trip
+ */
+export const TRIP_CITIES = ['Tokyo', 'Hakone', 'Kyoto', 'Osaka'];
