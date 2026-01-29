@@ -253,7 +253,8 @@ export function Map({
       });
 
       // Click handler - just notify parent, custom PinInfo handles display
-      marker.addListener('click', () => {
+      // Use 'gmp-click' for AdvancedMarkerElement (not 'click')
+      marker.addListener('gmp-click', () => {
         onPinClick?.(activity);
       });
 

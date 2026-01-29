@@ -92,6 +92,7 @@ export const CITY_CENTERS: Record<string, LatLngLiteral> = {
 };
 
 // Default map options for Japan (typed as partial to avoid google.maps dependency at module level)
+// Note: styles removed because mapId is used - configure styles in Google Cloud Console
 export const DEFAULT_MAP_OPTIONS: Partial<google.maps.MapOptions> & { center: LatLngLiteral } = {
   center: JAPAN_CENTER,
   zoom: 12,
@@ -102,12 +103,4 @@ export const DEFAULT_MAP_OPTIONS: Partial<google.maps.MapOptions> & { center: La
   mapTypeControl: false,
   streetViewControl: false,
   fullscreenControl: false,
-  styles: [
-    // Subtle styling - can be expanded later
-    {
-      featureType: 'poi',
-      elementType: 'labels',
-      stylers: [{ visibility: 'off' }],
-    },
-  ],
 };
