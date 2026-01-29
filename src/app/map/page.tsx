@@ -28,6 +28,7 @@ function MapContent() {
         useAppStore.getState().setSelectedDay(day);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- Only run on mount/URL change, not on store changes
   }, [dayParam]);
 
   // Effective day: store value takes precedence, otherwise current day, otherwise day 1
@@ -110,7 +111,6 @@ function MapContent() {
   }, [activitiesWithTransit, accommodations, accommodationToActivity]);
 
   // Compute map center from selected activity
-  // eslint-disable-next-line react-hooks/preserve-manual-memoization -- intentional: only recompute when lat/lng actually change
   const mapCenter = useMemo(() => {
     if (selectedActivity?.locationLat && selectedActivity?.locationLng) {
       return { lat: selectedActivity.locationLat, lng: selectedActivity.locationLng };
@@ -124,7 +124,6 @@ function MapContent() {
 
     const activity = activities.find(a => a.id === activityParam);
     if (activity) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional for URL-based initial selection
       setSelectedActivity(activity);
     }
     setInitialActivityHandled(true);
@@ -155,7 +154,7 @@ function MapContent() {
   };
 
   return (
-    <div className="flex flex-col bg-background overflow-hidden" style={{ height: '100%' }}>
+    <div className="flex flex-col bg-background overflow-hidden" style={{ height: 'calc(100dvh - 4rem - env(safe-area-inset-bottom))' }}>
       {/* Header */}
       <PageHeader
         title={`Day ${selectedDay} Map`}
@@ -239,7 +238,7 @@ function MapContent() {
 
 function MapLoading() {
   return (
-    <div className="flex flex-col bg-background overflow-hidden" style={{ height: '100%' }}>
+    <div className="flex flex-col bg-background overflow-hidden" style={{ height: 'calc(100dvh - 4rem - env(safe-area-inset-bottom))' }}>
       <header className="flex-shrink-0 px-4 py-3 bg-background border-b border-border">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 bg-background-secondary rounded-lg animate-pulse" />

@@ -7,7 +7,6 @@ import {
   DEFAULT_MAP_OPTIONS,
   CITY_CENTERS,
 } from '@/lib/google-maps';
-import { useSyncStore } from '@/stores/sync-store';
 import type { ActivityWithTransit, ActivityCategory } from '@/types/database';
 import { DAY_CITIES } from '@/types/database';
 
@@ -85,39 +84,40 @@ const CATEGORY_GLYPHS: Record<ActivityCategory, string> = {
 type MarkerMap = globalThis.Map<string, google.maps.marker.AdvancedMarkerElement>;
 
 /**
- * Create a PinElement with custom styling for a category
+ * Create a pin DOM element for a marker
  */
 function createPinElement(
   category: ActivityCategory,
-  isSelected: boolean = false
-): google.maps.marker.PinElement {
+  isSelected: boolean
+): HTMLDivElement {
+  const pinSize = isSelected ? 48 : 36;
+  const iconSize = isSelected ? 20 : 16;
+  const borderWidth = isSelected ? 3 : 2;
   const pinColor = getCategoryColor(category);
-  const glyph = document.createElement('span');
-  glyph.textContent = CATEGORY_GLYPHS[category];
-  glyph.style.fontSize = isSelected ? '16px' : '14px';
 
-  return new google.maps.marker.PinElement({
-    background: pinColor,
-    borderColor: 'white',
-    glyphColor: 'white',
-    glyph,
-    scale: isSelected ? 1.3 : 1.0,
-  });
-}
-
-/**
- * Create a user location marker element (blue dot)
- */
-function createUserLocationElement(): HTMLElement {
-  const primaryColor = getThemeColor('--primary', '#4285F4');
-  const el = document.createElement('div');
-  el.style.width = '20px';
-  el.style.height = '20px';
-  el.style.borderRadius = '50%';
-  el.style.backgroundColor = primaryColor;
-  el.style.border = '3px solid white';
-  el.style.boxShadow = '0 2px 6px rgba(0,0,0,0.3)';
-  return el;
+  const pinElement = document.createElement('div');
+  pinElement.className = 'ftc-map-pin';
+  pinElement.innerHTML = `
+    <div style="
+      background-color: ${pinColor};
+      width: ${pinSize}px;
+      height: ${pinSize}px;
+      border-radius: 50% 50% 50% 0;
+      transform: rotate(-45deg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: ${isSelected ? '0 4px 12px rgba(0,0,0,0.4)' : '0 2px 6px rgba(0,0,0,0.3)'};
+      border: ${borderWidth}px solid white;
+      transition: all 0.15s ease-out;
+    ">
+      <span style="
+        transform: rotate(45deg);
+        font-size: ${iconSize}px;
+      ">${CATEGORY_GLYPHS[category]}</span>
+    </div>
+  `;
+  return pinElement;
 }
 
 export function Map({
@@ -142,16 +142,9 @@ export function Map({
 
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  // Track if we've mounted (for hydration-safe online check)
-  const [isMounted, setIsMounted] = useState(false);
 
   // Check config once (not in effect)
   const isConfigured = isGoogleMapsConfigured();
-
-  // Set mounted after hydration to avoid SSR mismatch
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
 
   // Get initial map center based on day (used only for initialization)
   const getInitialCenter = useCallback(() => {
@@ -177,15 +170,11 @@ export function Map({
 
         const initialCenter = getInitialCenter();
 
-        // mapId: DEMO_MAP_ID is a special value that works without cloud configuration
-        // See: https://developers.google.com/maps/documentation/javascript/reference/map
-        const mapId = process.env.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID || 'DEMO_MAP_ID';
-
         mapInstanceRef.current = new maps.Map(mapRef.current, {
           ...DEFAULT_MAP_OPTIONS,
           center: initialCenter,
           zoom: zoom ?? 13,
-          mapId,
+          mapId: 'ftc-nihon-map', // Required for advanced markers
         });
 
         setIsLoaded(true);
@@ -242,7 +231,6 @@ export function Map({
     prevSelectedIdRef.current = null;
 
     // Create markers (all in unselected state initially)
-    // Using AdvancedMarkerElement with PinElement for custom styling
     validActivities.forEach((activity) => {
       if (activity.locationLat == null || activity.locationLng == null) return;
 
@@ -251,13 +239,13 @@ export function Map({
       const marker = new google.maps.marker.AdvancedMarkerElement({
         map: mapInstanceRef.current!,
         position: { lat: activity.locationLat, lng: activity.locationLng },
+        content: pinElement,
         title: activity.name,
-        content: pinElement.element,
         zIndex: 1,
       });
 
-      // Click handler (gmp-click for AdvancedMarkerElement)
-      marker.addListener('gmp-click', () => {
+      // Click handler - just notify parent, custom PinInfo handles display
+      marker.addListener('click', () => {
         onPinClick?.(activity);
       });
 
@@ -278,7 +266,6 @@ export function Map({
     }
   // Note: center is intentionally NOT a dependency - changing selection should not recreate markers
   // The separate pan-to-center effect handles centering on selected activity
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- center excluded per above comment
   }, [isLoaded, activities, onPinClick]);
 
   // Update marker styling when selection changes (efficient: only updates affected markers)
@@ -299,8 +286,7 @@ export function Map({
     if (prevId && prevActivity) {
       const prevMarker = markersRef.current.get(prevId);
       if (prevMarker) {
-        const pinElement = createPinElement(prevActivity.category, false);
-        prevMarker.content = pinElement.element;
+        prevMarker.content = createPinElement(prevActivity.category, false);
         prevMarker.zIndex = 1;
       }
     }
@@ -309,8 +295,7 @@ export function Map({
     if (newId && newActivity) {
       const newMarker = markersRef.current.get(newId);
       if (newMarker) {
-        const pinElement = createPinElement(newActivity.category, true);
-        newMarker.content = pinElement.element;
+        newMarker.content = createPinElement(newActivity.category, true);
         newMarker.zIndex = 100;
       }
     }
@@ -331,41 +316,30 @@ export function Map({
 
     if (!userLocation) return;
 
-    // Create user location marker with custom HTML element (blue dot)
+    // Create user location marker with theme-aware primary color
+    const primaryColor = getThemeColor('--primary', '#4285F4');
+    const userPinElement = document.createElement('div');
+    userPinElement.innerHTML = `
+      <div style="
+        width: 20px;
+        height: 20px;
+        background-color: ${primaryColor};
+        border: 3px solid white;
+        border-radius: 50%;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      "></div>
+    `;
+
     userMarkerRef.current = new google.maps.marker.AdvancedMarkerElement({
       map: mapInstanceRef.current,
       position: userLocation,
+      content: userPinElement,
       title: 'Your location',
-      content: createUserLocationElement(),
-      zIndex: 1000, // Above other markers
     });
   }, [isLoaded, userLocation]);
 
-  // Check if offline (only after mount to avoid hydration mismatch)
-  const isOnline = useSyncStore((state) => state.isOnline);
-
-  // Error state (config error, runtime error, or offline)
+  // Error state (config error or runtime error)
   const displayError = !isConfigured ? 'Google Maps API key not configured' : error;
-
-  // Show offline message if offline and map hasn't loaded
-  // Only check after mount to avoid SSR hydration mismatch
-  if (isMounted && !isOnline && !isLoaded) {
-    return (
-      <div className={`flex items-center justify-center bg-background-secondary ${className}`}>
-        <div className="text-center p-4 max-w-xs">
-          <span className="text-4xl">📍</span>
-          <p className="mt-2 font-medium text-foreground">Map unavailable offline</p>
-          <p className="mt-1 text-sm text-foreground-secondary">
-            Google Maps requires an internet connection to load map tiles.
-          </p>
-          <p className="mt-3 text-xs text-foreground-tertiary">
-            Your activity locations are still saved. Connect to the internet to view the map.
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   if (displayError) {
     return (
       <div className={`flex items-center justify-center bg-background-secondary ${className}`}>

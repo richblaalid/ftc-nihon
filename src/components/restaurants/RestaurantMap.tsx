@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   loadGoogleMaps,
   isGoogleMapsConfigured,
@@ -83,40 +83,21 @@ export function RestaurantMap({
 
   const isConfigured = isGoogleMapsConfigured();
 
-  // Calculate center from restaurants
-  const getMapCenter = useCallback(() => {
-    const validRestaurants = restaurants.filter(
-      (r) => r.locationLat != null && r.locationLng != null
-    );
-
-    if (validRestaurants.length === 0) {
-      return DEFAULT_MAP_OPTIONS.center!;
-    }
-
-    // Calculate center of all restaurants
-    const sumLat = validRestaurants.reduce((sum, r) => sum + (r.locationLat ?? 0), 0);
-    const sumLng = validRestaurants.reduce((sum, r) => sum + (r.locationLng ?? 0), 0);
-
-    return {
-      lat: sumLat / validRestaurants.length,
-      lng: sumLng / validRestaurants.length,
-    };
-  }, [restaurants]);
-
-  // Initialize map
+  // Initialize map (only once, not when restaurants change)
   useEffect(() => {
     if (!mapRef.current || !isConfigured) return;
+    // Don't reinitialize if map already exists
+    if (mapInstanceRef.current) return;
 
     const initMap = async () => {
       try {
         const maps = await loadGoogleMaps();
         if (!maps || !mapRef.current) return;
 
-        const mapCenter = getMapCenter();
-
+        // Use default center initially - will fit bounds when restaurants load
         mapInstanceRef.current = new maps.Map(mapRef.current, {
           ...DEFAULT_MAP_OPTIONS,
-          center: mapCenter,
+          center: DEFAULT_MAP_OPTIONS.center!,
           zoom: 14,
           mapId: 'ftc-nihon-restaurants-map',
         });
@@ -129,7 +110,7 @@ export function RestaurantMap({
     };
 
     initMap();
-  }, [getMapCenter, isConfigured]);
+  }, [isConfigured]);
 
   // Update restaurant pins
   useEffect(() => {
@@ -164,8 +145,12 @@ export function RestaurantMap({
       const existingMarker = markersRef.current.get(restaurant.id);
 
       if (existingMarker) {
-        // Update existing marker's content
+        // Update existing marker's content and ensure it's on the current map
         existingMarker.content = createPinElement(restaurant, isSelected, isHighlighted);
+        // Re-attach to map in case the map was re-initialized
+        if (existingMarker.map !== mapInstanceRef.current) {
+          existingMarker.map = mapInstanceRef.current;
+        }
       } else {
         // Create new marker
         const pinElement = createPinElement(restaurant, isSelected, isHighlighted);
@@ -210,7 +195,7 @@ export function RestaurantMap({
     });
 
     // Fit bounds to show all markers
-    if (validRestaurants.length > 1) {
+    if (validRestaurants.length > 0) {
       const bounds = new google.maps.LatLngBounds();
       validRestaurants.forEach((r) => {
         if (r.locationLat != null && r.locationLng != null) {
@@ -223,7 +208,16 @@ export function RestaurantMap({
         bounds.extend(userLocation);
       }
 
-      mapInstanceRef.current.fitBounds(bounds, { top: 40, right: 40, bottom: 40, left: 40 });
+      if (validRestaurants.length > 1) {
+        mapInstanceRef.current.fitBounds(bounds, { top: 40, right: 40, bottom: 40, left: 40 });
+      } else {
+        // Single restaurant - center on it with a reasonable zoom
+        const r = validRestaurants[0];
+        if (r?.locationLat && r?.locationLng) {
+          mapInstanceRef.current.setCenter({ lat: r.locationLat, lng: r.locationLng });
+          mapInstanceRef.current.setZoom(15);
+        }
+      }
     }
   }, [isLoaded, restaurants, selectedId, highlightedId, userLocation, onPinClick]);
 

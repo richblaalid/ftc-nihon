@@ -1,6 +1,7 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect, useRef } from 'react';
+import { loadGoogleMaps, isGoogleMapsConfigured } from '@/lib/google-maps';
 import type { Restaurant } from '@/types/database';
 
 interface RestaurantDetailProps {
@@ -13,6 +14,88 @@ interface RestaurantDetailProps {
 /**
  * Detailed view of a restaurant with map, contact info, and selection
  */
+/**
+ * Simple mini-map component for single restaurant location
+ */
+function RestaurantMiniMap({ lat, lng, name }: { lat: number; lng: number; name: string }) {
+  const mapRef = useRef<HTMLDivElement>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const isConfigured = isGoogleMapsConfigured();
+
+  useEffect(() => {
+    if (!mapRef.current || !isConfigured) return;
+
+    const initMap = async () => {
+      try {
+        const maps = await loadGoogleMaps();
+        if (!maps || !mapRef.current) return;
+
+        const map = new maps.Map(mapRef.current, {
+          center: { lat, lng },
+          zoom: 16,
+          mapId: 'ftc-nihon-restaurant-detail',
+          disableDefaultUI: true,
+          zoomControl: false,
+          gestureHandling: 'none', // Static for detail view
+        });
+
+        // Add marker for the restaurant
+        const pinElement = document.createElement('div');
+        pinElement.innerHTML = `
+          <div style="
+            background-color: #F46B55;
+            width: 36px;
+            height: 36px;
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            border: 2px solid white;
+          ">
+            <span style="transform: rotate(45deg); font-size: 16px;">🍜</span>
+          </div>
+        `;
+
+        new google.maps.marker.AdvancedMarkerElement({
+          map,
+          position: { lat, lng },
+          content: pinElement,
+          title: name,
+        });
+
+        setIsLoaded(true);
+      } catch (err) {
+        console.error('[RestaurantMiniMap] Init error:', err);
+        setError('Failed to load map');
+      }
+    };
+
+    initMap();
+  }, [lat, lng, name, isConfigured]);
+
+  if (!isConfigured || error) {
+    return (
+      <div className="h-full w-full flex items-center justify-center bg-background-secondary">
+        <span className="text-4xl">🗺️</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative h-full w-full">
+      <div ref={mapRef} className="h-full w-full" />
+      {!isLoaded && (
+        <div className="absolute inset-0 flex items-center justify-center bg-background-secondary">
+          <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function RestaurantDetail({
   restaurant,
   isSelected,
@@ -56,16 +139,10 @@ export function RestaurantDetail({
       {/* Map section */}
       {hasCoordinates && (
         <div className="relative h-48 rounded-xl overflow-hidden bg-background-secondary">
-          {/* Static map image from Google Maps Static API */}
-          {/* eslint-disable-next-line @next/next/no-img-element -- external dynamic API image */}
-          <img
-            src={`https://maps.googleapis.com/maps/api/staticmap?center=${restaurant.locationLat},${restaurant.locationLng}&zoom=16&size=600x300&maptype=roadmap&markers=color:red%7C${restaurant.locationLat},${restaurant.locationLng}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''}`}
-            alt={`Map showing ${restaurant.name}`}
-            className="w-full h-full object-cover"
-            onError={(e) => {
-              // Hide the image if it fails to load
-              (e.target as HTMLImageElement).style.display = 'none';
-            }}
+          <RestaurantMiniMap
+            lat={restaurant.locationLat!}
+            lng={restaurant.locationLng!}
+            name={restaurant.name}
           />
 
           {/* Open in Maps button */}
