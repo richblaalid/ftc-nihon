@@ -20,26 +20,29 @@ export function isSupabaseConfigured(): boolean {
 
 // Lazy-initialized client - only created when first accessed
 let supabaseClient: SupabaseClient | null = null;
-let clientInitialized = false;
 
 /**
  * Get the Supabase client, creating it lazily on first access.
  * This prevents errors during Next.js static generation when env vars aren't available.
  *
+ * IMPORTANT: Always tries to create the client if env vars are available,
+ * even if a previous attempt failed. This handles cases where env vars
+ * weren't available during SSR but are available on the client.
+ *
  * Returns null if Supabase is not configured.
  */
 export function getSupabaseClient(): SupabaseClient | null {
-  // Return cached client if already initialized
-  if (clientInitialized) {
+  // Return cached client if we have one
+  if (supabaseClient) {
     return supabaseClient;
   }
 
-  clientInitialized = true;
-
+  // Try to create client if env vars are available
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
   if (supabaseUrl && supabaseAnonKey) {
+    console.log('[Supabase] Creating client...');
     supabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
       auth: {
         persistSession: true,
@@ -50,6 +53,12 @@ export function getSupabaseClient(): SupabaseClient | null {
           eventsPerSecond: 10,
         },
       },
+    });
+    console.log('[Supabase] Client created successfully');
+  } else {
+    console.warn('[Supabase] Missing env vars:', {
+      hasUrl: !!supabaseUrl,
+      hasKey: !!supabaseAnonKey,
     });
   }
 
