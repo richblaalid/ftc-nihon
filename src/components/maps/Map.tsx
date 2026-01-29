@@ -178,11 +178,15 @@ export function Map({
 
         const initialCenter = getInitialCenter();
 
+        // mapId is required for AdvancedMarkerElement
+        // Set NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID in env, or it uses a demo ID
+        const mapId = process.env.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID || 'DEMO_MAP_ID';
+
         mapInstanceRef.current = new maps.Map(mapRef.current, {
           ...DEFAULT_MAP_OPTIONS,
           center: initialCenter,
           zoom: zoom ?? 13,
-          mapId: 'ftc-nihon-map', // Required for advanced markers
+          mapId,
         });
 
         setIsLoaded(true);
