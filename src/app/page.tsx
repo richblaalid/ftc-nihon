@@ -45,12 +45,14 @@ export default function Home() {
 
   // Sync feedback state
   const [syncFeedback, setSyncFeedback] = useState<'idle' | 'syncing' | 'success' | 'error'>('idle');
+  const [syncError, setSyncError] = useState<string | null>(null);
 
   // Handle manual refresh with visible feedback
   const handleRefresh = async () => {
     if (syncFeedback === 'syncing' || !isOnline) return;
 
     setSyncFeedback('syncing');
+    setSyncError(null);
     setIsSyncing(true);
 
     // Minimum display time so user sees feedback
@@ -63,13 +65,18 @@ export default function Home() {
         setSyncFeedback('success');
       } else {
         setSyncFeedback('error');
+        setSyncError(result.error || 'Unknown error');
+        console.error('[Sync] Failed:', result.error);
       }
-    } catch {
+    } catch (err) {
       setSyncFeedback('error');
+      const errorMsg = err instanceof Error ? err.message : 'Unknown error';
+      setSyncError(errorMsg);
+      console.error('[Sync] Exception:', err);
     } finally {
       setIsSyncing(false);
       // Reset feedback after showing result
-      setTimeout(() => setSyncFeedback('idle'), 2000);
+      setTimeout(() => setSyncFeedback('idle'), 3000);
     }
   };
 
@@ -206,9 +213,14 @@ export default function Home() {
               Sync complete!
             </span>
           ) : syncFeedback === 'error' ? (
-            <span className="flex items-center justify-center gap-2 text-error">
-              <span className="h-2 w-2 rounded-full bg-error" aria-hidden="true" />
-              Sync failed - tap to retry
+            <span className="flex flex-col items-center gap-1 text-error">
+              <span className="flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full bg-error" aria-hidden="true" />
+                Sync failed - tap to retry
+              </span>
+              {syncError && (
+                <span className="text-xs text-foreground-tertiary">{syncError}</span>
+              )}
             </span>
           ) : !isOnline ? (
             <span className="flex items-center justify-center gap-2">
