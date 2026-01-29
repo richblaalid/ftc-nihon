@@ -82,8 +82,43 @@ const CATEGORY_GLYPHS: Record<ActivityCategory, string> = {
 };
 
 // Type for our marker map to avoid collision with google.maps.Map
-// Use regular Marker (works without mapId) instead of AdvancedMarkerElement (requires mapId)
-type MarkerMap = globalThis.Map<string, google.maps.Marker>;
+type MarkerMap = globalThis.Map<string, google.maps.marker.AdvancedMarkerElement>;
+
+/**
+ * Create a PinElement with custom styling for a category
+ */
+function createPinElement(
+  category: ActivityCategory,
+  isSelected: boolean = false
+): google.maps.marker.PinElement {
+  const pinColor = getCategoryColor(category);
+  const glyph = document.createElement('span');
+  glyph.textContent = CATEGORY_GLYPHS[category];
+  glyph.style.fontSize = isSelected ? '16px' : '14px';
+
+  return new google.maps.marker.PinElement({
+    background: pinColor,
+    borderColor: 'white',
+    glyphColor: 'white',
+    glyph,
+    scale: isSelected ? 1.3 : 1.0,
+  });
+}
+
+/**
+ * Create a user location marker element (blue dot)
+ */
+function createUserLocationElement(): HTMLElement {
+  const primaryColor = getThemeColor('--primary', '#4285F4');
+  const el = document.createElement('div');
+  el.style.width = '20px';
+  el.style.height = '20px';
+  el.style.borderRadius = '50%';
+  el.style.backgroundColor = primaryColor;
+  el.style.border = '3px solid white';
+  el.style.boxShadow = '0 2px 6px rgba(0,0,0,0.3)';
+  return el;
+}
 
 export function Map({
   activities = [],
@@ -103,7 +138,7 @@ export function Map({
   const prevActivityIdsRef = useRef<string>('');
   // Track previous selection for efficient updates
   const prevSelectedIdRef = useRef<string | null>(null);
-  const userMarkerRef = useRef<google.maps.Marker | null>(null);
+  const userMarkerRef = useRef<google.maps.marker.AdvancedMarkerElement | null>(null);
 
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -142,15 +177,15 @@ export function Map({
 
         const initialCenter = getInitialCenter();
 
-        // mapId is optional - only needed for AdvancedMarkerElement custom styling
-        // Without a valid mapId, map tiles may not load. Create one in Google Cloud Console.
-        const mapId = process.env.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID;
+        // mapId: DEMO_MAP_ID is a special value that works without cloud configuration
+        // See: https://developers.google.com/maps/documentation/javascript/reference/map
+        const mapId = process.env.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID || 'DEMO_MAP_ID';
 
         mapInstanceRef.current = new maps.Map(mapRef.current, {
           ...DEFAULT_MAP_OPTIONS,
           center: initialCenter,
           zoom: zoom ?? 13,
-          ...(mapId && { mapId }), // Only include if set
+          mapId,
         });
 
         setIsLoaded(true);
@@ -201,40 +236,28 @@ export function Map({
 
     // Clear existing markers (only when activities actually changed)
     markersRef.current.forEach((marker) => {
-      marker.setMap(null);
+      marker.map = null;
     });
     markersRef.current.clear();
     prevSelectedIdRef.current = null;
 
     // Create markers (all in unselected state initially)
-    // Using regular Marker API (works without mapId)
+    // Using AdvancedMarkerElement with PinElement for custom styling
     validActivities.forEach((activity) => {
       if (activity.locationLat == null || activity.locationLng == null) return;
 
-      const pinColor = getCategoryColor(activity.category);
-      const glyph = CATEGORY_GLYPHS[activity.category];
+      const pinElement = createPinElement(activity.category, false);
 
-      const marker = new google.maps.Marker({
+      const marker = new google.maps.marker.AdvancedMarkerElement({
         map: mapInstanceRef.current!,
         position: { lat: activity.locationLat, lng: activity.locationLng },
         title: activity.name,
+        content: pinElement.element,
         zIndex: 1,
-        label: {
-          text: glyph,
-          fontSize: '14px',
-        },
-        icon: {
-          path: google.maps.SymbolPath.CIRCLE,
-          fillColor: pinColor,
-          fillOpacity: 1,
-          strokeColor: 'white',
-          strokeWeight: 2,
-          scale: 18,
-        },
       });
 
-      // Click handler
-      marker.addListener('click', () => {
+      // Click handler (gmp-click for AdvancedMarkerElement)
+      marker.addListener('gmp-click', () => {
         onPinClick?.(activity);
       });
 
@@ -276,16 +299,9 @@ export function Map({
     if (prevId && prevActivity) {
       const prevMarker = markersRef.current.get(prevId);
       if (prevMarker) {
-        const pinColor = getCategoryColor(prevActivity.category);
-        prevMarker.setIcon({
-          path: google.maps.SymbolPath.CIRCLE,
-          fillColor: pinColor,
-          fillOpacity: 1,
-          strokeColor: 'white',
-          strokeWeight: 2,
-          scale: 18,
-        });
-        prevMarker.setZIndex(1);
+        const pinElement = createPinElement(prevActivity.category, false);
+        prevMarker.content = pinElement.element;
+        prevMarker.zIndex = 1;
       }
     }
 
@@ -293,16 +309,9 @@ export function Map({
     if (newId && newActivity) {
       const newMarker = markersRef.current.get(newId);
       if (newMarker) {
-        const pinColor = getCategoryColor(newActivity.category);
-        newMarker.setIcon({
-          path: google.maps.SymbolPath.CIRCLE,
-          fillColor: pinColor,
-          fillOpacity: 1,
-          strokeColor: 'white',
-          strokeWeight: 3,
-          scale: 22, // Larger when selected
-        });
-        newMarker.setZIndex(100);
+        const pinElement = createPinElement(newActivity.category, true);
+        newMarker.content = pinElement.element;
+        newMarker.zIndex = 100;
       }
     }
 
@@ -316,27 +325,18 @@ export function Map({
 
     // Remove existing user marker
     if (userMarkerRef.current) {
-      userMarkerRef.current.setMap(null);
+      userMarkerRef.current.map = null;
       userMarkerRef.current = null;
     }
 
     if (!userLocation) return;
 
-    // Create user location marker with theme-aware primary color
-    const primaryColor = getThemeColor('--primary', '#4285F4');
-
-    userMarkerRef.current = new google.maps.Marker({
+    // Create user location marker with custom HTML element (blue dot)
+    userMarkerRef.current = new google.maps.marker.AdvancedMarkerElement({
       map: mapInstanceRef.current,
       position: userLocation,
       title: 'Your location',
-      icon: {
-        path: google.maps.SymbolPath.CIRCLE,
-        fillColor: primaryColor,
-        fillOpacity: 1,
-        strokeColor: 'white',
-        strokeWeight: 3,
-        scale: 10,
-      },
+      content: createUserLocationElement(),
       zIndex: 1000, // Above other markers
     });
   }, [isLoaded, userLocation]);
