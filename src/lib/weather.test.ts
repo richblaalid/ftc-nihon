@@ -61,6 +61,7 @@ describe('weather', () => {
         condition: 'Clear',
         icon: '☀️',
         humidity: 65,
+        precipitationChance: 10,
         city: 'Tokyo',
         updatedAt: '2026-03-10T12:00:00Z',
         cachedAt: Date.now(),
