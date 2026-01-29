@@ -709,7 +709,7 @@
   - Matching: Fuzzy match user question to cached patterns
   - Test: Offline questions return cached responses
 
-- [ ] 6.1.6: Add offline detection and graceful fallback
+- [x] 6.1.6: Add offline detection and graceful fallback
   - Files: src/lib/ai.ts, src/components/ai/ChatLayout.tsx
   - Logic: Check online status, try cache first, then API
   - UI: Show "offline mode" indicator, explain limitations
