@@ -2,9 +2,16 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 /**
  * Check if Supabase is configured
- * Uses a function to check at runtime rather than module load time
+ * First checks if client already exists (most reliable),
+ * then falls back to checking env vars
  */
 export function isSupabaseConfigured(): boolean {
+  // If client already exists, we're definitely configured
+  if (supabaseClient) {
+    return true;
+  }
+
+  // Otherwise check env vars
   return Boolean(
     process.env.NEXT_PUBLIC_SUPABASE_URL &&
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY

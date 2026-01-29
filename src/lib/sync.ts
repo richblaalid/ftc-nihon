@@ -40,11 +40,17 @@ export async function downloadAllData(): Promise<{
   tablesUpdated: SyncableTable[];
   error?: string;
 }> {
-  if (!isSupabaseConfigured()) {
+  // Check if client exists (more reliable than checking env vars)
+  const client = getSupabaseClient();
+  if (!client) {
+    // Fallback: also check env vars for debugging
+    const hasEnvVars = isSupabaseConfigured();
     return {
       success: false,
       tablesUpdated: [],
-      error: 'Supabase not configured',
+      error: hasEnvVars
+        ? 'Supabase client failed to initialize'
+        : 'Supabase not configured (missing env vars)',
     };
   }
 
