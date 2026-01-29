@@ -682,7 +682,7 @@
   - Style: iOS Messages-like interface, large touch targets
   - Test: Page renders, can type messages
 
-- [ ] 6.1.2: Create chat message components
+- [x] 6.1.2: Create chat message components
   - Files: src/components/ai/ChatMessage.tsx, src/components/ai/ChatInput.tsx
   - Display: User messages (right), AI messages (left), timestamps
   - Features: Loading indicator while AI responds
