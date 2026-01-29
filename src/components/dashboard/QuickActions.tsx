@@ -9,30 +9,12 @@ const GOOGLE_TRANSLATE_WEB_URL = 'https://translate.google.com/?sl=en&tl=ja&op=t
 const GOOGLE_TRANSLATE_APP_URL = 'googletranslate://?sl=en&tl=ja';
 
 /**
- * Try to open Google Translate app, fall back to web if not installed
+ * Open Google Translate app directly.
+ * No automatic web fallback - avoids lingering browser tabs on iOS PWA.
+ * If user doesn't have the app, iOS will show an error prompt.
  */
 function openGoogleTranslate() {
-  let appOpened = false;
-
-  // Detect if app opened by checking if page becomes hidden
-  const handleVisibilityChange = () => {
-    if (document.hidden) {
-      appOpened = true;
-    }
-  };
-
-  document.addEventListener('visibilitychange', handleVisibilityChange);
-
-  // Try to open the app
   window.location.href = GOOGLE_TRANSLATE_APP_URL;
-
-  // If page didn't become hidden, the app didn't open - fall back to web
-  setTimeout(() => {
-    document.removeEventListener('visibilitychange', handleVisibilityChange);
-    if (!appOpened) {
-      window.open(GOOGLE_TRANSLATE_WEB_URL, '_blank');
-    }
-  }, 800);
 }
 
 /**
