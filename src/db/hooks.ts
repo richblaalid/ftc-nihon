@@ -1,5 +1,6 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from './database';
+import { useSyncStore } from '@/stores/sync-store';
 import type {
   Activity,
   ActivityWithTransit,
@@ -24,21 +25,31 @@ import { TRIP_START_DATE } from '@/types/database';
 import { getCurrentDate } from '@/lib/utils';
 
 /**
+ * Hook to get the current sync version.
+ * Include this in useLiveQuery dependencies to force re-query after sync.
+ */
+export function useSyncVersion(): number {
+  return useSyncStore((state) => state.syncVersion);
+}
+
+/**
  * Get activities for a specific day, with optional transit data
  */
 export function useActivities(dayNumber?: number): Activity[] | undefined {
+  const syncVersion = useSyncVersion();
   return useLiveQuery(async () => {
     if (dayNumber !== undefined) {
       return db.activities.where('dayNumber').equals(dayNumber).sortBy('sortOrder');
     }
     return db.activities.orderBy('[dayNumber+sortOrder]').toArray();
-  }, [dayNumber]);
+  }, [dayNumber, syncVersion]);
 }
 
 /**
  * Get activities with their transit segments for a specific day
  */
 export function useActivitiesWithTransit(dayNumber: number): ActivityWithTransit[] | undefined {
+  const syncVersion = useSyncVersion();
   return useLiveQuery(async () => {
     const activities = await db.activities
       .where('dayNumber')
@@ -52,14 +63,15 @@ export function useActivitiesWithTransit(dayNumber: number): ActivityWithTransit
       ...activity,
       transit: transitMap.get(activity.id) ?? null,
     }));
-  }, [dayNumber]);
+  }, [dayNumber, syncVersion]);
 }
 
 /**
  * Get all accommodations
  */
 export function useAccommodations(): Accommodation[] | undefined {
-  return useLiveQuery(() => db.accommodations.orderBy('sortOrder').toArray());
+  const syncVersion = useSyncVersion();
+  return useLiveQuery(() => db.accommodations.orderBy('sortOrder').toArray(), [syncVersion]);
 }
 
 /**
@@ -82,6 +94,7 @@ export function useCurrentAccommodation(date?: string): Accommodation | undefine
  * Returns the activity that is currently happening or should be happening now
  */
 export function useCurrentActivity(): Activity | null | undefined {
+  const syncVersion = useSyncVersion();
   return useLiveQuery(async () => {
     const now = getCurrentDate();
     const today = now.toISOString().split('T')[0] ?? '';
@@ -134,13 +147,14 @@ export function useCurrentActivity(): Activity | null | undefined {
     }
 
     return todayActivities[todayActivities.length - 1] ?? null;
-  });
+  }, [syncVersion]);
 }
 
 /**
  * Get the next upcoming activity
  */
 export function useNextActivity(): Activity | null | undefined {
+  const syncVersion = useSyncVersion();
   return useLiveQuery(async () => {
     const now = getCurrentDate();
     const today = now.toISOString().split('T')[0] ?? '';
@@ -170,7 +184,7 @@ export function useNextActivity(): Activity | null | undefined {
       .sortBy('sortOrder');
 
     return tomorrowActivities[0] ?? null;
-  });
+  }, [syncVersion]);
 }
 
 /**
@@ -178,6 +192,7 @@ export function useNextActivity(): Activity | null | undefined {
  * Falls back to first upcoming activity if outside trip dates
  */
 export function useNextActivityWithTransit(): ActivityWithTransit | null | undefined {
+  const syncVersion = useSyncVersion();
   return useLiveQuery(async () => {
     const now = getCurrentDate();
     const today = now.toISOString().split('T')[0] ?? '';
@@ -237,13 +252,14 @@ export function useNextActivityWithTransit(): ActivityWithTransit | null | undef
     const transit = await db.transitSegments.where('activityId').equals(nextActivity.id).first();
 
     return { ...nextActivity, transit: transit ?? null };
-  });
+  }, [syncVersion]);
 }
 
 /**
  * Get active alerts (not expired, marked active)
  */
 export function useAlerts(): Alert[] | undefined {
+  const syncVersion = useSyncVersion();
   return useLiveQuery(async () => {
     const now = getCurrentDate().toISOString();
 
@@ -251,13 +267,14 @@ export function useAlerts(): Alert[] | undefined {
 
     // Filter out expired alerts
     return alerts.filter((alert) => !alert.expiresAt || alert.expiresAt > now);
-  });
+  }, [syncVersion]);
 }
 
 /**
  * Get urgent alerts and hard deadlines within specified hours
  */
 export function useUrgentAlerts(withinHours: number = 2): Alert[] | undefined {
+  const syncVersion = useSyncVersion();
   return useLiveQuery(async () => {
     const now = getCurrentDate();
     const threshold = new Date(now.getTime() + withinHours * 60 * 60 * 1000).toISOString();
@@ -275,31 +292,33 @@ export function useUrgentAlerts(withinHours: number = 2): Alert[] | undefined {
 
       return false;
     });
-  }, [withinHours]);
+  }, [withinHours, syncVersion]);
 }
 
 /**
  * Get restaurants for a specific day
  */
 export function useRestaurants(dayNumber?: number): Restaurant[] | undefined {
+  const syncVersion = useSyncVersion();
   return useLiveQuery(async () => {
     if (dayNumber !== undefined) {
       return db.restaurants.where('dayNumber').equals(dayNumber).toArray();
     }
     return db.restaurants.toArray();
-  }, [dayNumber]);
+  }, [dayNumber, syncVersion]);
 }
 
 /**
  * Get checklist items
  */
 export function useChecklistItems(preTripOnly?: boolean): ChecklistItem[] | undefined {
+  const syncVersion = useSyncVersion();
   return useLiveQuery(async () => {
     if (preTripOnly !== undefined) {
       return db.checklistItems.where('isPreTrip').equals(preTripOnly ? 1 : 0).sortBy('sortOrder');
     }
     return db.checklistItems.orderBy('dueDate').toArray();
-  }, [preTripOnly]);
+  }, [preTripOnly, syncVersion]);
 }
 
 /**
@@ -470,9 +489,10 @@ export function useUnpurchasedTickets(): Ticket[] | undefined {
  * Get day info for a specific day number
  */
 export function useDayInfo(dayNumber: number): DayInfo | undefined {
+  const syncVersion = useSyncVersion();
   return useLiveQuery(
     () => db.dayInfo.where('dayNumber').equals(dayNumber).first(),
-    [dayNumber]
+    [dayNumber, syncVersion]
   );
 }
 
@@ -480,7 +500,8 @@ export function useDayInfo(dayNumber: number): DayInfo | undefined {
  * Get all day info records
  */
 export function useAllDayInfo(): DayInfo[] | undefined {
-  return useLiveQuery(() => db.dayInfo.orderBy('dayNumber').toArray());
+  const syncVersion = useSyncVersion();
+  return useLiveQuery(() => db.dayInfo.orderBy('dayNumber').toArray(), [syncVersion]);
 }
 
 /**
@@ -560,11 +581,14 @@ export function useRestaurantsByCity(city: string): Restaurant[] | undefined {
  * Get pre-trip checklist items sorted by due date
  */
 export function usePreTripChecklist(): ChecklistItem[] | undefined {
-  return useLiveQuery(() =>
-    db.checklistItems
-      .where('isPreTrip')
-      .equals(1) // Dexie stores booleans as 1/0 in indexes
-      .sortBy('sortOrder')
+  const syncVersion = useSyncVersion();
+  return useLiveQuery(
+    () =>
+      db.checklistItems
+        .where('isPreTrip')
+        .equals(1) // Dexie stores booleans as 1/0 in indexes
+        .sortBy('sortOrder'),
+    [syncVersion]
   );
 }
 

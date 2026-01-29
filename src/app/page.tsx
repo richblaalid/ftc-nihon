@@ -27,7 +27,7 @@ import { EmergencySheet, EmergencyButton, useEmergencySheet } from '@/components
 
 export default function Home() {
   const [hasMounted, setHasMounted] = useState(false);
-  const { isSyncing, isOnline, lastSyncedAt, setIsSyncing, setLastSyncedAt } = useSyncStore();
+  const { isSyncing, isOnline, lastSyncedAt, setIsSyncing, setLastSyncedAt, incrementSyncVersion } = useSyncStore();
 
   // Enriched data hooks
   const tripInfo = useTripInfo();
@@ -62,6 +62,7 @@ export default function Home() {
       const [result] = await Promise.all([forceResync(), minDisplayTime]);
       if (result.success) {
         setLastSyncedAt(new Date().toISOString());
+        incrementSyncVersion(); // Trigger UI re-renders with fresh data
         setSyncFeedback('success');
       } else {
         setSyncFeedback('error');

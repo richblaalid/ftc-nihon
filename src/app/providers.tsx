@@ -18,6 +18,7 @@ export function Providers({ children }: ProvidersProps) {
   const setIsSyncing = useSyncStore((state) => state.setIsSyncing);
   const setLastSyncedAt = useSyncStore((state) => state.setLastSyncedAt);
   const setLastError = useSyncStore((state) => state.setLastError);
+  const incrementSyncVersion = useSyncStore((state) => state.incrementSyncVersion);
 
   useEffect(() => {
     // Prevent double initialization in React Strict Mode
@@ -58,6 +59,7 @@ export function Providers({ children }: ProvidersProps) {
 
         if (result.success) {
           setLastSyncedAt(new Date().toISOString());
+          incrementSyncVersion(); // Trigger UI re-renders
           if (result.didSync) {
             console.log('[Providers] Initial sync complete');
           } else {
@@ -89,7 +91,7 @@ export function Providers({ children }: ProvidersProps) {
     return () => {
       cleanupOnlineListeners();
     };
-  }, [setIsSyncing, setLastSyncedAt, setLastError]);
+  }, [setIsSyncing, setLastSyncedAt, setLastError, incrementSyncVersion]);
 
   // Re-sync when coming back online
   useEffect(() => {

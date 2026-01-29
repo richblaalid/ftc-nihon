@@ -12,6 +12,8 @@ interface SyncState {
   pendingChanges: number;
   /** Last sync error message */
   lastError: string | null;
+  /** Version counter that increments on each successful sync - used to trigger re-renders */
+  syncVersion: number;
 
   // Actions
   setLastSyncedAt: (timestamp: string) => void;
@@ -22,6 +24,8 @@ interface SyncState {
   clearPendingChanges: () => void;
   setLastError: (error: string | null) => void;
   resetSyncState: () => void;
+  /** Increment sync version to trigger UI re-renders after sync */
+  incrementSyncVersion: () => void;
 }
 
 export const useSyncStore = create<SyncState>()(
@@ -33,6 +37,7 @@ export const useSyncStore = create<SyncState>()(
       isOnline: typeof navigator !== 'undefined' ? navigator.onLine : true,
       pendingChanges: 0,
       lastError: null,
+      syncVersion: 0,
 
       // Actions
       setLastSyncedAt: (timestamp) => set({ lastSyncedAt: timestamp, lastError: null }),
@@ -57,7 +62,11 @@ export const useSyncStore = create<SyncState>()(
           isSyncing: false,
           pendingChanges: 0,
           lastError: null,
+          syncVersion: 0,
         }),
+
+      incrementSyncVersion: () =>
+        set((state) => ({ syncVersion: state.syncVersion + 1 })),
     }),
     {
       name: 'ftc-sync-state',
