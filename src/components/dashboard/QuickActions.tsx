@@ -12,21 +12,27 @@ const GOOGLE_TRANSLATE_APP_URL = 'googletranslate://?sl=en&tl=ja';
  * Try to open Google Translate app, fall back to web if not installed
  */
 function openGoogleTranslate() {
-  // Create a hidden iframe to try opening the app
-  // This prevents the "can't open" error from showing
-  const start = Date.now();
+  let appOpened = false;
+
+  // Detect if app opened by checking if page becomes hidden
+  const handleVisibilityChange = () => {
+    if (document.hidden) {
+      appOpened = true;
+    }
+  };
+
+  document.addEventListener('visibilitychange', handleVisibilityChange);
 
   // Try to open the app
   window.location.href = GOOGLE_TRANSLATE_APP_URL;
 
-  // If we're still here after a short delay, the app didn't open
-  // Fall back to web version
+  // If page didn't become hidden, the app didn't open - fall back to web
   setTimeout(() => {
-    // If less than 2 seconds passed, the app probably didn't open
-    if (Date.now() - start < 2000) {
+    document.removeEventListener('visibilitychange', handleVisibilityChange);
+    if (!appOpened) {
       window.open(GOOGLE_TRANSLATE_WEB_URL, '_blank');
     }
-  }, 500);
+  }, 800);
 }
 
 /**
