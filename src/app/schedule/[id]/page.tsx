@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation';
 import { useActivityWithTransit } from '@/db/hooks';
 import { CategoryIcon, getCategoryPillClass } from '@/components/ui/CategoryIcon';
 import { ContextualPhrases } from '@/components/phrases/ContextualPhrases';
+import { TourGuide } from '@/components/ai';
+import { getLocationIdForActivity } from '@/lib/tour-guide';
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -271,6 +273,16 @@ function ActivityDetailContent({ params }: PageProps) {
         <div className="mt-6">
           <ContextualPhrases activityCategory={activity.category} />
         </div>
+
+        {/* Tour Guide for cultural sites */}
+        {(() => {
+          const locationId = getLocationIdForActivity(activity.name, activity.category);
+          return locationId ? (
+            <div className="mt-6">
+              <TourGuide locationId={locationId} variant="compact" />
+            </div>
+          ) : null;
+        })()}
 
         {/* Website link */}
         {activity.websiteUrl && (
