@@ -4,33 +4,21 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? '';
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? '';
 
-// Log at module load to debug
-console.log('[Supabase] Module loaded, env vars:', {
-  hasUrl: !!SUPABASE_URL,
-  hasKey: !!SUPABASE_ANON_KEY,
-  urlPrefix: SUPABASE_URL?.substring(0, 30) || 'none',
-});
-
 // Create client at module load time if env vars are available
-let supabaseClient: SupabaseClient | null = null;
-
-if (SUPABASE_URL && SUPABASE_ANON_KEY) {
-  console.log('[Supabase] Creating client at module load...');
-  supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-    auth: {
-      persistSession: true,
-      autoRefreshToken: true,
-    },
-    realtime: {
-      params: {
-        eventsPerSecond: 10,
-      },
-    },
-  });
-  console.log('[Supabase] Client created successfully');
-} else {
-  console.warn('[Supabase] Cannot create client at module load - missing env vars');
-}
+const supabaseClient: SupabaseClient | null =
+  SUPABASE_URL && SUPABASE_ANON_KEY
+    ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+        auth: {
+          persistSession: true,
+          autoRefreshToken: true,
+        },
+        realtime: {
+          params: {
+            eventsPerSecond: 10,
+          },
+        },
+      })
+    : null;
 
 /**
  * Check if Supabase is configured
@@ -44,9 +32,6 @@ export function isSupabaseConfigured(): boolean {
  * Returns null if Supabase is not configured.
  */
 export function getSupabaseClient(): SupabaseClient | null {
-  if (!supabaseClient) {
-    console.warn('[Supabase] getSupabaseClient called but client is null');
-  }
   return supabaseClient;
 }
 
