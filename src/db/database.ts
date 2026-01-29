@@ -18,6 +18,7 @@ import type {
   Phrase,
   TransportRoute,
   MealSelection,
+  ChatMessage,
 } from '@/types/database';
 
 /**
@@ -47,11 +48,13 @@ export class FTCDatabase extends Dexie {
   transportRoutes!: Table<TransportRoute, string>;
   // User selections (v3)
   mealSelections!: Table<MealSelection, string>;
+  // Chat history (v4)
+  chatMessages!: Table<ChatMessage, string>;
 
   constructor() {
     super('ftc-nihon');
 
-    this.version(3).stores({
+    this.version(4).stores({
       // Activities - main itinerary
       // Primary key: id, Indexes: dayNumber, date, sortOrder compound
       activities: 'id, dayNumber, date, [dayNumber+sortOrder]',
@@ -131,6 +134,14 @@ export class FTCDatabase extends Dexie {
       // Meal selections - user's restaurant choices per day/meal
       // Primary key: id (format: "dayNumber-meal"), Indexes: dayNumber, restaurantId
       mealSelections: 'id, dayNumber, restaurantId, [dayNumber+meal]',
+
+      // =====================================================
+      // Chat history (v4)
+      // =====================================================
+
+      // Chat messages - AI chat history
+      // Primary key: id, Index: timestamp for ordering
+      chatMessages: 'id, timestamp',
     });
   }
 
@@ -195,6 +206,28 @@ export class FTCDatabase extends Dexie {
   }
 
   /**
+   * Get chat messages ordered by timestamp (newest last)
+   * Limits to most recent 50 messages by default
+   */
+  async getChatHistory(limit: number = 50): Promise<ChatMessage[]> {
+    return this.chatMessages.orderBy('timestamp').reverse().limit(limit).toArray().then((msgs) => msgs.reverse());
+  }
+
+  /**
+   * Add a chat message
+   */
+  async addChatMessage(message: ChatMessage): Promise<void> {
+    await this.chatMessages.add(message);
+  }
+
+  /**
+   * Clear chat history
+   */
+  async clearChatHistory(): Promise<void> {
+    await this.chatMessages.clear();
+  }
+
+  /**
    * Clear all data (for testing or full resync)
    */
   async clearAllData(): Promise<void> {
@@ -219,6 +252,7 @@ export class FTCDatabase extends Dexie {
         this.phrases,
         this.transportRoutes,
         this.mealSelections,
+        this.chatMessages,
       ],
       async () => {
         await this.activities.clear();
@@ -239,6 +273,7 @@ export class FTCDatabase extends Dexie {
         await this.phrases.clear();
         await this.transportRoutes.clear();
         await this.mealSelections.clear();
+        await this.chatMessages.clear();
       }
     );
   }

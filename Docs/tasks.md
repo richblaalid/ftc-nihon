@@ -695,7 +695,7 @@
   - Model: Claude 3.5 Sonnet
   - Test: AI responds with context-aware answers
 
-- [ ] 6.1.4: Add chat history persistence
+- [x] 6.1.4: Add chat history persistence
   - Files: src/db/database.ts, src/db/types.ts, src/db/hooks.ts
   - Schema: chatHistory table with id, role, content, timestamp
   - Hook: useChatHistory() - returns chat messages

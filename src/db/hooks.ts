@@ -20,6 +20,7 @@ import type {
   MealType,
   MealAssignment,
   MealSelection,
+  ChatMessage,
 } from '@/types/database';
 import { TRIP_START_DATE } from '@/types/database';
 import { getCurrentDate } from '@/lib/utils';
@@ -848,4 +849,45 @@ export function useRestaurant(restaurantId: string | null): Restaurant | undefin
     () => (restaurantId ? db.restaurants.get(restaurantId) : undefined),
     [restaurantId, syncVersion]
   );
+}
+
+// ============================================================================
+// CHAT HISTORY HOOKS (v4)
+// ============================================================================
+
+/**
+ * Get chat history (most recent 50 messages by default)
+ */
+export function useChatHistory(limit: number = 50): ChatMessage[] | undefined {
+  return useLiveQuery(
+    () => db.getChatHistory(limit),
+    [limit]
+  );
+}
+
+/**
+ * Add a chat message to history
+ */
+export async function addChatMessage(
+  role: 'user' | 'assistant',
+  content: string
+): Promise<ChatMessage> {
+  const now = new Date().toISOString();
+  const message: ChatMessage = {
+    id: `${role}-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
+    role,
+    content,
+    timestamp: now,
+    createdAt: now,
+  };
+
+  await db.addChatMessage(message);
+  return message;
+}
+
+/**
+ * Clear all chat history
+ */
+export async function clearChatHistory(): Promise<void> {
+  await db.clearChatHistory();
 }

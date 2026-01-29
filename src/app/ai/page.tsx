@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import {
   ChatLayout,
   ChatMessage,
@@ -15,22 +15,47 @@ import {
   useActivities,
   useCurrentDayNumber,
   useAccommodationsForDay,
+  useChatHistory,
+  addChatMessage,
+  clearChatHistory,
 } from '@/db/hooks';
 import { getCityForDay } from '@/lib/trip-dates';
 import type { TripContext } from '@/lib/ai';
+import type { ChatMessage as DBChatMessage } from '@/types/database';
+
+/**
+ * Convert database chat message to component format
+ */
+function toMessageData(msg: DBChatMessage): ChatMessageData {
+  return {
+    id: msg.id,
+    role: msg.role,
+    content: msg.content,
+    timestamp: new Date(msg.timestamp),
+  };
+}
 
 /**
  * AI Assistant chat page.
  * Provides a conversational interface for trip-related questions.
  */
 export default function AIPage() {
-  const [messages, setMessages] = useState<ChatMessageData[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [streamingMessage, setStreamingMessage] = useState<ChatMessageData | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Track online status
   const isOnline = useSyncStore((state) => state.isOnline);
+
+  // Load persisted chat history from IndexedDB
+  const chatHistory = useChatHistory(50);
+
+  // Convert DB messages to component format
+  const messages: ChatMessageData[] = useMemo(
+    () => chatHistory?.map(toMessageData) ?? [],
+    [chatHistory]
+  );
 
   // Get trip context for AI
   const currentDay = useCurrentDayNumber();
@@ -53,39 +78,36 @@ export default function AIPage() {
   // Scroll to bottom when new messages arrive
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+  }, [messages, streamingMessage]);
+
+  const handleClearHistory = async () => {
+    if (window.confirm('Clear all chat history?')) {
+      await clearChatHistory();
+    }
+  };
 
   const handleSubmit = async () => {
     const trimmedInput = input.trim();
     if (!trimmedInput || isLoading) return;
 
-    // Add user message
-    const userMessage: ChatMessageData = {
-      id: `user-${Date.now()}`,
-      role: 'user',
-      content: trimmedInput,
-      timestamp: new Date(),
-    };
-
-    setMessages((prev) => [...prev, userMessage]);
+    // Save user message to database
+    const userMessage = await addChatMessage('user', trimmedInput);
     setInput('');
     setIsLoading(true);
 
     try {
       if (!isOnline) {
         // Offline fallback - show cached response
-        const offlineMessage: ChatMessageData = {
-          id: `assistant-${Date.now()}`,
-          role: 'assistant',
-          content: 'I\'m currently offline. Please try again when you have an internet connection, or ask about basic Japanese phrases and etiquette which I can answer from cached knowledge.',
-          timestamp: new Date(),
-        };
-        setMessages((prev) => [...prev, offlineMessage]);
+        await addChatMessage(
+          'assistant',
+          'I\'m currently offline. Please try again when you have an internet connection, or ask about basic Japanese phrases and etiquette which I can answer from cached knowledge.'
+        );
         return;
       }
 
-      // Convert messages to UI format for API
-      const uiMessages = [...messages, userMessage].map((m) => ({
+      // Get all messages including the new user message for API
+      const allMessages = [...messages, toMessageData(userMessage)];
+      const uiMessages = allMessages.map((m) => ({
         id: m.id,
         role: m.role as 'user' | 'assistant',
         content: m.content,
@@ -111,19 +133,16 @@ export default function AIPage() {
         throw new Error('No response body');
       }
 
-      // Create assistant message that will be updated
-      const assistantMessageId = `assistant-${Date.now()}`;
+      // Create streaming message state
+      const streamingId = `streaming-${Date.now()}`;
       let assistantContent = '';
 
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: assistantMessageId,
-          role: 'assistant',
-          content: '',
-          timestamp: new Date(),
-        },
-      ]);
+      setStreamingMessage({
+        id: streamingId,
+        role: 'assistant',
+        content: '',
+        timestamp: new Date(),
+      });
 
       const decoder = new TextDecoder();
       let done = false;
@@ -143,12 +162,8 @@ export default function AIPage() {
                 const textContent = JSON.parse(line.slice(2));
                 if (typeof textContent === 'string') {
                   assistantContent += textContent;
-                  setMessages((prev) =>
-                    prev.map((m) =>
-                      m.id === assistantMessageId
-                        ? { ...m, content: assistantContent }
-                        : m
-                    )
+                  setStreamingMessage((prev) =>
+                    prev ? { ...prev, content: assistantContent } : null
                   );
                 }
               } catch {
@@ -159,43 +174,47 @@ export default function AIPage() {
         }
       }
 
-      // If we didn't get any content, show an error
-      if (!assistantContent) {
-        setMessages((prev) =>
-          prev.map((m) =>
-            m.id === assistantMessageId
-              ? { ...m, content: 'Sorry, I couldn\'t generate a response. Please try again.' }
-              : m
-          )
-        );
+      // Save the completed message to database
+      if (assistantContent) {
+        await addChatMessage('assistant', assistantContent);
+      } else {
+        await addChatMessage('assistant', 'Sorry, I couldn\'t generate a response. Please try again.');
       }
+
+      // Clear streaming state
+      setStreamingMessage(null);
     } catch (error) {
       console.error('[AI] Error:', error);
-      const errorMessage: ChatMessageData = {
-        id: `error-${Date.now()}`,
-        role: 'assistant',
-        content: 'Sorry, I encountered an error. Please try again.',
-        timestamp: new Date(),
-      };
-      setMessages((prev) => [...prev, errorMessage]);
+      await addChatMessage('assistant', 'Sorry, I encountered an error. Please try again.');
+      setStreamingMessage(null);
     } finally {
       setIsLoading(false);
     }
   };
 
+  // Combine persisted messages with streaming message
+  const displayMessages = streamingMessage
+    ? [...messages, streamingMessage]
+    : messages;
+
   return (
-    <ChatLayout isOnline={isOnline}>
+    <ChatLayout
+      isOnline={isOnline}
+      onClearHistory={messages.length > 0 ? handleClearHistory : undefined}
+    >
       {/* Messages area */}
       <div className="flex-1 overflow-y-auto px-4 py-4">
-        {messages.length === 0 ? (
+        {displayMessages.length === 0 ? (
           <EmptyState onSuggestionClick={setInput} />
         ) : (
           <div className="space-y-4 max-w-2xl mx-auto">
-            {messages.map((message) => (
+            {displayMessages.map((message) => (
               <ChatMessage key={message.id} message={message} />
             ))}
 
-            {isLoading && messages[messages.length - 1]?.content === '' && <ChatTypingIndicator />}
+            {isLoading && (!streamingMessage || streamingMessage.content === '') && (
+              <ChatTypingIndicator />
+            )}
 
             <div ref={messagesEndRef} />
           </div>

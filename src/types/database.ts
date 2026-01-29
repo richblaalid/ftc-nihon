@@ -373,6 +373,17 @@ export interface TransportRoute {
   updatedAt: string;
 }
 
+/**
+ * Chat message stored in local database for AI chat history
+ */
+export interface ChatMessage {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: string; // ISO date string
+  createdAt: string;
+}
+
 // Activity with transit info joined (flattened for convenience)
 export interface ActivityWithTransit extends Activity {
   transit?: TransitSegment | null;
