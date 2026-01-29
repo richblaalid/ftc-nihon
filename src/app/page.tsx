@@ -85,43 +85,6 @@ export default function Home() {
             </span>
           </div>
 
-          {/* Sync status indicator - tappable to refresh */}
-          <button
-            onClick={handleRefresh}
-            disabled={isSyncing || !isOnline}
-            className="flex items-center gap-2 text-xs text-foreground-tertiary hover:text-foreground-secondary active:scale-95 transition-all disabled:opacity-50"
-            data-testid="sync-status"
-            aria-live="polite"
-            title="Tap to refresh data"
-          >
-            {hasMounted && (
-              <>
-                {isSyncing ? (
-                  <span className="flex items-center gap-1">
-                    <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" aria-hidden="true" />
-                    Syncing...
-                  </span>
-                ) : !isOnline ? (
-                  <span className="flex items-center gap-1">
-                    <span className="h-1.5 w-1.5 rounded-full bg-warning" aria-hidden="true" />
-                    Offline
-                  </span>
-                ) : lastSyncedAt ? (
-                  <span className="flex items-center gap-1">
-                    <span className="h-1.5 w-1.5 rounded-full bg-success" aria-hidden="true" />
-                    <time dateTime={lastSyncedAt}>
-                      {formatLastSyncTime(lastSyncedAt)}
-                    </time>
-                    <span className="text-foreground-tertiary">↻</span>
-                  </span>
-                ) : (
-                  <span className="flex items-center gap-1">
-                    Tap to sync ↻
-                  </span>
-                )}
-              </>
-            )}
-          </button>
         </div>
       }
     >
@@ -167,6 +130,34 @@ export default function Home() {
         <WeatherWidgetCompact />
         <TimeWidgetCompact />
       </div>
+
+      {/* Sync refresh button - at bottom */}
+      {hasMounted && (
+        <button
+          onClick={handleRefresh}
+          disabled={isSyncing || !isOnline}
+          className="w-full py-3 text-sm text-foreground-tertiary hover:text-foreground-secondary active:bg-background-secondary rounded-lg transition-all disabled:opacity-50"
+          data-testid="sync-status"
+        >
+          {isSyncing ? (
+            <span className="flex items-center justify-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-primary animate-ping" aria-hidden="true" />
+              Refreshing data...
+            </span>
+          ) : !isOnline ? (
+            <span className="flex items-center justify-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-warning" aria-hidden="true" />
+              Offline - can&apos;t refresh
+            </span>
+          ) : (
+            <span className="flex items-center justify-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-success" aria-hidden="true" />
+              {lastSyncedAt ? `Synced ${formatLastSyncTime(lastSyncedAt)}` : 'Not synced'}
+              <span>· Tap to refresh</span>
+            </span>
+          )}
+        </button>
+      )}
 
       {/* Emergency button - floating action */}
       {tripInfo && <EmergencyButton onClick={emergencySheet.open} />}
