@@ -78,6 +78,7 @@ export function useAccommodations(): Accommodation[] | undefined {
  * Get current accommodation based on date
  */
 export function useCurrentAccommodation(date?: string): Accommodation | undefined {
+  const syncVersion = useSyncVersion();
   const targetDate = date ?? getCurrentDate().toISOString().split('T')[0] ?? '';
 
   return useLiveQuery(
@@ -85,7 +86,7 @@ export function useCurrentAccommodation(date?: string): Accommodation | undefine
       db.accommodations
         .filter((acc) => targetDate !== '' && acc.startDate <= targetDate && acc.endDate >= targetDate)
         .first(),
-    [targetDate]
+    [targetDate, syncVersion]
   );
 }
 
@@ -325,11 +326,14 @@ export function useChecklistItems(preTripOnly?: boolean): ChecklistItem[] | unde
  * Get incomplete checklist items
  */
 export function useIncompleteChecklist(): ChecklistItem[] | undefined {
-  return useLiveQuery(() =>
-    db.checklistItems
-      .where('isCompleted')
-      .equals(0)
-      .sortBy('dueDate')
+  const syncVersion = useSyncVersion();
+  return useLiveQuery(
+    () =>
+      db.checklistItems
+        .where('isCompleted')
+        .equals(0)
+        .sortBy('dueDate'),
+    [syncVersion]
   );
 }
 
@@ -442,37 +446,42 @@ export function useActivityWithTransit(activityId: string | null): ActivityWithT
  * Returns single record or undefined
  */
 export function useTripInfo(): TripInfo | undefined {
-  return useLiveQuery(() => db.tripInfo.toCollection().first());
+  const syncVersion = useSyncVersion();
+  return useLiveQuery(() => db.tripInfo.toCollection().first(), [syncVersion]);
 }
 
 /**
  * Get all flights
  */
 export function useFlights(): Flight[] | undefined {
-  return useLiveQuery(() => db.flights.toArray());
+  const syncVersion = useSyncVersion();
+  return useLiveQuery(() => db.flights.toArray(), [syncVersion]);
 }
 
 /**
  * Get a specific flight by type (outbound or return)
  */
 export function useFlight(type: FlightType): Flight | undefined {
-  return useLiveQuery(() => db.flights.where('type').equals(type).first(), [type]);
+  const syncVersion = useSyncVersion();
+  return useLiveQuery(() => db.flights.where('type').equals(type).first(), [type, syncVersion]);
 }
 
 /**
  * Get all tickets (purchased and unpurchased)
  */
 export function useTickets(): Ticket[] | undefined {
-  return useLiveQuery(() => db.tickets.orderBy('sortOrder').toArray());
+  const syncVersion = useSyncVersion();
+  return useLiveQuery(() => db.tickets.orderBy('sortOrder').toArray(), [syncVersion]);
 }
 
 /**
  * Get a specific ticket by ID
  */
 export function useTicket(ticketId: string | null): Ticket | undefined {
+  const syncVersion = useSyncVersion();
   return useLiveQuery(
     () => (ticketId ? db.tickets.get(ticketId) : undefined),
-    [ticketId]
+    [ticketId, syncVersion]
   );
 }
 
@@ -480,8 +489,10 @@ export function useTicket(ticketId: string | null): Ticket | undefined {
  * Get tickets that need to be purchased (status = 'not_purchased')
  */
 export function useUnpurchasedTickets(): Ticket[] | undefined {
-  return useLiveQuery(() =>
-    db.tickets.where('status').equals('not_purchased').sortBy('sortOrder')
+  const syncVersion = useSyncVersion();
+  return useLiveQuery(
+    () => db.tickets.where('status').equals('not_purchased').sortBy('sortOrder'),
+    [syncVersion]
   );
 }
 
@@ -508,21 +519,23 @@ export function useAllDayInfo(): DayInfo[] | undefined {
  * Get attractions, optionally filtered by city
  */
 export function useAttractions(city?: string): Attraction[] | undefined {
+  const syncVersion = useSyncVersion();
   return useLiveQuery(async () => {
     if (city) {
       return db.attractions.where('city').equals(city).toArray();
     }
     return db.attractions.toArray();
-  }, [city]);
+  }, [city, syncVersion]);
 }
 
 /**
  * Get a specific attraction by ID
  */
 export function useAttraction(attractionId: string | null): Attraction | undefined {
+  const syncVersion = useSyncVersion();
   return useLiveQuery(
     () => (attractionId ? db.attractions.get(attractionId) : undefined),
-    [attractionId]
+    [attractionId, syncVersion]
   );
 }
 
@@ -530,16 +543,18 @@ export function useAttraction(attractionId: string | null): Attraction | undefin
  * Get all shopping locations
  */
 export function useShoppingLocations(): ShoppingLocation[] | undefined {
-  return useLiveQuery(() => db.shoppingLocations.toArray());
+  const syncVersion = useSyncVersion();
+  return useLiveQuery(() => db.shoppingLocations.toArray(), [syncVersion]);
 }
 
 /**
  * Get shopping locations by city
  */
 export function useShoppingLocationsByCity(city: string): ShoppingLocation[] | undefined {
+  const syncVersion = useSyncVersion();
   return useLiveQuery(
     () => db.shoppingLocations.where('city').equals(city).toArray(),
-    [city]
+    [city, syncVersion]
   );
 }
 
@@ -547,16 +562,18 @@ export function useShoppingLocationsByCity(city: string): ShoppingLocation[] | u
  * Get all Japanese phrases
  */
 export function usePhrases(): Phrase[] | undefined {
-  return useLiveQuery(() => db.phrases.orderBy('sortOrder').toArray());
+  const syncVersion = useSyncVersion();
+  return useLiveQuery(() => db.phrases.orderBy('sortOrder').toArray(), [syncVersion]);
 }
 
 /**
  * Get phrases by category
  */
 export function usePhrasesByCategory(category: string): Phrase[] | undefined {
+  const syncVersion = useSyncVersion();
   return useLiveQuery(
     () => db.phrases.where('category').equals(category).sortBy('sortOrder'),
-    [category]
+    [category, syncVersion]
   );
 }
 
@@ -564,16 +581,18 @@ export function usePhrasesByCategory(category: string): Phrase[] | undefined {
  * Get all transport routes
  */
 export function useTransportRoutes(): TransportRoute[] | undefined {
-  return useLiveQuery(() => db.transportRoutes.toArray());
+  const syncVersion = useSyncVersion();
+  return useLiveQuery(() => db.transportRoutes.toArray(), [syncVersion]);
 }
 
 /**
  * Get restaurants by city
  */
 export function useRestaurantsByCity(city: string): Restaurant[] | undefined {
+  const syncVersion = useSyncVersion();
   return useLiveQuery(
     () => db.restaurants.where('city').equals(city).toArray(),
-    [city]
+    [city, syncVersion]
   );
 }
 
@@ -596,6 +615,7 @@ export function usePreTripChecklist(): ChecklistItem[] | undefined {
  * Get critical checklist items (due soon or overdue)
  */
 export function useCriticalChecklist(daysAhead: number = 7): ChecklistItem[] | undefined {
+  const syncVersion = useSyncVersion();
   return useLiveQuery(async () => {
     const now = getCurrentDate();
     const cutoff = new Date(now);
@@ -619,7 +639,7 @@ export function useCriticalChecklist(daysAhead: number = 7): ChecklistItem[] | u
       }
       return (a.sortOrder ?? 0) - (b.sortOrder ?? 0);
     });
-  }, [daysAhead]);
+  }, [daysAhead, syncVersion]);
 }
 
 // ============================================================================
@@ -643,6 +663,7 @@ export function useRestaurantOptionsForMeal(
   dayNumber: number,
   meal: MealType
 ): RestaurantOptions | undefined {
+  const syncVersion = useSyncVersion();
   return useLiveQuery(async () => {
     const allRestaurants = await db.restaurants.toArray();
 
@@ -676,7 +697,7 @@ export function useRestaurantOptionsForMeal(
     }
 
     return { primary, alternatives, isIncluded };
-  }, [dayNumber, meal]);
+  }, [dayNumber, meal, syncVersion]);
 }
 
 /**
@@ -685,6 +706,7 @@ export function useRestaurantOptionsForMeal(
 export function useRestaurantOptionsForDay(
   dayNumber: number
 ): Map<MealType, RestaurantOptions> | undefined {
+  const syncVersion = useSyncVersion();
   return useLiveQuery(async () => {
     const allRestaurants = await db.restaurants.toArray();
 
@@ -723,7 +745,7 @@ export function useRestaurantOptionsForDay(
     }
 
     return optionsByMeal;
-  }, [dayNumber]);
+  }, [dayNumber, syncVersion]);
 }
 
 /**
@@ -733,11 +755,12 @@ export function useMealSelection(
   dayNumber: number,
   meal: MealType
 ): MealSelection | null | undefined {
+  const syncVersion = useSyncVersion();
   return useLiveQuery(async () => {
     const id = `${dayNumber}-${meal}`;
     const selection = await db.mealSelections.get(id);
     return selection ?? null;
-  }, [dayNumber, meal]);
+  }, [dayNumber, meal, syncVersion]);
 }
 
 /**
@@ -746,9 +769,10 @@ export function useMealSelection(
 export function useMealSelectionsForDay(
   dayNumber: number
 ): MealSelection[] | undefined {
+  const syncVersion = useSyncVersion();
   return useLiveQuery(
     () => db.mealSelections.where('dayNumber').equals(dayNumber).toArray(),
-    [dayNumber]
+    [dayNumber, syncVersion]
   );
 }
 
@@ -760,6 +784,7 @@ export function useSelectedRestaurant(
   dayNumber: number,
   meal: MealType
 ): Restaurant | null | undefined {
+  const syncVersion = useSyncVersion();
   return useLiveQuery(async () => {
     const id = `${dayNumber}-${meal}`;
     const selection = await db.mealSelections.get(id);
@@ -768,7 +793,7 @@ export function useSelectedRestaurant(
 
     const restaurant = await db.restaurants.get(selection.restaurantId);
     return restaurant ?? null;
-  }, [dayNumber, meal]);
+  }, [dayNumber, meal, syncVersion]);
 }
 
 /**
@@ -818,8 +843,9 @@ export async function clearMealSelection(
  * Get a restaurant by ID
  */
 export function useRestaurant(restaurantId: string | null): Restaurant | undefined {
+  const syncVersion = useSyncVersion();
   return useLiveQuery(
     () => (restaurantId ? db.restaurants.get(restaurantId) : undefined),
-    [restaurantId]
+    [restaurantId, syncVersion]
   );
 }

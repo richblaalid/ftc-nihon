@@ -61,6 +61,8 @@ export default function Home() {
     try {
       const [result] = await Promise.all([forceResync(), minDisplayTime]);
       if (result.success) {
+        // Small delay to ensure IndexedDB transaction fully commits
+        await new Promise((resolve) => setTimeout(resolve, 100));
         setLastSyncedAt(new Date().toISOString());
         incrementSyncVersion(); // Trigger UI re-renders with fresh data
         setSyncFeedback('success');
