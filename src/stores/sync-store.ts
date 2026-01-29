@@ -2,29 +2,14 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
 interface SyncState {
-  /** Timestamp of last successful sync */
-  lastSyncedAt: string | null;
-  /** Whether a sync operation is currently in progress */
-  isSyncing: boolean;
   /** Whether the device is currently online */
   isOnline: boolean;
-  /** Number of pending local changes to sync */
-  pendingChanges: number;
-  /** Last sync error message */
-  lastError: string | null;
-  /** Version counter that increments on each successful sync - used to trigger re-renders */
+  /** Version counter - used to trigger re-renders (legacy, kept for compatibility) */
   syncVersion: number;
 
   // Actions
-  setLastSyncedAt: (timestamp: string) => void;
-  setIsSyncing: (syncing: boolean) => void;
   setIsOnline: (online: boolean) => void;
-  incrementPendingChanges: () => void;
-  decrementPendingChanges: () => void;
-  clearPendingChanges: () => void;
-  setLastError: (error: string | null) => void;
-  resetSyncState: () => void;
-  /** Increment sync version to trigger UI re-renders after sync */
+  /** Increment sync version to trigger UI re-renders */
   incrementSyncVersion: () => void;
 }
 
@@ -32,38 +17,11 @@ export const useSyncStore = create<SyncState>()(
   persist(
     (set) => ({
       // Initial state
-      lastSyncedAt: null,
-      isSyncing: false,
       isOnline: typeof navigator !== 'undefined' ? navigator.onLine : true,
-      pendingChanges: 0,
-      lastError: null,
       syncVersion: 0,
 
       // Actions
-      setLastSyncedAt: (timestamp) => set({ lastSyncedAt: timestamp, lastError: null }),
-
-      setIsSyncing: (syncing) => set({ isSyncing: syncing }),
-
       setIsOnline: (online) => set({ isOnline: online }),
-
-      incrementPendingChanges: () =>
-        set((state) => ({ pendingChanges: state.pendingChanges + 1 })),
-
-      decrementPendingChanges: () =>
-        set((state) => ({ pendingChanges: Math.max(0, state.pendingChanges - 1) })),
-
-      clearPendingChanges: () => set({ pendingChanges: 0 }),
-
-      setLastError: (error) => set({ lastError: error }),
-
-      resetSyncState: () =>
-        set({
-          lastSyncedAt: null,
-          isSyncing: false,
-          pendingChanges: 0,
-          lastError: null,
-          syncVersion: 0,
-        }),
 
       incrementSyncVersion: () =>
         set((state) => ({ syncVersion: state.syncVersion + 1 })),
@@ -71,9 +29,9 @@ export const useSyncStore = create<SyncState>()(
     {
       name: 'ftc-sync-state',
       storage: createJSONStorage(() => localStorage),
-      // Only persist certain fields
+      // Only persist syncVersion
       partialize: (state) => ({
-        lastSyncedAt: state.lastSyncedAt,
+        syncVersion: state.syncVersion,
       }),
     }
   )
@@ -88,12 +46,12 @@ export function initOnlineListeners(): () => void {
 
   const handleOnline = () => {
     useSyncStore.getState().setIsOnline(true);
-    console.log('[Sync] Device is online');
+    console.log('[App] Device is online');
   };
 
   const handleOffline = () => {
     useSyncStore.getState().setIsOnline(false);
-    console.log('[Sync] Device is offline');
+    console.log('[App] Device is offline');
   };
 
   window.addEventListener('online', handleOnline);
@@ -110,6 +68,7 @@ export function initOnlineListeners(): () => void {
 
 /**
  * Helper to format last sync time for display
+ * @deprecated Sync functionality removed - kept for backwards compatibility
  */
 export function formatLastSyncTime(timestamp: string | null): string {
   if (!timestamp) return 'Never';

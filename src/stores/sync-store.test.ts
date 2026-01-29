@@ -26,11 +26,8 @@ describe('sync-store', () => {
   beforeEach(() => {
     // Reset store state before each test
     useSyncStore.setState({
-      lastSyncedAt: null,
-      isSyncing: false,
       isOnline: true,
-      pendingChanges: 0,
-      lastError: null,
+      syncVersion: 0,
     });
     localStorageMock.clear();
   });
@@ -39,38 +36,8 @@ describe('sync-store', () => {
     it('has correct initial values', () => {
       const state = useSyncStore.getState();
 
-      expect(state.lastSyncedAt).toBeNull();
-      expect(state.isSyncing).toBe(false);
-      expect(state.pendingChanges).toBe(0);
-      expect(state.lastError).toBeNull();
-    });
-  });
-
-  describe('setLastSyncedAt', () => {
-    it('updates lastSyncedAt and clears error', () => {
-      const { setLastSyncedAt, setLastError } = useSyncStore.getState();
-
-      setLastError('Some error');
-      expect(useSyncStore.getState().lastError).toBe('Some error');
-
-      const timestamp = '2026-03-10T12:00:00Z';
-      setLastSyncedAt(timestamp);
-
-      const state = useSyncStore.getState();
-      expect(state.lastSyncedAt).toBe(timestamp);
-      expect(state.lastError).toBeNull();
-    });
-  });
-
-  describe('setIsSyncing', () => {
-    it('toggles syncing state', () => {
-      const { setIsSyncing } = useSyncStore.getState();
-
-      setIsSyncing(true);
-      expect(useSyncStore.getState().isSyncing).toBe(true);
-
-      setIsSyncing(false);
-      expect(useSyncStore.getState().isSyncing).toBe(false);
+      expect(state.isOnline).toBe(true);
+      expect(state.syncVersion).toBe(0);
     });
   });
 
@@ -86,80 +53,17 @@ describe('sync-store', () => {
     });
   });
 
-  describe('pendingChanges', () => {
-    it('increments pending changes', () => {
-      const { incrementPendingChanges } = useSyncStore.getState();
+  describe('incrementSyncVersion', () => {
+    it('increments sync version', () => {
+      const { incrementSyncVersion } = useSyncStore.getState();
 
-      incrementPendingChanges();
-      expect(useSyncStore.getState().pendingChanges).toBe(1);
+      expect(useSyncStore.getState().syncVersion).toBe(0);
 
-      incrementPendingChanges();
-      expect(useSyncStore.getState().pendingChanges).toBe(2);
-    });
+      incrementSyncVersion();
+      expect(useSyncStore.getState().syncVersion).toBe(1);
 
-    it('decrements pending changes', () => {
-      useSyncStore.setState({ pendingChanges: 5 });
-      const { decrementPendingChanges } = useSyncStore.getState();
-
-      decrementPendingChanges();
-      expect(useSyncStore.getState().pendingChanges).toBe(4);
-    });
-
-    it('does not go below zero', () => {
-      useSyncStore.setState({ pendingChanges: 1 });
-      const { decrementPendingChanges } = useSyncStore.getState();
-
-      decrementPendingChanges();
-      expect(useSyncStore.getState().pendingChanges).toBe(0);
-
-      decrementPendingChanges();
-      expect(useSyncStore.getState().pendingChanges).toBe(0);
-    });
-
-    it('clears all pending changes', () => {
-      useSyncStore.setState({ pendingChanges: 10 });
-      const { clearPendingChanges } = useSyncStore.getState();
-
-      clearPendingChanges();
-      expect(useSyncStore.getState().pendingChanges).toBe(0);
-    });
-  });
-
-  describe('setLastError', () => {
-    it('sets error message', () => {
-      const { setLastError } = useSyncStore.getState();
-
-      setLastError('Connection failed');
-      expect(useSyncStore.getState().lastError).toBe('Connection failed');
-    });
-
-    it('clears error message', () => {
-      useSyncStore.setState({ lastError: 'Some error' });
-      const { setLastError } = useSyncStore.getState();
-
-      setLastError(null);
-      expect(useSyncStore.getState().lastError).toBeNull();
-    });
-  });
-
-  describe('resetSyncState', () => {
-    it('resets all sync-related state', () => {
-      // Set various state
-      useSyncStore.setState({
-        lastSyncedAt: '2026-03-10T12:00:00Z',
-        isSyncing: true,
-        pendingChanges: 5,
-        lastError: 'Some error',
-      });
-
-      const { resetSyncState } = useSyncStore.getState();
-      resetSyncState();
-
-      const state = useSyncStore.getState();
-      expect(state.lastSyncedAt).toBeNull();
-      expect(state.isSyncing).toBe(false);
-      expect(state.pendingChanges).toBe(0);
-      expect(state.lastError).toBeNull();
+      incrementSyncVersion();
+      expect(useSyncStore.getState().syncVersion).toBe(2);
     });
   });
 });

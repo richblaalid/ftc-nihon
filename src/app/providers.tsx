@@ -1,24 +1,20 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { initializeSync, subscribeToChanges } from '@/lib/sync';
-import { useSyncStore, initOnlineListeners } from '@/stores/sync-store';
 import { seedDatabase, reseedDatabase } from '@/db/seed';
 import { warmAllCaches } from '@/lib/cache-warmer';
+import { initOnlineListeners } from '@/stores/sync-store';
 
 interface ProvidersProps {
   children: React.ReactNode;
 }
 
 /**
- * App-level providers for sync, state management, etc.
+ * App-level providers for database seeding and cache warming.
+ * Note: Supabase sync has been removed - app uses seeded IndexedDB data.
  */
 export function Providers({ children }: ProvidersProps) {
   const initialized = useRef(false);
-  const setIsSyncing = useSyncStore((state) => state.setIsSyncing);
-  const setLastSyncedAt = useSyncStore((state) => state.setLastSyncedAt);
-  const setLastError = useSyncStore((state) => state.setLastError);
-  const incrementSyncVersion = useSyncStore((state) => state.incrementSyncVersion);
 
   useEffect(() => {
     // Prevent double initialization in React Strict Mode
@@ -35,7 +31,7 @@ export function Providers({ children }: ProvidersProps) {
     }
 
     // Seed database with trip data if empty (development/first load)
-    const seedIfNeeded = async () => {
+    const initialize = async () => {
       try {
         const result = await seedDatabase();
         if (result.success) {
@@ -46,38 +42,8 @@ export function Providers({ children }: ProvidersProps) {
       } catch (error) {
         console.error('[Providers] Seed error:', error);
       }
-    };
 
-    // Initialize sync
-    const runSync = async () => {
-      // First seed the database if needed
-      await seedIfNeeded();
-
-      setIsSyncing(true);
-      try {
-        const result = await initializeSync();
-
-        if (result.success) {
-          setLastSyncedAt(new Date().toISOString());
-          incrementSyncVersion(); // Trigger UI re-renders
-          if (result.didSync) {
-            console.log('[Providers] Initial sync complete');
-          } else {
-            console.log('[Providers] Using cached data, real-time active');
-          }
-        } else if (result.error) {
-          setLastError(result.error);
-          console.warn('[Providers] Sync failed:', result.error);
-        }
-      } catch (error) {
-        const message = error instanceof Error ? error.message : 'Unknown error';
-        setLastError(message);
-        console.error('[Providers] Sync error:', error);
-      } finally {
-        setIsSyncing(false);
-      }
-
-      // Warm caches in background after sync (with delay to not block UI)
+      // Warm caches in background after seeding (with delay to not block UI)
       setTimeout(() => {
         warmAllCaches().catch((err) => {
           console.warn('[Providers] Cache warming failed:', err);
@@ -85,25 +51,11 @@ export function Providers({ children }: ProvidersProps) {
       }, 2000);
     };
 
-    runSync();
+    initialize();
 
-    // Cleanup function
     return () => {
       cleanupOnlineListeners();
     };
-  }, [setIsSyncing, setLastSyncedAt, setLastError, incrementSyncVersion]);
-
-  // Re-sync when coming back online
-  useEffect(() => {
-    const unsubscribe = useSyncStore.subscribe((state, prevState) => {
-      // When going from offline to online, trigger resync
-      if (!prevState.isOnline && state.isOnline) {
-        console.log('[Providers] Back online, re-establishing sync');
-        subscribeToChanges();
-      }
-    });
-
-    return unsubscribe;
   }, []);
 
   return <>{children}</>;

@@ -1,6 +1,5 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import {
   DashboardLayout,
@@ -13,8 +12,6 @@ import {
   TripCountdown,
   TripPrepCard,
 } from '@/components/dashboard';
-import { useSyncStore, formatLastSyncTime } from '@/stores/sync-store';
-import { forceResync } from '@/lib/sync';
 import {
   useTripInfo,
   useFlight,
@@ -26,9 +23,6 @@ import { TicketCardCompact } from '@/components/ui/TicketCard';
 import { EmergencySheet, EmergencyButton, useEmergencySheet } from '@/components/ui/EmergencySheet';
 
 export default function Home() {
-  const [hasMounted, setHasMounted] = useState(false);
-  const { isSyncing, isOnline, lastSyncedAt, setIsSyncing, setLastSyncedAt, incrementSyncVersion } = useSyncStore();
-
   // Enriched data hooks
   const tripInfo = useTripInfo();
   const currentDayNumber = useCurrentDayNumber();
@@ -38,50 +32,6 @@ export default function Home() {
 
   // Emergency sheet state
   const emergencySheet = useEmergencySheet();
-
-  // Prevent hydration mismatch by only showing sync status after mount
-  // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional for hydration fix
-  useEffect(() => setHasMounted(true), []);
-
-  // Sync feedback state
-  const [syncFeedback, setSyncFeedback] = useState<'idle' | 'syncing' | 'success' | 'error'>('idle');
-  const [syncError, setSyncError] = useState<string | null>(null);
-
-  // Handle manual refresh with visible feedback
-  const handleRefresh = async () => {
-    if (syncFeedback === 'syncing' || !isOnline) return;
-
-    setSyncFeedback('syncing');
-    setSyncError(null);
-    setIsSyncing(true);
-
-    // Minimum display time so user sees feedback
-    const minDisplayTime = new Promise((resolve) => setTimeout(resolve, 800));
-
-    try {
-      const [result] = await Promise.all([forceResync(), minDisplayTime]);
-      if (result.success) {
-        // Small delay to ensure IndexedDB transaction fully commits
-        await new Promise((resolve) => setTimeout(resolve, 100));
-        setLastSyncedAt(new Date().toISOString());
-        incrementSyncVersion(); // Trigger UI re-renders with fresh data
-        setSyncFeedback('success');
-      } else {
-        setSyncFeedback('error');
-        setSyncError(result.error || 'Unknown error');
-        console.error('[Sync] Failed:', result.error);
-      }
-    } catch (err) {
-      setSyncFeedback('error');
-      const errorMsg = err instanceof Error ? err.message : 'Unknown error';
-      setSyncError(errorMsg);
-      console.error('[Sync] Exception:', err);
-    } finally {
-      setIsSyncing(false);
-      // Reset feedback after showing result
-      setTimeout(() => setSyncFeedback('idle'), 3000);
-    }
-  };
 
   // Determine which flight to show based on current day
   // Day 1 (or before trip): show outbound, Day 15-16: show return
@@ -196,49 +146,6 @@ export default function Home() {
         <WeatherWidgetCompact />
         <TimeWidgetCompact />
       </div>
-
-      {/* Sync refresh button - at bottom */}
-      {hasMounted && (
-        <button
-          onClick={handleRefresh}
-          disabled={syncFeedback === 'syncing' || !isOnline}
-          className="w-full py-3 text-sm text-foreground-tertiary hover:text-foreground-secondary active:bg-background-secondary rounded-lg transition-all disabled:opacity-50"
-          data-testid="sync-status"
-        >
-          {syncFeedback === 'syncing' ? (
-            <span className="flex items-center justify-center gap-2 text-primary">
-              <span className="h-2 w-2 rounded-full bg-primary animate-ping" aria-hidden="true" />
-              Refreshing data...
-            </span>
-          ) : syncFeedback === 'success' ? (
-            <span className="flex items-center justify-center gap-2 text-success">
-              <span className="h-2 w-2 rounded-full bg-success" aria-hidden="true" />
-              Sync complete!
-            </span>
-          ) : syncFeedback === 'error' ? (
-            <span className="flex flex-col items-center gap-1 text-error">
-              <span className="flex items-center gap-2">
-                <span className="h-2 w-2 rounded-full bg-error" aria-hidden="true" />
-                Sync failed - tap to retry
-              </span>
-              {syncError && (
-                <span className="text-xs text-foreground-tertiary">{syncError}</span>
-              )}
-            </span>
-          ) : !isOnline ? (
-            <span className="flex items-center justify-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-warning" aria-hidden="true" />
-              Offline - can&apos;t refresh
-            </span>
-          ) : (
-            <span className="flex items-center justify-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-success" aria-hidden="true" />
-              {lastSyncedAt ? `Synced ${formatLastSyncTime(lastSyncedAt)}` : 'Not synced'}
-              <span>· Tap to refresh</span>
-            </span>
-          )}
-        </button>
-      )}
 
       {/* Emergency button - floating action */}
       {tripInfo && <EmergencyButton onClick={emergencySheet.open} />}
