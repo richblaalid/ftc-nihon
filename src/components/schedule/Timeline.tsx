@@ -11,6 +11,7 @@ import {
   useSelectedRestaurant,
 } from '@/db/hooks';
 import { getMealSlotsForDay, type MealSlot } from '@/lib/meal-slots';
+import { getCurrentDate } from '@/lib/utils';
 
 interface TimelineProps {
   activities: ActivityWithTransit[];
@@ -18,17 +19,29 @@ interface TimelineProps {
 }
 
 /**
- * Get activity state based on current time
+ * Get activity state based on current time and date
  */
 function getActivityState(
   activity: ActivityWithTransit,
-  currentActivityId: string | null | undefined
+  currentActivityId: string | null | undefined,
+  isViewingToday: boolean,
+  todayStr: string
 ): 'current' | 'completed' | 'upcoming' {
   if (activity.id === currentActivityId) {
     return 'current';
   }
 
-  const now = new Date();
+  // If not viewing today, determine state by comparing activity date to today
+  if (!isViewingToday) {
+    // Past day = all completed, Future day = all upcoming
+    if (activity.date < todayStr) {
+      return 'completed';
+    }
+    return 'upcoming';
+  }
+
+  // Viewing today - compare times
+  const now = getCurrentDate();
   const currentTime = now.toTimeString().slice(0, 5);
 
   // Calculate activity end time
@@ -147,7 +160,7 @@ export function Timeline({ activities, currentActivityId }: TimelineProps) {
   const currentRef = useRef<HTMLLIElement>(null);
   const nowRef = useRef<HTMLDivElement>(null);
   const [currentTime, setCurrentTime] = useState<string>(() => {
-    const now = new Date();
+    const now = getCurrentDate();
     return now.toTimeString().slice(0, 5);
   });
 
@@ -163,7 +176,7 @@ export function Timeline({ activities, currentActivityId }: TimelineProps) {
   // Update current time every minute
   useEffect(() => {
     const updateTime = () => {
-      const now = new Date();
+      const now = getCurrentDate();
       setCurrentTime(now.toTimeString().slice(0, 5));
     };
 
@@ -205,22 +218,30 @@ export function Timeline({ activities, currentActivityId }: TimelineProps) {
     grouped[period].push(activity);
   }
 
+  // Determine if we're viewing today's schedule (using test-aware date)
+  const todayStr = getCurrentDate().toISOString().split('T')[0] ?? '';
+  const viewingDate = activities[0]?.date ?? '';
+  const isViewingToday = viewingDate === todayStr;
+
+  // Determine if viewing a past day (for dimming meals)
+  const isViewingPastDay = viewingDate < todayStr;
+
   // Create a combined list of activities and meal slots, sorted by time
   type TimelineItem =
     | { type: 'activity'; activity: ActivityWithTransit; state: 'current' | 'completed' | 'upcoming' }
-    | { type: 'meal'; slot: MealSlot };
+    | { type: 'meal'; slot: MealSlot; isPast: boolean };
 
   const timelineItems: TimelineItem[] = [];
 
   // Add all activities
   for (const activity of activities) {
-    const state = getActivityState(activity, currentActivityId);
+    const state = getActivityState(activity, currentActivityId, isViewingToday, todayStr);
     timelineItems.push({ type: 'activity', activity, state });
   }
 
   // Add all meal slots
   for (const slot of mealSlots) {
-    timelineItems.push({ type: 'meal', slot });
+    timelineItems.push({ type: 'meal', slot, isPast: isViewingPastDay });
   }
 
   // Sort by time
@@ -273,9 +294,9 @@ export function Timeline({ activities, currentActivityId }: TimelineProps) {
                     </li>
                   );
                 } else {
-                  const { slot } = item;
+                  const { slot, isPast } = item;
                   return (
-                    <li key={`meal-${slot.meal}`}>
+                    <li key={`meal-${slot.meal}`} className={isPast ? 'opacity-60' : ''}>
                       {slot.showOptions ? (
                         <MealSlotCard dayNumber={dayNumber} meal={slot.meal} />
                       ) : (
