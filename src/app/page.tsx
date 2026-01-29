@@ -11,6 +11,7 @@ import {
   QuickActions,
   TripCountdown,
   TripPrepCard,
+  CityOverviewCard,
 } from '@/components/dashboard';
 import {
   useTripInfo,
@@ -114,6 +115,9 @@ export default function Home() {
               <FlightCard flight={relevantFlight} />
             </section>
           )}
+
+          {/* City overview - learn about current city */}
+          <CityOverviewCard />
 
           {/* NOW widget - current activity */}
           <NowWidget />
