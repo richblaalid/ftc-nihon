@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import { seedDatabase, reseedDatabase } from '@/db/seed';
 import { warmAllCaches } from '@/lib/cache-warmer';
 import { initOnlineListeners } from '@/stores/sync-store';
+import { seedAICache } from '@/db/seed-ai-cache';
 
 interface ProvidersProps {
   children: React.ReactNode;
@@ -41,6 +42,13 @@ export function Providers({ children }: ProvidersProps) {
         }
       } catch (error) {
         console.error('[Providers] Seed error:', error);
+      }
+
+      // Seed AI cache for offline responses
+      try {
+        await seedAICache();
+      } catch (error) {
+        console.warn('[Providers] AI cache seed failed:', error);
       }
 
       // Warm caches in background after seeding (with delay to not block UI)

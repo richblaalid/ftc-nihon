@@ -22,6 +22,7 @@ import {
 import { getCityForDay } from '@/lib/trip-dates';
 import type { TripContext } from '@/lib/ai';
 import type { ChatMessage as DBChatMessage } from '@/types/database';
+import { findCachedResponse } from '@/db/seed-ai-cache';
 
 /**
  * Convert database chat message to component format
@@ -97,11 +98,16 @@ export default function AIPage() {
 
     try {
       if (!isOnline) {
-        // Offline fallback - show cached response
-        await addChatMessage(
-          'assistant',
-          'I\'m currently offline. Please try again when you have an internet connection, or ask about basic Japanese phrases and etiquette which I can answer from cached knowledge.'
-        );
+        // Offline fallback - try cached responses first
+        const cachedResponse = findCachedResponse(trimmedInput);
+        if (cachedResponse) {
+          await addChatMessage('assistant', cachedResponse);
+        } else {
+          await addChatMessage(
+            'assistant',
+            'I\'m currently offline and couldn\'t find a cached answer for your question. Try asking about:\n\n• Temple or restaurant etiquette\n• Common Japanese phrases (thank you, excuse me, etc.)\n• Practical tips (WiFi, bathrooms, money)\n• Emergency information\n\nOr try again when you have an internet connection!'
+          );
+        }
         return;
       }
 

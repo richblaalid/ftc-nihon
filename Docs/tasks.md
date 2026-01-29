@@ -702,7 +702,7 @@
   - Retention: Keep last 50 messages, clear on request
   - Test: Chat history persists across sessions
 
-- [ ] 6.1.5: Pre-cache common Q&A responses for offline
+- [x] 6.1.5: Pre-cache common Q&A responses for offline
   - Files: src/db/seed-ai-cache.ts
   - Content: Top 20-30 anticipated questions with pre-generated responses
   - Categories: Etiquette, location history, practical tips, schedule questions
