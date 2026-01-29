@@ -1,77 +1,53 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-// Use globalThis to ensure singleton across all module instances
-// This fixes issues with Next.js code splitting creating separate module states
-const GLOBAL_KEY = '__ftc_supabase_client__' as const;
+// Get env vars at module load time - Next.js inlines NEXT_PUBLIC_* at build time
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? '';
+const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? '';
 
-declare global {
-  // eslint-disable-next-line no-var
-  var __ftc_supabase_client__: SupabaseClient | undefined;
+// Log at module load to debug
+console.log('[Supabase] Module loaded, env vars:', {
+  hasUrl: !!SUPABASE_URL,
+  hasKey: !!SUPABASE_ANON_KEY,
+  urlPrefix: SUPABASE_URL?.substring(0, 30) || 'none',
+});
+
+// Create client at module load time if env vars are available
+let supabaseClient: SupabaseClient | null = null;
+
+if (SUPABASE_URL && SUPABASE_ANON_KEY) {
+  console.log('[Supabase] Creating client at module load...');
+  supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+    },
+    realtime: {
+      params: {
+        eventsPerSecond: 10,
+      },
+    },
+  });
+  console.log('[Supabase] Client created successfully');
+} else {
+  console.warn('[Supabase] Cannot create client at module load - missing env vars');
 }
 
 /**
  * Check if Supabase is configured
- * First checks if client already exists (most reliable),
- * then falls back to checking env vars
  */
 export function isSupabaseConfigured(): boolean {
-  // If client already exists, we're definitely configured
-  if (globalThis[GLOBAL_KEY]) {
-    return true;
-  }
-
-  // Otherwise check env vars
-  return Boolean(
-    process.env.NEXT_PUBLIC_SUPABASE_URL &&
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  );
+  return supabaseClient !== null;
 }
 
 /**
- * Get the Supabase client, creating it lazily on first access.
- * Uses globalThis to ensure the client is shared across all code paths,
- * even with Next.js code splitting.
- *
+ * Get the Supabase client.
  * Returns null if Supabase is not configured.
  */
 export function getSupabaseClient(): SupabaseClient | null {
-  // Return cached client if we have one (check global)
-  const cachedClient = globalThis[GLOBAL_KEY];
-  if (cachedClient) {
-    console.log('[Supabase] Returning cached client from globalThis');
-    return cachedClient;
+  if (!supabaseClient) {
+    console.warn('[Supabase] getSupabaseClient called but client is null');
   }
-
-  // Try to create client if env vars are available
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-  console.log('[Supabase] getSupabaseClient called:', {
-    hasCachedClient: !!cachedClient,
-    hasUrl: !!supabaseUrl,
-    hasKey: !!supabaseAnonKey,
-    urlPrefix: supabaseUrl?.substring(0, 30),
-  });
-
-  if (supabaseUrl && supabaseAnonKey) {
-    console.log('[Supabase] Creating client...');
-    globalThis[GLOBAL_KEY] = createClient(supabaseUrl, supabaseAnonKey, {
-      auth: {
-        persistSession: true,
-        autoRefreshToken: true,
-      },
-      realtime: {
-        params: {
-          eventsPerSecond: 10,
-        },
-      },
-    });
-    console.log('[Supabase] Client created and stored in globalThis');
-    return globalThis[GLOBAL_KEY];
-  }
-
-  console.warn('[Supabase] Cannot create client - missing env vars');
-  return null;
+  return supabaseClient;
 }
 
 /**
