@@ -1,5 +1,14 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
+// Use globalThis to ensure singleton across all module instances
+// This fixes issues with Next.js code splitting creating separate module states
+const GLOBAL_KEY = '__ftc_supabase_client__' as const;
+
+declare global {
+  // eslint-disable-next-line no-var
+  var __ftc_supabase_client__: SupabaseClient | undefined;
+}
+
 /**
  * Check if Supabase is configured
  * First checks if client already exists (most reliable),
@@ -7,7 +16,7 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
  */
 export function isSupabaseConfigured(): boolean {
   // If client already exists, we're definitely configured
-  if (supabaseClient) {
+  if (globalThis[GLOBAL_KEY]) {
     return true;
   }
 
@@ -18,23 +27,17 @@ export function isSupabaseConfigured(): boolean {
   );
 }
 
-// Lazy-initialized client - only created when first accessed
-let supabaseClient: SupabaseClient | null = null;
-
 /**
  * Get the Supabase client, creating it lazily on first access.
- * This prevents errors during Next.js static generation when env vars aren't available.
- *
- * IMPORTANT: Always tries to create the client if env vars are available,
- * even if a previous attempt failed. This handles cases where env vars
- * weren't available during SSR but are available on the client.
+ * Uses globalThis to ensure the client is shared across all code paths,
+ * even with Next.js code splitting.
  *
  * Returns null if Supabase is not configured.
  */
 export function getSupabaseClient(): SupabaseClient | null {
-  // Return cached client if we have one
-  if (supabaseClient) {
-    return supabaseClient;
+  // Return cached client if we have one (check global)
+  if (globalThis[GLOBAL_KEY]) {
+    return globalThis[GLOBAL_KEY];
   }
 
   // Try to create client if env vars are available
@@ -43,7 +46,7 @@ export function getSupabaseClient(): SupabaseClient | null {
 
   if (supabaseUrl && supabaseAnonKey) {
     console.log('[Supabase] Creating client...');
-    supabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
+    globalThis[GLOBAL_KEY] = createClient(supabaseUrl, supabaseAnonKey, {
       auth: {
         persistSession: true,
         autoRefreshToken: true,
@@ -55,14 +58,15 @@ export function getSupabaseClient(): SupabaseClient | null {
       },
     });
     console.log('[Supabase] Client created successfully');
-  } else {
-    console.warn('[Supabase] Missing env vars:', {
-      hasUrl: !!supabaseUrl,
-      hasKey: !!supabaseAnonKey,
-    });
+    return globalThis[GLOBAL_KEY];
   }
 
-  return supabaseClient;
+  console.warn('[Supabase] Missing env vars:', {
+    hasUrl: !!supabaseUrl,
+    hasKey: !!supabaseAnonKey,
+  });
+
+  return null;
 }
 
 /**
