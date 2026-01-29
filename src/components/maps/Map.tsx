@@ -143,9 +143,16 @@ export function Map({
 
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Track if we've mounted (for hydration-safe online check)
+  const [isMounted, setIsMounted] = useState(false);
 
   // Check config once (not in effect)
   const isConfigured = isGoogleMapsConfigured();
+
+  // Set mounted after hydration to avoid SSR mismatch
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Get initial map center based on day (used only for initialization)
   const getInitialCenter = useCallback(() => {
@@ -340,14 +347,15 @@ export function Map({
     });
   }, [isLoaded, userLocation]);
 
-  // Check if offline
+  // Check if offline (only after mount to avoid hydration mismatch)
   const isOnline = useSyncStore((state) => state.isOnline);
 
   // Error state (config error, runtime error, or offline)
   const displayError = !isConfigured ? 'Google Maps API key not configured' : error;
 
   // Show offline message if offline and map hasn't loaded
-  if (!isOnline && !isLoaded) {
+  // Only check after mount to avoid SSR hydration mismatch
+  if (isMounted && !isOnline && !isLoaded) {
     return (
       <div className={`flex items-center justify-center bg-background-secondary ${className}`}>
         <div className="text-center p-4 max-w-xs">
