@@ -152,28 +152,34 @@ export default function AIPage() {
 
       const decoder = new TextDecoder();
       let done = false;
+      let buffer = '';
 
       while (!done) {
         const { value, done: readerDone } = await reader.read();
         done = readerDone;
 
         if (value) {
-          const chunk = decoder.decode(value);
-          // Parse the data stream format (0: prefix for text)
-          const lines = chunk.split('\n');
+          buffer += decoder.decode(value, { stream: true });
+          // Parse SSE format: data: {"type":"text-delta","delta":"text"}
+          const lines = buffer.split('\n');
+          // Keep the last potentially incomplete line in buffer
+          buffer = lines.pop() || '';
+
           for (const line of lines) {
-            if (line.startsWith('0:')) {
+            const trimmedLine = line.trim();
+            if (trimmedLine.startsWith('data: ')) {
               try {
-                // The format is 0:"text content"
-                const textContent = JSON.parse(line.slice(2));
-                if (typeof textContent === 'string') {
-                  assistantContent += textContent;
+                const json = JSON.parse(trimmedLine.slice(6));
+                // Handle both possible field names: 'delta' or 'textDelta'
+                const text = json.delta ?? json.textDelta;
+                if (json.type === 'text-delta' && typeof text === 'string') {
+                  assistantContent += text;
                   setStreamingMessage((prev) =>
                     prev ? { ...prev, content: assistantContent } : null
                   );
                 }
               } catch {
-                // Ignore parsing errors for non-text chunks
+                // Ignore parsing errors for non-JSON chunks
               }
             }
           }

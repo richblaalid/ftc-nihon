@@ -127,8 +127,10 @@ export function useSpeechRecognition(lang: string = 'en-US'): UseSpeechRecogniti
   const recognitionRef = useRef<ISpeechRecognition | null>(null);
 
   // Check browser support on mount (client-side only)
+  // This must be in useEffect to avoid SSR hydration mismatch
   useEffect(() => {
     const SpeechRecognitionClass = getSpeechRecognition();
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Required to avoid hydration mismatch
     setIsSupported(SpeechRecognitionClass !== null);
   }, []);
 
