@@ -437,6 +437,28 @@ export const PHRASES: Phrase[] = [
     createdAt: now,
     updatedAt: now,
   },
+  {
+    id: 'phrase-transit-11',
+    category: 'transit',
+    japanese: '北 / 南 / 東 / 西',
+    romaji: 'Kita / Minami / Higashi / Nishi',
+    meaning: 'North / South / East / West',
+    when: 'Station exits often labeled by direction (e.g., 北口 = North Exit)',
+    sortOrder: 211,
+    createdAt: now,
+    updatedAt: now,
+  },
+  {
+    id: 'phrase-transit-12',
+    category: 'transit',
+    japanese: '出口 / 入口',
+    romaji: 'Deguchi / Iriguchi',
+    meaning: 'Exit / Entrance',
+    when: 'Finding your way in stations - look for 出口 signs with direction (北口, 南口, etc.)',
+    sortOrder: 212,
+    createdAt: now,
+    updatedAt: now,
+  },
 
   // ============================================================================
   // SHOPPING - price, sizes, payment
