@@ -120,17 +120,24 @@ export function useSpeechRecognition(lang: string = 'en-US'): UseSpeechRecogniti
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [error, setError] = useState<string | null>(null);
+  // Start as false to avoid hydration mismatch, check on mount
+  const [isSupported, setIsSupported] = useState(false);
 
   // Store recognition instance in ref to persist across renders
   const recognitionRef = useRef<ISpeechRecognition | null>(null);
 
-  // Check if browser supports speech recognition
-  const SpeechRecognitionClass = getSpeechRecognition();
-  const isSupported = SpeechRecognitionClass !== null;
+  // Check browser support on mount (client-side only)
+  useEffect(() => {
+    const SpeechRecognitionClass = getSpeechRecognition();
+    setIsSupported(SpeechRecognitionClass !== null);
+  }, []);
 
   // Initialize recognition instance
   useEffect(() => {
-    if (!isSupported || !SpeechRecognitionClass) return;
+    if (!isSupported) return;
+
+    const SpeechRecognitionClass = getSpeechRecognition();
+    if (!SpeechRecognitionClass) return;
 
     const recognition = new SpeechRecognitionClass();
 
@@ -181,7 +188,7 @@ export function useSpeechRecognition(lang: string = 'en-US'): UseSpeechRecogniti
         recognitionRef.current = null;
       }
     };
-  }, [isSupported, SpeechRecognitionClass, lang]);
+  }, [isSupported, lang]);
 
   // Start listening
   const startListening = useCallback(() => {
