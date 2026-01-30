@@ -23,11 +23,59 @@ import {
 import { PHRASES as phrases } from './seed-phrases';
 
 /**
+ * Data version - increment this when seed data changes to trigger a reseed
+ * This allows updating phrases/data without users needing to clear their browser data
+ */
+const DATA_VERSION = 2; // Incremented: added toilet, directions, cardinal directions phrases
+const DATA_VERSION_KEY = 'ftc-nihon-data-version';
+
+/**
  * Check if database is already seeded
  */
 export async function isDatabaseSeeded(): Promise<boolean> {
   const activityCount = await db.activities.count();
   return activityCount > 0;
+}
+
+/**
+ * Check if data version has changed and phrases need reseeding
+ */
+function getStoredDataVersion(): number {
+  if (typeof window === 'undefined') return DATA_VERSION;
+  const stored = localStorage.getItem(DATA_VERSION_KEY);
+  return stored ? parseInt(stored, 10) : 0;
+}
+
+function setStoredDataVersion(version: number): void {
+  if (typeof window === 'undefined') return;
+  localStorage.setItem(DATA_VERSION_KEY, version.toString());
+}
+
+/**
+ * Reseed just the phrases table (for data version updates)
+ */
+async function reseedPhrases(): Promise<void> {
+  console.log('[Seed] Reseeding phrases due to data version change...');
+  await db.phrases.clear();
+  await db.phrases.bulkAdd(phrases);
+  console.log(`[Seed] Reseeded ${phrases.length} phrases`);
+}
+
+/**
+ * Check and update data if version changed
+ */
+export async function checkDataVersion(): Promise<void> {
+  const storedVersion = getStoredDataVersion();
+
+  if (storedVersion < DATA_VERSION) {
+    console.log(`[Seed] Data version changed: ${storedVersion} -> ${DATA_VERSION}`);
+
+    // Reseed phrases (most commonly updated)
+    await reseedPhrases();
+
+    // Update stored version
+    setStoredDataVersion(DATA_VERSION);
+  }
 }
 
 /**

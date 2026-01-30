@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { seedDatabase, reseedDatabase } from '@/db/seed';
+import { seedDatabase, reseedDatabase, checkDataVersion } from '@/db/seed';
 import { warmAllCaches } from '@/lib/cache-warmer';
 import { initOnlineListeners } from '@/stores/sync-store';
 import { seedAICache } from '@/db/seed-ai-cache';
@@ -41,6 +41,9 @@ export function Providers({ children }: ProvidersProps) {
         } else {
           console.warn('[Providers] Seed failed:', result.message);
         }
+
+        // Check if data version changed and update phrases if needed
+        await checkDataVersion();
       } catch (error) {
         console.error('[Providers] Seed error:', error);
       }
