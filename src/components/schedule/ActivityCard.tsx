@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import type { ActivityWithTransit } from '@/types/database';
 import { CategoryIcon, getCategoryBgClass } from '@/components/ui/CategoryIcon';
+import { getLocationIdForActivity } from '@/lib/tour-guide';
 
 type ActivityState = 'upcoming' | 'current' | 'completed';
 
@@ -72,6 +73,7 @@ export function ActivityCard({
 }: ActivityCardProps) {
   const styles = getStateStyles(state);
   const hasTransit = showTransit && activity.transit?.leaveBy;
+  const hasTourGuide = getLocationIdForActivity(activity.name, activity.category) !== null;
 
   return (
     <Link
@@ -101,7 +103,18 @@ export function ActivityCard({
         </div>
 
         {/* Activity name */}
-        <h3 className={`mt-1 text-lg font-semibold ${styles.text}`}>{activity.name}</h3>
+        <div className="mt-1 flex items-center gap-2">
+          <h3 className={`text-lg font-semibold ${styles.text}`}>{activity.name}</h3>
+          {hasTourGuide && (
+            <span
+              className="inline-flex items-center text-xs text-primary"
+              title="Tour guide info available"
+              aria-label="Has tour guide content"
+            >
+              🎧
+            </span>
+          )}
+        </div>
 
         {/* Location */}
         {activity.locationName && (

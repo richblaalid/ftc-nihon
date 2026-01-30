@@ -150,6 +150,48 @@ export function getAvailableLocations(): string[] {
 }
 
 /**
+ * Explicit mappings from activity names to tour content locationIds.
+ * This handles cases where activity names don't exactly match locationIds.
+ */
+const ACTIVITY_TO_TOUR_MAPPING: Record<string, string> = {
+  // Tokyo
+  'asakusa - senso-ji temple': 'senso-ji',
+  'senso-ji temple': 'senso-ji',
+  'sensoji temple': 'senso-ji',
+  'senso-ji': 'senso-ji',
+  'harajuku - lunch, meiji shrine & shopping': 'meiji-shrine',
+  'meiji shrine': 'meiji-shrine',
+  'meiji jingu': 'meiji-shrine',
+  'meiji jingu shrine': 'meiji-shrine',
+  'teamlab borderless': 'teamlab-borderless',
+  'tokyo skytree & solamachi': 'tokyo-tower', // Skytree content could be added, using tower for now
+  'tokyo tower': 'tokyo-tower',
+
+  // Hakone
+  'hakone shrine': 'hakone-shrine',
+  'owakudani (hell valley)': 'owakudani',
+  'owakudani': 'owakudani',
+  'hakone circuit to lake ashi': 'hakone-shrine', // Show shrine content for Hakone activities
+
+  // Kyoto
+  'kinkaku-ji (golden pavilion)': 'kinkaku-ji',
+  'kinkaku-ji': 'kinkaku-ji',
+  'golden pavilion': 'kinkaku-ji',
+  'fushimi inari': 'fushimi-inari',
+  'fushimi inari taisha': 'fushimi-inari',
+  'bamboo grove & tenryu-ji temple': 'arashiyama-bamboo',
+  'arashiyama bamboo grove': 'arashiyama-bamboo',
+  'arashiyama': 'arashiyama-bamboo',
+  'gion backstreets & nishiki market': 'gion',
+  'gion': 'gion',
+
+  // Osaka
+  'dotonbori evening': 'dotonbori',
+  'dotonbori': 'dotonbori',
+  'osaka castle': 'osaka-castle',
+};
+
+/**
  * Map activity categories to locationId patterns for tour content.
  * Returns potential locationIds based on activity name and category.
  */
@@ -157,30 +199,37 @@ export function getLocationIdForActivity(
   activityName: string,
   category: string
 ): string | null {
-  // Only provide tour content for cultural categories
-  if (!['temple', 'activity', 'food'].includes(category.toLowerCase())) {
+  // Only provide tour content for cultural/experience categories
+  if (!['temple', 'activity', 'food', 'shopping'].includes(category.toLowerCase())) {
     return null;
   }
 
-  // Normalize activity name to create locationId
-  const normalizedName = activityName
-    .toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, '')
-    .replace(/\s+/g, '-')
-    .trim();
+  const normalizedName = activityName.toLowerCase().trim();
 
-  // Check if we have content for this normalized name
-  if (hasTourContent(normalizedName)) {
-    return normalizedName;
+  // Check explicit mapping first
+  if (ACTIVITY_TO_TOUR_MAPPING[normalizedName]) {
+    const locationId = ACTIVITY_TO_TOUR_MAPPING[normalizedName];
+    if (hasTourContent(locationId)) {
+      return locationId;
+    }
+  }
+
+  // Try normalized name directly
+  const sluggedName = normalizedName
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-');
+
+  if (hasTourContent(sluggedName)) {
+    return sluggedName;
   }
 
   // Try common variations
   const variations = [
-    normalizedName,
-    normalizedName.replace(/-temple$/, ''),
-    normalizedName.replace(/-shrine$/, ''),
-    `${normalizedName}-temple`,
-    `${normalizedName}-shrine`,
+    sluggedName,
+    sluggedName.replace(/-temple$/, ''),
+    sluggedName.replace(/-shrine$/, ''),
+    `${sluggedName}-temple`,
+    `${sluggedName}-shrine`,
   ];
 
   for (const variation of variations) {
