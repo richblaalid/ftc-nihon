@@ -104,6 +104,8 @@ function ChecklistRow({ item, now }: { item: ChecklistItem; now: Date }) {
   );
 }
 
+const COLLAPSED_ITEM_COUNT = 3;
+
 /**
  * Trip preparation checklist card
  */
@@ -111,6 +113,7 @@ export function TripPrepCard() {
   const checklistItems = usePreTripChecklist();
   // Track mount state to avoid hydration mismatch with date calculations
   const [now, setNow] = useState<Date | null>(null);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
     setNow(new Date());
@@ -161,6 +164,9 @@ export function TripPrepCard() {
 
   const incompleteCount = checklistItems.filter((item) => !item.isCompleted).length;
   const totalCount = checklistItems.length;
+  const hasMore = sortedItems.length > COLLAPSED_ITEM_COUNT;
+  const displayedItems = isExpanded ? sortedItems : sortedItems.slice(0, COLLAPSED_ITEM_COUNT);
+  const hiddenCount = sortedItems.length - COLLAPSED_ITEM_COUNT;
 
   return (
     <div className="card">
@@ -184,10 +190,20 @@ export function TripPrepCard() {
 
       {/* Checklist items */}
       <div className="mt-3 -mx-3">
-        {sortedItems.map((item) => (
+        {displayedItems.map((item) => (
           <ChecklistRow key={item.id} item={item} now={now} />
         ))}
       </div>
+
+      {/* Show more/less button */}
+      {hasMore && (
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="w-full mt-2 py-2 text-sm font-medium text-primary hover:text-primary-hover transition-colors"
+        >
+          {isExpanded ? 'Show less' : `Show ${hiddenCount} more`}
+        </button>
+      )}
     </div>
   );
 }
