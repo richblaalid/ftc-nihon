@@ -1,21 +1,22 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { usePreTripChecklist } from '@/db/hooks';
 import { db } from '@/db/database';
 import type { ChecklistItem } from '@/types/database';
 
 /**
- * Format due date for display
+ * Format due date for display (only call client-side after mount)
  */
-function formatDueDate(dueDate: string | null): string {
+function formatDueDate(dueDate: string | null, now: Date): string {
   if (!dueDate) return '';
 
   const date = new Date(dueDate);
-  const now = new Date();
-  now.setHours(0, 0, 0, 0);
+  const today = new Date(now);
+  today.setHours(0, 0, 0, 0);
   date.setHours(0, 0, 0, 0);
 
-  const diffTime = date.getTime() - now.getTime();
+  const diffTime = date.getTime() - today.getTime();
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
   if (diffDays < 0) return 'Overdue';
@@ -27,17 +28,17 @@ function formatDueDate(dueDate: string | null): string {
 }
 
 /**
- * Get urgency class based on due date
+ * Get urgency class based on due date (only call client-side after mount)
  */
-function getUrgencyClass(dueDate: string | null): string {
+function getUrgencyClass(dueDate: string | null, now: Date): string {
   if (!dueDate) return 'text-foreground-tertiary';
 
   const date = new Date(dueDate);
-  const now = new Date();
-  now.setHours(0, 0, 0, 0);
+  const today = new Date(now);
+  today.setHours(0, 0, 0, 0);
   date.setHours(0, 0, 0, 0);
 
-  const diffTime = date.getTime() - now.getTime();
+  const diffTime = date.getTime() - today.getTime();
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
   if (diffDays < 0) return 'text-error';
@@ -58,7 +59,7 @@ async function toggleItem(item: ChecklistItem) {
 /**
  * Single checklist item row
  */
-function ChecklistRow({ item }: { item: ChecklistItem }) {
+function ChecklistRow({ item, now }: { item: ChecklistItem; now: Date }) {
   return (
     <button
       onClick={() => toggleItem(item)}
@@ -95,8 +96,8 @@ function ChecklistRow({ item }: { item: ChecklistItem }) {
 
       {/* Due date */}
       {item.dueDate && !item.isCompleted && (
-        <span className={`text-xs font-medium shrink-0 ${getUrgencyClass(item.dueDate)}`}>
-          {formatDueDate(item.dueDate)}
+        <span className={`text-xs font-medium shrink-0 ${getUrgencyClass(item.dueDate, now)}`}>
+          {formatDueDate(item.dueDate, now)}
         </span>
       )}
     </button>
@@ -108,9 +109,15 @@ function ChecklistRow({ item }: { item: ChecklistItem }) {
  */
 export function TripPrepCard() {
   const checklistItems = usePreTripChecklist();
+  // Track mount state to avoid hydration mismatch with date calculations
+  const [now, setNow] = useState<Date | null>(null);
 
-  // Loading state
-  if (checklistItems === undefined) {
+  useEffect(() => {
+    setNow(new Date());
+  }, []);
+
+  // Loading state (waiting for mount or data)
+  if (checklistItems === undefined || now === null) {
     return (
       <div className="card animate-pulse">
         <div className="h-5 w-32 rounded bg-background-secondary" />
@@ -178,7 +185,7 @@ export function TripPrepCard() {
       {/* Checklist items */}
       <div className="mt-3 -mx-3">
         {sortedItems.map((item) => (
-          <ChecklistRow key={item.id} item={item} />
+          <ChecklistRow key={item.id} item={item} now={now} />
         ))}
       </div>
     </div>

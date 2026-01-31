@@ -37,10 +37,13 @@ function formatTripDate(): string {
  * Countdown card showing days until trip starts
  */
 export function TripCountdown() {
-  // Calculate initial value during render (safe for SSR since it's the same result)
-  const [daysUntil, setDaysUntil] = useState(() => getDaysUntilTrip());
+  // Start with null to avoid hydration mismatch, then calculate on client
+  const [daysUntil, setDaysUntil] = useState<number | null>(null);
 
   useEffect(() => {
+    // Set initial value on mount (client-side only)
+    setDaysUntil(getDaysUntilTrip());
+
     // Update at midnight
     const now = new Date();
     const tomorrow = new Date(now);
@@ -60,6 +63,17 @@ export function TripCountdown() {
 
     return () => clearTimeout(timeout);
   }, []);
+
+  // Show skeleton while calculating on client
+  if (daysUntil === null) {
+    return (
+      <div className="card text-center py-6 animate-pulse">
+        <div className="h-4 w-32 mx-auto rounded bg-background-secondary" />
+        <div className="h-16 w-20 mx-auto mt-2 rounded bg-background-secondary" />
+        <div className="h-4 w-48 mx-auto mt-2 rounded bg-background-secondary" />
+      </div>
+    );
+  }
 
   return (
     <div className="card text-center py-6">
