@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useEffect, useCallback } from 'react';
+import { Suspense, useEffect, useCallback, useState, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useActivitiesWithTransit, useCurrentActivity, useCurrentDayNumber, useDayInfo } from '@/db/hooks';
 import { DayStrip, PageHeader } from '@/components/ui';
@@ -12,12 +12,19 @@ import { useSwipe } from '@/lib/hooks/useSwipe';
 import { TRIP_DAYS } from '@/types/database';
 import type { HardDeadline } from '@/types/database';
 
+type SlideDirection = 'left' | 'right' | null;
+
 function ScheduleContent() {
   const searchParams = useSearchParams();
   const currentDayNumber = useCurrentDayNumber();
 
   // Global day selection from store
   const globalSelectedDay = useAppStore((state) => state.selectedDay);
+
+  // Transition state for smooth animations
+  const [slideDirection, setSlideDirection] = useState<SlideDirection>(null);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const transitionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // On mount only, check URL param and sync to store if present
   const dayParam = searchParams.get('day');
@@ -33,28 +40,65 @@ function ScheduleContent() {
   // Effective day: store value takes precedence, otherwise current day, otherwise day 1
   const selectedDay = globalSelectedDay ?? currentDayNumber ?? 1;
 
-  // Update store when day changes - call store action directly to avoid stale closures
-  const handleDayChange = useCallback((day: number) => {
+  // Update store when day changes with smooth transition
+  const handleDayChange = useCallback((day: number, direction?: SlideDirection) => {
+    // Clear any pending transition
+    if (transitionTimeoutRef.current) {
+      clearTimeout(transitionTimeoutRef.current);
+    }
+
+    // Auto-detect direction if not provided
+    const slideDir = direction ?? (day > (globalSelectedDay ?? currentDayNumber ?? 1) ? 'left' : 'right');
+
+    // Start exit animation
+    setSlideDirection(slideDir);
+    setIsTransitioning(true);
+
+    // After exit animation, change day and start enter animation
+    transitionTimeoutRef.current = setTimeout(() => {
+      useAppStore.getState().setSelectedDay(day);
+      // Scroll to top
+      const scrollContainer = document.getElementById('main-scroll-container');
+      scrollContainer?.scrollTo({ top: 0, behavior: 'instant' });
+
+      // End transition after enter animation
+      transitionTimeoutRef.current = setTimeout(() => {
+        setIsTransitioning(false);
+        setSlideDirection(null);
+      }, 200);
+    }, 150);
+  }, [globalSelectedDay, currentDayNumber]);
+
+  // Direct day change (from DayStrip tap) - no animation
+  const handleDirectDayChange = useCallback((day: number) => {
     useAppStore.getState().setSelectedDay(day);
-    // Scroll to top so user sees day summary first
     const scrollContainer = document.getElementById('main-scroll-container');
     scrollContainer?.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (transitionTimeoutRef.current) {
+        clearTimeout(transitionTimeoutRef.current);
+      }
+    };
   }, []);
 
   // Swipe handlers for day navigation
   const swipeHandlers = useSwipe({
     onSwipeLeft: useCallback(() => {
       // Swipe left = go to next day
-      if (selectedDay < TRIP_DAYS - 1) {
-        handleDayChange(selectedDay + 1);
+      if (selectedDay < TRIP_DAYS - 1 && !isTransitioning) {
+        handleDayChange(selectedDay + 1, 'left');
       }
-    }, [selectedDay, handleDayChange]),
+    }, [selectedDay, handleDayChange, isTransitioning]),
     onSwipeRight: useCallback(() => {
       // Swipe right = go to previous day
-      if (selectedDay > 0) {
-        handleDayChange(selectedDay - 1);
+      if (selectedDay > 0 && !isTransitioning) {
+        handleDayChange(selectedDay - 1, 'right');
       }
-    }, [selectedDay, handleDayChange]),
+    }, [selectedDay, handleDayChange, isTransitioning]),
     threshold: 50,
     maxVerticalMovement: 100,
   });
@@ -93,13 +137,22 @@ function ScheduleContent() {
           <DayStrip
             selectedDay={selectedDay}
             currentDay={currentDayNumber}
-            onDayChange={handleDayChange}
+            onDayChange={handleDirectDayChange}
           />
         </div>
       </PageHeader>
 
-      {/* Main content - swipeable area */}
-      <main className="flex-1 px-4 py-4 pb-4" {...swipeHandlers}>
+      {/* Main content - swipeable area with slide transitions */}
+      <main
+        className={`flex-1 px-4 py-4 pb-4 transition-all duration-200 ease-out ${
+          isTransitioning
+            ? slideDirection === 'left'
+              ? '-translate-x-4 opacity-0'
+              : 'translate-x-4 opacity-0'
+            : 'translate-x-0 opacity-100'
+        }`}
+        {...swipeHandlers}
+      >
         {activities === undefined ? (
           // Loading state
           <div className="flex flex-col gap-3">
