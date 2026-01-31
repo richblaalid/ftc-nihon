@@ -26,7 +26,7 @@ import { PHRASES as phrases } from './seed-phrases';
  * Data version - increment this when seed data changes to trigger a reseed
  * This allows updating phrases/data without users needing to clear their browser data
  */
-const DATA_VERSION = 2; // Incremented: added toilet, directions, cardinal directions phrases
+const DATA_VERSION = 3; // Incremented: added Japan travel prep checklist items
 const DATA_VERSION_KEY = 'ftc-nihon-data-version';
 
 /**
@@ -62,6 +62,16 @@ async function reseedPhrases(): Promise<void> {
 }
 
 /**
+ * Reseed just the checklist items table (for data version updates)
+ */
+async function reseedChecklistItems(): Promise<void> {
+  console.log('[Seed] Reseeding checklist items due to data version change...');
+  await db.checklistItems.clear();
+  await db.checklistItems.bulkAdd(checklistItems);
+  console.log(`[Seed] Reseeded ${checklistItems.length} checklist items`);
+}
+
+/**
  * Check and update data if version changed
  */
 export async function checkDataVersion(): Promise<void> {
@@ -72,6 +82,9 @@ export async function checkDataVersion(): Promise<void> {
 
     // Reseed phrases (most commonly updated)
     await reseedPhrases();
+
+    // Reseed checklist items (Japan travel prep)
+    await reseedChecklistItems();
 
     // Update stored version
     setStoredDataVersion(DATA_VERSION);
