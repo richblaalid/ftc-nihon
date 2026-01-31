@@ -317,7 +317,7 @@ export function useChecklistItems(preTripOnly?: boolean): ChecklistItem[] | unde
   const syncVersion = useSyncVersion();
   return useLiveQuery(async () => {
     if (preTripOnly !== undefined) {
-      return db.checklistItems.where('isPreTrip').equals(preTripOnly ? 1 : 0).sortBy('sortOrder');
+      return db.checklistItems.filter((item) => item.isPreTrip === preTripOnly).sortBy('sortOrder');
     }
     return db.checklistItems.orderBy('dueDate').toArray();
   }, [preTripOnly, syncVersion]);
@@ -331,8 +331,7 @@ export function useIncompleteChecklist(): ChecklistItem[] | undefined {
   return useLiveQuery(
     () =>
       db.checklistItems
-        .where('isCompleted')
-        .equals(0)
+        .filter((item) => item.isCompleted === false)
         .sortBy('dueDate'),
     [syncVersion]
   );
@@ -605,8 +604,7 @@ export function usePreTripChecklist(): ChecklistItem[] | undefined {
   return useLiveQuery(
     () =>
       db.checklistItems
-        .where('isPreTrip')
-        .equals(1) // Dexie stores booleans as 1/0 in indexes
+        .filter((item) => item.isPreTrip === true)
         .sortBy('sortOrder'),
     [syncVersion]
   );
@@ -624,8 +622,7 @@ export function useCriticalChecklist(daysAhead: number = 7): ChecklistItem[] | u
     const cutoffStr = cutoff.toISOString().split('T')[0] ?? '';
 
     const items = await db.checklistItems
-      .where('isCompleted')
-      .equals(0)
+      .filter((item) => item.isCompleted === false)
       .toArray();
 
     // Filter to items due within the threshold
