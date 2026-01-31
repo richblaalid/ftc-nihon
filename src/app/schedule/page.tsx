@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useEffect } from 'react';
+import { Suspense, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useActivitiesWithTransit, useCurrentActivity, useCurrentDayNumber, useDayInfo } from '@/db/hooks';
 import { DayStrip, PageHeader } from '@/components/ui';
@@ -8,6 +8,8 @@ import { Timeline } from '@/components/schedule/Timeline';
 import { useAppStore } from '@/stores/app-store';
 import { DayHeader } from '@/components/ui/DayHeader';
 import { HardDeadlineList } from '@/components/ui/HardDeadlineAlert';
+import { useSwipe } from '@/lib/hooks/useSwipe';
+import { TRIP_DAYS } from '@/types/database';
 import type { HardDeadline } from '@/types/database';
 
 function ScheduleContent() {
@@ -32,12 +34,30 @@ function ScheduleContent() {
   const selectedDay = globalSelectedDay ?? currentDayNumber ?? 1;
 
   // Update store when day changes - call store action directly to avoid stale closures
-  const handleDayChange = (day: number) => {
+  const handleDayChange = useCallback((day: number) => {
     useAppStore.getState().setSelectedDay(day);
     // Scroll to top so user sees day summary first
     const scrollContainer = document.getElementById('main-scroll-container');
     scrollContainer?.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  }, []);
+
+  // Swipe handlers for day navigation
+  const swipeHandlers = useSwipe({
+    onSwipeLeft: useCallback(() => {
+      // Swipe left = go to next day
+      if (selectedDay < TRIP_DAYS - 1) {
+        handleDayChange(selectedDay + 1);
+      }
+    }, [selectedDay, handleDayChange]),
+    onSwipeRight: useCallback(() => {
+      // Swipe right = go to previous day
+      if (selectedDay > 0) {
+        handleDayChange(selectedDay - 1);
+      }
+    }, [selectedDay, handleDayChange]),
+    threshold: 50,
+    maxVerticalMovement: 100,
+  });
 
   // Fetch activities for selected day
   const activities = useActivitiesWithTransit(selectedDay);
@@ -78,8 +98,8 @@ function ScheduleContent() {
         </div>
       </PageHeader>
 
-      {/* Main content */}
-      <main className="flex-1 px-4 py-4 pb-4">
+      {/* Main content - swipeable area */}
+      <main className="flex-1 px-4 py-4 pb-4" {...swipeHandlers}>
         {activities === undefined ? (
           // Loading state
           <div className="flex flex-col gap-3">
