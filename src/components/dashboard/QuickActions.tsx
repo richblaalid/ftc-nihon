@@ -62,6 +62,28 @@ function UtilityWidget({ icon, label, onClick, href, external, testId }: Utility
 }
 
 /**
+ * Conversation icon - two speech bubbles side by side, both pointing down
+ */
+function ConversationIcon() {
+  return (
+    <svg
+      className="w-12 h-8 mt-1.5 text-foreground"
+      viewBox="-1 -1 30 20"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      {/* Left bubble - higher, tail pointing down-left */}
+      <path d="M1 2C1 1 2 0 3 0h6c1 0 2 1 2 2v5c0 1-1 2-2 2H6l-2 3V9c-1.5 0-3-1-3-2V2z" />
+      {/* Right bubble - lower, tail pointing down-right */}
+      <path d="M27 6c0-1-1-2-2-2h-6c-1 0-2 1-2 2v5c0 1 1 2 2 2h3l2 3v-3c1.5 0 3-1 3-2V6z" />
+    </svg>
+  );
+}
+
+/**
  * Phrases link widget
  */
 function PhrasesWidget() {
@@ -71,7 +93,7 @@ function PhrasesWidget() {
       className="card flex flex-col items-center justify-center p-3 transition-all active:scale-95 cursor-pointer hover:bg-background-secondary"
       data-testid="quick-action-phrases"
     >
-      <span className="text-2xl" aria-hidden="true">🗣️</span>
+      <ConversationIcon />
       <p className="text-sm font-medium text-foreground-secondary mt-2">Phrases</p>
     </Link>
   );
