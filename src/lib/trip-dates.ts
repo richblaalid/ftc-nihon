@@ -1,19 +1,21 @@
 /**
  * Trip date utilities
- * The trip runs from March 6-21, 2026 (15 days)
+ * The trip runs from March 6-21, 2026 (16 days: Day 0-15)
+ * Day 0 = Departure from MSP, Day 1 = Arrival in Tokyo, Day 15 = Return flight
  */
 
-// Trip start date (Day 1)
+// Trip start date (Day 0 - departure day)
 export const TRIP_START = new Date('2026-03-06T00:00:00+09:00');
 
-// Trip end date (Day 15)
+// Trip end date (Day 15 - return flight)
 export const TRIP_END = new Date('2026-03-21T23:59:59+09:00');
 
-// Total trip days
-export const TOTAL_DAYS = 15;
+// Total trip days (0-15)
+export const TOTAL_DAYS = 16;
 
 /**
- * Get the current trip day number (1-15)
+ * Get the current trip day number (0-15)
+ * Day 0 = departure, Day 1 = arrival in Tokyo, Day 15 = return flight
  * Returns null if before or after the trip
  */
 export function getTripDay(date: Date = new Date()): number | null {
@@ -26,19 +28,19 @@ export function getTripDay(date: Date = new Date()): number | null {
     return null;
   }
 
-  // Calculate day difference
+  // Calculate day difference (0-indexed: Day 0 = first day)
   const msPerDay = 24 * 60 * 60 * 1000;
   const dayDiff = Math.floor((japanTime.getTime() - tripStartLocal.getTime()) / msPerDay);
 
-  return Math.min(Math.max(dayDiff + 1, 1), TOTAL_DAYS);
+  return Math.min(Math.max(dayDiff, 0), TOTAL_DAYS - 1);
 }
 
 /**
- * Get the date for a specific trip day (1-15)
+ * Get the date for a specific trip day (0-15)
  */
 export function getTripDate(dayNumber: number): Date {
   const date = new Date(TRIP_START);
-  date.setDate(date.getDate() + dayNumber - 1);
+  date.setDate(date.getDate() + dayNumber);
   return date;
 }
 
@@ -93,10 +95,11 @@ export function getDaysUntilTrip(date: Date = new Date()): number {
 }
 
 /**
- * City for each day of the trip
+ * City for each day of the trip (0-indexed, matches database.ts)
  */
 export const DAY_CITIES: Record<number, string> = {
-  1: 'Tokyo',
+  0: 'Travel',  // Departure from Minneapolis (on plane)
+  1: 'Tokyo',   // Arrive Tokyo
   2: 'Tokyo',
   3: 'Tokyo',
   4: 'Tokyo',
@@ -106,11 +109,11 @@ export const DAY_CITIES: Record<number, string> = {
   8: 'Kyoto',
   9: 'Kyoto',
   10: 'Kyoto',
-  11: 'Kyoto',
+  11: 'Osaka',
   12: 'Osaka',
   13: 'Osaka',
   14: 'Osaka',
-  15: 'Tokyo', // Return flight
+  15: 'Travel', // Return flight
 };
 
 /**

@@ -3,14 +3,27 @@
 import { useEffect, useState, useMemo } from 'react';
 import Link from 'next/link';
 import { useCurrentActivity } from '@/db/hooks';
+import { getCurrentDate } from '@/lib/utils';
 import type { Activity } from '@/types/database';
+
+/**
+ * Get current time in Japan timezone as HH:MM
+ */
+function getJapanTime(date: Date): string {
+  return date.toLocaleTimeString('en-US', {
+    timeZone: 'Asia/Tokyo',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  });
+}
 
 /**
  * Calculate time remaining for an activity
  */
 function getTimeRemaining(activity: Activity): { minutes: number; text: string } | null {
-  const now = new Date();
-  const currentTime = now.toTimeString().slice(0, 5);
+  const now = getCurrentDate();
+  const currentTime = getJapanTime(now);
 
   // Calculate end time
   let endTime: string;

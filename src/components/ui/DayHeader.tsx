@@ -43,13 +43,15 @@ export function DayHeader({ dayInfo, className = '', compact = false }: DayHeade
   const highlights = dayInfo.highlights ? JSON.parse(dayInfo.highlights) : [];
   const typeConfig = DAY_TYPE_CONFIG[dayInfo.type];
 
-  // Format date for display
+  // Format date for display - use Japan timezone since all dates are Japan dates
   const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
+    // Parse as noon JST to avoid UTC midnight issues
+    const date = new Date(`${dateStr}T12:00:00+09:00`);
     return date.toLocaleDateString('en-US', {
       weekday: 'long',
       month: 'long',
       day: 'numeric',
+      timeZone: 'Asia/Tokyo',
     });
   };
 

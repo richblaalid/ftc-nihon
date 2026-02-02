@@ -11,11 +11,23 @@ import {
   useSelectedRestaurant,
 } from '@/db/hooks';
 import { getMealSlotsForDay, type MealSlot } from '@/lib/meal-slots';
-import { getCurrentDate } from '@/lib/utils';
+import { getCurrentDate, getJapanDateString } from '@/lib/utils';
 
 interface TimelineProps {
   activities: ActivityWithTransit[];
   currentActivityId?: string | null;
+}
+
+/**
+ * Get current time in Japan timezone as HH:MM
+ */
+function getJapanTime(date: Date): string {
+  return date.toLocaleTimeString('en-US', {
+    timeZone: 'Asia/Tokyo',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  });
 }
 
 /**
@@ -40,18 +52,19 @@ function getActivityState(
     return 'upcoming';
   }
 
-  // Viewing today - compare times
+  // Viewing today - compare times using Japan timezone
   const now = getCurrentDate();
-  const currentTime = now.toTimeString().slice(0, 5);
+  const currentTime = getJapanTime(now);
 
   // Calculate activity end time
   let endTime = activity.startTime;
   if (activity.durationMinutes) {
     const [hours, mins] = activity.startTime.split(':').map(Number);
     if (hours !== undefined && mins !== undefined) {
-      const endDate = new Date();
-      endDate.setHours(hours, mins + activity.durationMinutes, 0, 0);
-      endTime = endDate.toTimeString().slice(0, 5);
+      const totalMins = hours * 60 + mins + activity.durationMinutes;
+      const endHours = Math.floor(totalMins / 60) % 24;
+      const endMins = totalMins % 60;
+      endTime = `${endHours.toString().padStart(2, '0')}:${endMins.toString().padStart(2, '0')}`;
     }
   }
 
@@ -161,7 +174,7 @@ export function Timeline({ activities, currentActivityId }: TimelineProps) {
   const nowRef = useRef<HTMLDivElement>(null);
   const [currentTime, setCurrentTime] = useState<string>(() => {
     const now = getCurrentDate();
-    return now.toTimeString().slice(0, 5);
+    return getJapanTime(now);
   });
 
   // Get day number from activities
@@ -173,11 +186,11 @@ export function Timeline({ activities, currentActivityId }: TimelineProps) {
   // Calculate meal slots for this day
   const mealSlots = getMealSlotsForDay(dayNumber, activities, dayInfo ?? null);
 
-  // Update current time every minute
+  // Update current time every minute (using Japan timezone)
   useEffect(() => {
     const updateTime = () => {
       const now = getCurrentDate();
-      setCurrentTime(now.toTimeString().slice(0, 5));
+      setCurrentTime(getJapanTime(now));
     };
 
     // Update immediately and then every minute
@@ -218,8 +231,8 @@ export function Timeline({ activities, currentActivityId }: TimelineProps) {
     grouped[period].push(activity);
   }
 
-  // Determine if we're viewing today's schedule (using test-aware date)
-  const todayStr = getCurrentDate().toISOString().split('T')[0] ?? '';
+  // Determine if we're viewing today's schedule (using Japan timezone)
+  const todayStr = getJapanDateString(getCurrentDate());
   const viewingDate = activities[0]?.date ?? '';
   const isViewingToday = viewingDate === todayStr;
 
