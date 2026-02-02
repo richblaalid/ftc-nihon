@@ -26,10 +26,26 @@ export function getCurrentDate(): Date {
 }
 
 /**
- * Format a date as ISO date string (YYYY-MM-DD)
+ * Format a date as ISO date string (YYYY-MM-DD) in UTC
+ * Note: For trip-related dates, use getJapanDateString instead
  */
 export function formatISODate(date: Date): string {
   return date.toISOString().split('T')[0] ?? '';
+}
+
+/**
+ * Get the current date string in Japan timezone (YYYY-MM-DD)
+ * This is the correct format for comparing against trip dates
+ */
+export function getJapanDateString(date: Date = new Date()): string {
+  // Format date in Japan timezone to get correct local date
+  const formatter = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Tokyo',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  });
+  return formatter.format(date); // Returns YYYY-MM-DD format
 }
 
 /**

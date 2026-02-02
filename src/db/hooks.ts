@@ -23,7 +23,7 @@ import type {
   ChatMessage,
 } from '@/types/database';
 import { TRIP_START_DATE } from '@/types/database';
-import { getCurrentDate } from '@/lib/utils';
+import { getCurrentDate, getJapanDateString } from '@/lib/utils';
 
 /**
  * Hook to get the current sync version.
@@ -344,15 +344,25 @@ export function useIncompleteChecklist(): ChecklistItem[] | undefined {
  */
 export function useCurrentDayNumber(): number | null {
   const now = getCurrentDate();
-  const today = now.toISOString().split('T')[0];
+  // Get current date in Japan timezone to match trip dates
+  const todayJapan = getJapanDateString(now);
 
-  if (!today) return null;
+  if (!todayJapan) return null;
 
-  const tripStart = new Date(TRIP_START_DATE);
-  const todayDate = new Date(today);
+  // Parse both dates as noon local to avoid timezone edge cases
+  const [tripYear, tripMonth, tripDay] = TRIP_START_DATE.split('-').map(Number);
+  const [todayYear, todayMonth, todayDay] = todayJapan.split('-').map(Number);
+
+  if (!tripYear || !tripMonth || !tripDay || !todayYear || !todayMonth || !todayDay) {
+    return null;
+  }
+
+  // Create dates at noon to avoid DST issues
+  const tripStart = new Date(tripYear, tripMonth - 1, tripDay, 12, 0, 0);
+  const todayDate = new Date(todayYear, todayMonth - 1, todayDay, 12, 0, 0);
 
   const diffTime = todayDate.getTime() - tripStart.getTime();
-  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+  const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
 
   // Day 0 starts on TRIP_START_DATE (departure day)
   const dayNumber = diffDays;

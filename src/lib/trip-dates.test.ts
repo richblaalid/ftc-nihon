@@ -32,46 +32,48 @@ describe('trip-dates', () => {
     });
 
     it('has correct total days', () => {
-      expect(TOTAL_DAYS).toBe(15);
+      expect(TOTAL_DAYS).toBe(16);
     });
 
     it('has city for each day', () => {
-      for (let day = 1; day <= TOTAL_DAYS; day++) {
+      for (let day = 0; day < TOTAL_DAYS; day++) {
         expect(DAY_CITIES[day]).toBeDefined();
         expect(typeof DAY_CITIES[day]).toBe('string');
       }
     });
 
     it('has correct city assignments', () => {
+      // Day 0 - Travel (departure)
+      expect(DAY_CITIES[0]).toBe('Travel');
       // Tokyo days 1-5
       expect(DAY_CITIES[1]).toBe('Tokyo');
       expect(DAY_CITIES[5]).toBe('Tokyo');
       // Hakone days 6-7
       expect(DAY_CITIES[6]).toBe('Hakone');
       expect(DAY_CITIES[7]).toBe('Hakone');
-      // Kyoto days 8-11
+      // Kyoto days 8-10
       expect(DAY_CITIES[8]).toBe('Kyoto');
-      expect(DAY_CITIES[11]).toBe('Kyoto');
-      // Osaka days 12-14
-      expect(DAY_CITIES[12]).toBe('Osaka');
+      expect(DAY_CITIES[10]).toBe('Kyoto');
+      // Osaka days 11-14
+      expect(DAY_CITIES[11]).toBe('Osaka');
       expect(DAY_CITIES[14]).toBe('Osaka');
-      // Return day 15
-      expect(DAY_CITIES[15]).toBe('Tokyo');
+      // Day 15 - Travel (return)
+      expect(DAY_CITIES[15]).toBe('Travel');
     });
   });
 
   describe('getTripDay', () => {
-    it('returns 1 for trip start date', () => {
+    it('returns 0 for trip start date (departure day)', () => {
       const startDate = new Date('2026-03-06T12:00:00+09:00');
-      expect(getTripDay(startDate)).toBe(1);
+      expect(getTripDay(startDate)).toBe(0);
     });
 
     it('returns correct day for mid-trip date', () => {
       const midDate = new Date('2026-03-10T12:00:00+09:00');
-      expect(getTripDay(midDate)).toBe(5);
+      expect(getTripDay(midDate)).toBe(4);
     });
 
-    it('returns 15 for trip end date', () => {
+    it('returns 15 for trip end date (return flight)', () => {
       const endDate = new Date('2026-03-21T12:00:00+09:00');
       expect(getTripDay(endDate)).toBe(15);
     });
@@ -88,8 +90,8 @@ describe('trip-dates', () => {
   });
 
   describe('getTripDate', () => {
-    it('returns correct date for day 1', () => {
-      const date = getTripDate(1);
+    it('returns correct date for day 0 (departure)', () => {
+      const date = getTripDate(0);
       const dateInJapan = date.toLocaleDateString('en-US', {
         timeZone: 'Asia/Tokyo',
         year: 'numeric',
@@ -99,32 +101,32 @@ describe('trip-dates', () => {
       expect(dateInJapan).toBe('3/6/2026');
     });
 
-    it('returns correct date for day 15', () => {
+    it('returns correct date for day 15 (return)', () => {
       const date = getTripDate(15);
-      // Verify the date offset is correct (14 days after day 1)
-      const day1 = getTripDate(1);
-      const daysDiff = Math.round((date.getTime() - day1.getTime()) / (24 * 60 * 60 * 1000));
-      expect(daysDiff).toBe(14);
+      // Verify the date offset is correct (15 days after day 0)
+      const day0 = getTripDate(0);
+      const daysDiff = Math.round((date.getTime() - day0.getTime()) / (24 * 60 * 60 * 1000));
+      expect(daysDiff).toBe(15);
     });
 
     it('returns correct date for middle day', () => {
       const date = getTripDate(8);
-      // Verify the date offset is correct (7 days after day 1)
-      const day1 = getTripDate(1);
-      const daysDiff = Math.round((date.getTime() - day1.getTime()) / (24 * 60 * 60 * 1000));
-      expect(daysDiff).toBe(7);
+      // Verify the date offset is correct (8 days after day 0)
+      const day0 = getTripDate(0);
+      const daysDiff = Math.round((date.getTime() - day0.getTime()) / (24 * 60 * 60 * 1000));
+      expect(daysDiff).toBe(8);
     });
   });
 
   describe('formatTripDate', () => {
     it('formats short date correctly', () => {
-      const result = formatTripDate(1, 'short');
+      const result = formatTripDate(0, 'short');
       expect(result).toContain('Mar');
       expect(result).toContain('6');
     });
 
     it('formats long date correctly', () => {
-      const result = formatTripDate(1, 'long');
+      const result = formatTripDate(0, 'long');
       expect(result).toContain('March');
       expect(result).toContain('6');
       expect(result).toContain('2026');
@@ -132,7 +134,7 @@ describe('trip-dates', () => {
     });
 
     it('defaults to short format', () => {
-      const result = formatTripDate(1);
+      const result = formatTripDate(0);
       expect(result).toContain('Mar');
     });
   });
