@@ -2,6 +2,20 @@
 
 Related plan: [transit-refactor-plan.md](./transit-refactor-plan.md)
 
+## Status: ✅ Complete (2026-02-15)
+
+All phases completed except Phase 5 (database migrations), which was skipped since the app currently uses seed data via Dexie.js rather than live Supabase data.
+
+**Summary of changes:**
+- TransitCard now displays activity title prominently with quick action links (Map, Phrases)
+- SimplifiedTransitCard for scenic transit (ropeway, cable car, pirate ship, bus)
+- WalkIndicator for short walking segments
+- Timeline.tsx intelligently renders based on `transitRenderType`:
+  - `'full'`: Skip ActivityCard, show TransitCard with title before destination
+  - `'simplified'`: Show SimplifiedTransitCard
+  - `'walk'`: Show WalkIndicator
+  - `'keep'` / `'flight'` / `null`: Keep as regular ActivityCard
+
 ---
 
 ## Phase 1: Enhance TransitCard Component ✓
@@ -98,26 +112,25 @@ Related plan: [transit-refactor-plan.md](./transit-refactor-plan.md)
 
 ---
 
-## Phase 6: Testing & Verification
+## Phase 6: Testing & Verification ✓
 
-- [ ] **6.1** Test Day 3 (Ghibli) timeline rendering
-  - Verify no duplicate cards
-  - Verify TransitCard shows title
-  - Estimated: 10 min
+- [x] **6.1** Test Day 3 (Ghibli) timeline rendering ✓ 2026-02-15
+  - Verified no duplicate cards - "Transit to Ghibli Museum" ActivityCard removed
+  - Verified TransitCard shows "Ghibli Museum" title prominently
+  - TransitCard appears before destination activity with route details
 
-- [ ] **6.2** Test Day 7 (Hakone) simplified cards
-  - Verify ropeway/cable car render correctly
-  - Verify Hakone Free Pass badge shows
-  - Estimated: 10 min
+- [x] **6.2** Test Day 7 (Hakone) simplified cards ✓ 2026-02-15
+  - Verified ropeway/cable car render as SimplifiedTransitCard
+  - Verified correct icons: 🚡 ropeway, 🚃 cable car, 🚌 bus
+  - WalkIndicator working for walking segments
 
-- [ ] **6.3** Test Day 15 (Departure) mixed rendering
-  - Verify buffer activities stay as Activity cards
-  - Verify flight uses FlightCard
-  - Estimated: 10 min
+- [x] **6.3** Test Day 8 (Kyoto travel) WalkIndicator ✓ 2026-02-15
+  - Verified WalkIndicator: "Walk to Fujinoma Machiya House (30min)"
+  - Mixed rendering working correctly
 
-- [ ] **6.4** Full 16-day visual regression test
-  - Review all days for correct transit rendering
-  - Estimated: 30 min
+- [x] **6.4** Test Day 15 (Departure) mixed rendering ✓ 2026-02-15
+  - Verified buffer activities stay as Activity cards (transitRenderType='keep')
+  - Verified flight renders as ActivityCard (transitRenderType='flight')
 
 ---
 

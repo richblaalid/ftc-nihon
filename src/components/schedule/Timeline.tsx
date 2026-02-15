@@ -259,14 +259,10 @@ export function Timeline({ activities, currentActivityId }: TimelineProps) {
     const renderType = activity.transitRenderType;
 
     // Determine what type of item to render based on transitRenderType
-    if (renderType === 'full' && activity.transit) {
-      // For 'full' transit: render TransitCard with activity title, skip ActivityCard
-      activitiesAndMeals.push({
-        type: 'transit',
-        transit: activity.transit,
-        activityName: activity.name,
-        activityState: state,
-      });
+    if (renderType === 'full') {
+      // Skip 'full' transit activities entirely - they're duplicates
+      // The real transit info is shown via the destination activity's transit segment
+      continue;
     } else if (renderType === 'simplified') {
       // For 'simplified': render SimplifiedTransitCard
       activitiesAndMeals.push({ type: 'simplified', activity, state });
@@ -274,7 +270,17 @@ export function Timeline({ activities, currentActivityId }: TimelineProps) {
       // For 'walk': render WalkIndicator
       activitiesAndMeals.push({ type: 'walk-activity', activity, state });
     } else {
-      // For 'keep', 'flight', or null: render standard ActivityCard
+      // For 'keep', 'flight', or null: check if has linked transit segment
+      if (activity.transit && activity.transit.leaveBy) {
+        // Insert TransitCard BEFORE the activity
+        activitiesAndMeals.push({
+          type: 'transit',
+          transit: activity.transit,
+          activityName: activity.name,
+          activityState: state,
+        });
+      }
+      // Then add the activity itself
       activitiesAndMeals.push({ type: 'activity', activity, state });
     }
   }
@@ -286,8 +292,17 @@ export function Timeline({ activities, currentActivityId }: TimelineProps) {
   // Sort activities and meals by time
   activitiesAndMeals.sort((a, b) => {
     const getTime = (item: TimelineItem): string => {
-      if (item.type === 'activity') return item.activity.startTime;
-      return (item as { type: 'meal'; slot: MealSlot }).slot.suggestedTime;
+      if (item.type === 'activity' || item.type === 'simplified' || item.type === 'walk-activity') {
+        return item.activity.startTime;
+      }
+      if (item.type === 'transit') {
+        return item.transit.leaveBy;
+      }
+      if (item.type === 'meal') {
+        return item.slot.suggestedTime;
+      }
+      // Walk fallback
+      return '08:00';
     };
     return timeToMinutes(getTime(a)) - timeToMinutes(getTime(b));
   });
