@@ -16,10 +16,12 @@
 - Phase 5: [x] Complete
 - **MVP Status:** Complete
 - Phase 5.5: [x] Complete - Quick Utility Features
-- Phase 6: [ ] In Progress - AI Assistant + Tour Guide
+- Phase 6: [x] Complete - AI Assistant + Tour Guide
+- Phase 6.5: [x] Complete - Transit Enhancement
 - Phase 7: [ ] Not Started - Push Notifications
 - Phase 8: [ ] Not Started - Admin Panel
 - Phase 9: [ ] Not Started - Group Location Sharing
+- **Phase 10: [x] Complete - Code Quality & Design System Improvements (from audit)**
 
 ---
 
@@ -964,6 +966,222 @@
 - [ ] Meeting point feature works
 - [ ] Real-time updates when someone shares
 - [ ] Commit: "feat: complete group location sharing (Phase 9)"
+
+---
+
+## Phase 10: Code Quality & Design System Improvements
+
+> Addresses findings from comprehensive UI and code audit (Feb 2026).
+> Improves reliability, maintainability, and design system consistency.
+
+### 10.1 Critical: JSON.parse Error Handling
+
+- [x] 10.1.1: Create safe JSON parsing utility
+  - Files: src/lib/json-utils.ts
+  - Function: safeJsonParse<T>(json: string, fallback: T): T
+  - Features: Wraps JSON.parse in try-catch, returns fallback on error
+  - Test: Returns fallback for invalid JSON, returns parsed for valid
+
+- [x] 10.1.2: Fix JSON.parse in schedule/page.tsx
+  - Files: src/app/schedule/page.tsx:113
+  - Issue: `JSON.parse(dayInfo.hardDeadlines)` without try-catch
+  - Fix: Use safeJsonParse with empty array fallback
+  - Test: Page loads even with corrupted hardDeadlines data
+
+- [x] 10.1.3: Fix JSON.parse in DayHeader.tsx
+  - Files: src/components/ui/DayHeader.tsx:43
+  - Issue: Parsing hardDeadlines without error handling
+  - Fix: Use safeJsonParse
+  - Test: Component renders with corrupted data
+
+- [x] 10.1.4: Fix JSON.parse in TicketCard.tsx
+  - Files: src/components/ui/TicketCard.tsx:17-18
+  - Issue: Parsing seats and confirmations without try-catch
+  - Fix: Use safeJsonParse with empty array fallbacks
+  - Test: Card renders with corrupted JSON fields
+
+- [x] 10.1.5: Fix JSON.parse in FlightCard.tsx
+  - Files: src/components/ui/FlightCard.tsx:16
+  - Issue: Parsing seats without error handling
+  - Fix: Use safeJsonParse
+  - Test: Card renders with corrupted seats data
+
+- [x] 10.1.6: Fix JSON.parse in ai/page.tsx (already had try-catch)
+  - Files: src/app/ai/page.tsx:172
+  - Issue: Parsing streamed JSON response without try-catch
+  - Fix: Already wrapped in try-catch, no changes needed
+  - Test: AI chat handles interrupted streams gracefully
+
+### 10.2 Critical: Timezone Consistency
+
+- [x] 10.2.1: Create time utilities module
+  - Files: src/lib/time-utils.ts
+  - Functions:
+    - getJapanTime(date: Date): { hours: number, minutes: number }
+    - getJapanTimeString(date: Date): string (HH:MM format)
+    - parseTimeToMinutes(time: string): number | null
+    - formatTimeRemaining(minutes: number): string
+  - Test: All functions return Japan timezone results
+
+- [x] 10.2.2: Fix NextWidget timezone usage
+  - Files: src/components/dashboard/NextWidget.tsx:23-48
+  - Issue: Uses `now.getHours()` which returns local timezone
+  - Fix: Use getTimeUntil() from time-utils (uses Japan timezone)
+  - Test: Time calculations correct when tested outside Japan
+
+- [x] 10.2.3: Consolidate Timeline time functions
+  - Files: src/components/schedule/Timeline.tsx:25-31
+  - Issue: Has local getJapanTime() function
+  - Fix: Import from lib/time-utils.ts, remove local definition
+  - Test: Timeline still displays correct times
+
+- [x] 10.2.4: Consolidate NowWidget time functions
+  - Files: src/components/dashboard/NowWidget.tsx
+  - Note: NowWidget already uses shared getTimeRemaining from hooks
+  - No changes needed for this component
+
+- [x] 10.2.5: Consolidate meal-slots time functions
+  - Files: src/lib/meal-slots.ts
+  - Issue: Has timeToMinutes() duplicated from other files
+  - Fix: Import parseTimeToMinutes from time-utils
+  - Test: Meal slot calculations work correctly
+
+### 10.3 Design System: Color Standardization
+
+- [x] 10.3.1: Define semantic color mappings
+  - Files: src/app/globals.css
+  - Add: --color-success, --color-warning, --color-info CSS variables
+  - Map: emerald→activity, blue→transit, amber→secondary
+  - Test: Variables accessible in Tailwind
+
+- [x] 10.3.2: Fix TicketCard.tsx colors
+  - Files: src/components/ui/TicketCard.tsx:56-60, 72, 95-98, 148-161, 168, 191
+  - Issues: Uses bg-emerald-*, bg-slate-*, bg-amber-*, bg-pink-*
+  - Fix: Replace with design system colors (bg-category-*, semantic colors)
+  - Test: Card renders correctly in light/dark modes
+
+- [x] 10.3.3: Fix PhraseCard.tsx colors
+  - Files: src/components/ui/PhraseCard.tsx:23-24, 67-68, 88, 181
+  - Issue: Uses rose/pink palette not in design system
+  - Fix: Use coral-* (light) and vermillion-* (dark) instead
+  - Test: Phrase cards match design system
+
+- [x] 10.3.4: Fix DayHeader.tsx day type colors
+  - Files: src/components/ui/DayHeader.tsx:11-35
+  - Issue: Hardcoded bg-blue-100, bg-emerald-100, bg-violet-100, bg-amber-100
+  - Fix: Create DAY_TYPE_COLORS constant using design system
+  - Test: Day badges render with correct colors
+
+- [x] 10.3.5: Fix FlightCard.tsx colors
+  - Files: src/components/ui/FlightCard.tsx:32-34, 60, 131
+  - Issue: Uses hardcoded indigo, amber colors
+  - Fix: Use design system indigo-* and amber-* variables
+  - Test: Flight card renders correctly
+
+- [x] 10.3.6: Fix DayStrip.tsx city colors
+  - Files: src/components/ui/DayStrip.tsx:14-18
+  - Issue: Hardcoded city color classes
+  - Fix: Create CITY_COLORS constant with design system colors
+  - Test: Day strip renders correctly
+
+- [x] 10.3.7: Fix Map.tsx hardcoded fallback colors
+  - Files: src/components/maps/Map.tsx:33-40
+  - Issue: Hardcoded hex values for category fallbacks
+  - Fix: Reference CSS variables or centralize in constants
+  - Test: Map pins use correct colors
+
+### 10.4 Code Organization: Hooks Refactoring
+
+- [x] 10.4.1: Create hooks directory structure
+  - Files: src/db/hooks/index.ts
+  - Structure: Prepare for split files
+  - Test: Directory created
+
+- [x] 10.4.2: Extract activity hooks
+  - Files: src/db/hooks/activities.ts
+  - Move: useActivities, useActivitiesWithTransit, useCurrentActivity, useNextActivity, useActivity
+  - Re-export: From hooks/index.ts
+  - Test: All activity hooks work as before
+
+- [x] 10.4.3: Extract restaurant hooks
+  - Files: src/db/hooks/restaurants.ts
+  - Move: useRestaurants, useRestaurant, useRestaurantOptionsForMeal, useSelectedRestaurant
+  - Re-export: From hooks/index.ts
+  - Test: All restaurant hooks work as before
+
+- [x] 10.4.4: Extract meal selection hooks
+  - Files: src/db/hooks/meal-selection.ts
+  - Move: useMealSelection, setMealSelection, clearMealSelection
+  - Re-export: From hooks/index.ts
+  - Test: Meal selection works as before
+
+- [x] 10.4.5: Extract accommodation hooks
+  - Files: src/db/hooks/accommodations.ts
+  - Move: useAccommodations, useAccommodation, useCurrentAccommodation, useAccommodationsForDay
+  - Re-export: From hooks/index.ts
+  - Test: All accommodation hooks work as before
+
+- [x] 10.4.6: Extract day/trip hooks
+  - Files: src/db/hooks/trip.ts
+  - Move: useDayInfo, useAllDayInfo, useTripInfo, useCurrentDayNumber
+  - Re-export: From hooks/index.ts
+  - Test: All trip hooks work as before
+
+- [x] 10.4.7: Extract utility hooks
+  - Files: src/db/hooks/utilities.ts
+  - Move: useAlerts, useSyncVersion, useChatHistory, usePhrases, useTourContent
+  - Re-export: From hooks/index.ts
+  - Test: All utility hooks work as before
+
+- [x] 10.4.8: Update main hooks.ts as re-export
+  - Files: src/db/hooks.ts
+  - Change: Import and re-export from hooks/index.ts
+  - Backward compat: All existing imports continue to work
+  - Test: `npm run build` passes, all imports work
+
+### 10.5 Accessibility: ARIA Improvements
+
+- [x] 10.5.1: Add aria-hidden to RestaurantDetail SVGs
+  - Files: src/components/restaurants/RestaurantDetail.tsx:205-211
+  - Issue: Definition list icons (clock, location, phone) are decorative
+  - Fix: Add aria-hidden="true" to SVG elements
+  - Test: Screen reader skips decorative icons
+
+- [x] 10.5.2: Add aria-hidden to FlightCard decorative elements
+  - Files: src/components/ui/FlightCard.tsx:38-40
+  - Issue: Decorative circles lack aria-hidden
+  - Fix: Add aria-hidden="true"
+  - Test: Screen reader skips decorative elements
+
+- [x] 10.5.3: Add aria-expanded to CityOverviewCard
+  - Files: src/components/dashboard/CityOverviewCard.tsx:27-29
+  - Issue: Expandable button missing aria-expanded
+  - Fix: Add aria-expanded={isExpanded} and aria-label
+  - Test: Screen reader announces expanded state
+
+- [x] 10.5.4: Add aria-hidden to BottomNav decorative icons
+  - Files: src/components/ui/BottomNav.tsx:18-42
+  - Issue: SVG icons lack explicit aria-hidden (text labels exist)
+  - Fix: Add aria-hidden="true" to SVG icons
+  - Test: Screen reader reads text labels only
+
+- [x] 10.5.5: Verify all interactive elements have labels
+  - Files: src/components/ (audit)
+  - Check: All buttons, links have accessible names
+  - Fix: Add aria-label where missing
+  - Test: aXe or similar accessibility tool passes
+
+**Phase 10 Checkpoint:**
+
+- [x] All JSON.parse calls use safeJsonParse utility
+- [x] All time calculations use Japan timezone via time-utils
+- [x] No hardcoded Tailwind default colors (emerald, slate, rose, pink, blue outside design system)
+- [x] hooks.ts split into modules, each <300 lines
+- [x] All decorative SVGs have aria-hidden="true"
+- [x] Expandable buttons have aria-expanded
+- [x] `npm run build` passes
+- [x] `npm run lint` passes
+- [x] Commit: "refactor: code quality and design system improvements (Phase 10)"
 
 ---
 

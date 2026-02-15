@@ -317,7 +317,7 @@ export function Map({
     if (!userLocation) return;
 
     // Create user location marker with theme-aware primary color
-    const primaryColor = getThemeColor('--primary', '#4285F4');
+    const primaryColor = getThemeColor('--primary', '#F46B55');
     const userPinElement = document.createElement('div');
     userPinElement.innerHTML = `
       <div style="

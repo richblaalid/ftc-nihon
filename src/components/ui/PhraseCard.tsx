@@ -20,9 +20,9 @@ export function PhraseCard({ phrase, className = '', expanded = false }: PhraseC
     <div
       className={`
         relative overflow-hidden rounded-xl
-        bg-gradient-to-br from-rose-50 via-white to-pink-50
-        dark:from-rose-950/30 dark:via-surface dark:to-pink-950/30
-        border border-rose-200 dark:border-rose-800/50
+        bg-gradient-to-br from-primary/5 via-white to-primary/10
+        dark:from-primary/10 dark:via-surface dark:to-primary/20
+        border border-primary/20 dark:border-primary/30
         shadow-sm
         transition-all duration-200
         ${className}
@@ -64,8 +64,8 @@ export function PhraseCard({ phrase, className = '', expanded = false }: PhraseC
             className={`
               inline-flex items-center gap-1 px-2 py-0.5 rounded-full
               text-xs font-medium
-              bg-rose-100 dark:bg-rose-900/40
-              text-rose-700 dark:text-rose-300
+              bg-primary/10 dark:bg-primary/20
+              text-primary
             `}
           >
             {phrase.category}
@@ -85,12 +85,12 @@ export function PhraseCard({ phrase, className = '', expanded = false }: PhraseC
 
       {/* Expanded section with usage context */}
       {isExpanded && (
-        <div className="px-4 pb-4 border-t border-rose-200 dark:border-rose-800/50">
+        <div className="px-4 pb-4 border-t border-primary/20 dark:border-primary/30">
           <div className="pt-3">
             <p className="text-xs font-medium text-foreground-tertiary uppercase tracking-wider mb-2">
               When to use
             </p>
-            <p className="text-sm text-foreground-secondary bg-rose-50 dark:bg-rose-950/50 p-3 rounded-lg">
+            <p className="text-sm text-foreground-secondary bg-primary/5 dark:bg-primary/10 p-3 rounded-lg">
               💡 {phrase.when}
             </p>
           </div>
@@ -108,8 +108,8 @@ export function PhraseCardCompact({ phrase, className = '' }: Omit<PhraseCardPro
     <div
       className={`
         flex items-center gap-3 p-3 rounded-lg
-        bg-rose-50 dark:bg-rose-950/30
-        border border-rose-100 dark:border-rose-900/50
+        bg-primary/5 dark:bg-primary/10
+        border border-primary/10 dark:border-primary/20
         ${className}
       `}
     >
@@ -178,7 +178,7 @@ export function QuickPhrase({ phrase, onClose, className = '' }: QuickPhraseProp
     <div
       className={`
         relative overflow-hidden rounded-2xl p-6
-        bg-gradient-to-br from-rose-500 via-pink-500 to-red-500
+        bg-gradient-to-br from-primary via-accent to-primary
         text-white shadow-xl
         ${className}
       `}

@@ -13,26 +13,26 @@ const DAY_TYPE_CONFIG: Record<DayType, { label: string; icon: string; bgClass: s
   travel: {
     label: 'Travel Day',
     icon: '✈️',
-    bgClass: 'bg-blue-100 dark:bg-blue-900/40',
-    textClass: 'text-blue-700 dark:text-blue-300',
+    bgClass: 'bg-category-transit/20 dark:bg-category-transit/30',
+    textClass: 'text-category-transit',
   },
   self_guided: {
     label: 'Self-Guided',
     icon: '🗺️',
-    bgClass: 'bg-emerald-100 dark:bg-emerald-900/40',
-    textClass: 'text-emerald-700 dark:text-emerald-300',
+    bgClass: 'bg-category-activity/20 dark:bg-category-activity/30',
+    textClass: 'text-category-activity',
   },
   guided_tour: {
     label: 'Guided Tour',
     icon: '🧭',
-    bgClass: 'bg-violet-100 dark:bg-violet-900/40',
-    textClass: 'text-violet-700 dark:text-violet-300',
+    bgClass: 'bg-category-temple/20 dark:bg-category-temple/30',
+    textClass: 'text-category-temple',
   },
   mixed: {
     label: 'Mixed Day',
     icon: '🎯',
-    bgClass: 'bg-amber-100 dark:bg-amber-900/40',
-    textClass: 'text-amber-700 dark:text-amber-300',
+    bgClass: 'bg-secondary/20 dark:bg-secondary/30',
+    textClass: 'text-secondary',
   },
 };
 
@@ -134,7 +134,7 @@ export function DayHeader({ dayInfo, className = '', compact = false }: DayHeade
             <ul className="space-y-1.5">
               {highlights.map((highlight: string, i: number) => (
                 <li key={i} className="flex items-start gap-2 text-sm text-foreground-secondary">
-                  <span className="text-amber-500 mt-0.5">★</span>
+                  <span className="text-secondary mt-0.5">★</span>
                   <span>{highlight}</span>
                 </li>
               ))}
@@ -144,8 +144,8 @@ export function DayHeader({ dayInfo, className = '', compact = false }: DayHeade
 
         {/* Optimization note if present */}
         {dayInfo.optimizationNote && (
-          <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-200 dark:border-blue-800">
-            <p className="text-xs text-blue-700 dark:text-blue-400">
+          <div className="mt-4 p-3 bg-info/10 dark:bg-info/20 rounded-lg border border-info/30 dark:border-info/40">
+            <p className="text-xs text-info">
               <span className="font-semibold">💡 Tip:</span> {dayInfo.optimizationNote}
             </p>
           </div>
