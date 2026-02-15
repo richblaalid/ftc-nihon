@@ -131,9 +131,28 @@ function getMealSlotInfo(
     }
   }
 
-  // Check for Hakone ryokan days (days 7-8 have included dinner and breakfast)
-  if (dayNumber === 7 || dayNumber === 8) {
-    if (meal === 'dinner' && dayNumber === 7) {
+  // Check for Hakone ryokan days:
+  // Day 6: Arrive, dinner included
+  // Day 7: Full day - breakfast AND dinner included
+  // Day 8: Checkout - breakfast included
+  if (dayNumber === 6 && meal === 'dinner') {
+    return {
+      meal,
+      suggestedTime: '18:00',
+      showOptions: false,
+      reason: 'Ryokan dinner included',
+    };
+  }
+  if (dayNumber === 7) {
+    if (meal === 'breakfast') {
+      return {
+        meal,
+        suggestedTime: '07:30',
+        showOptions: false,
+        reason: 'Ryokan breakfast included',
+      };
+    }
+    if (meal === 'dinner') {
       return {
         meal,
         suggestedTime: '18:00',
@@ -141,14 +160,14 @@ function getMealSlotInfo(
         reason: 'Ryokan dinner included',
       };
     }
-    if (meal === 'breakfast' && dayNumber === 8) {
-      return {
-        meal,
-        suggestedTime: '08:00',
-        showOptions: false,
-        reason: 'Ryokan breakfast included',
-      };
-    }
+  }
+  if (dayNumber === 8 && meal === 'breakfast') {
+    return {
+      meal,
+      suggestedTime: '07:00',
+      showOptions: false,
+      reason: 'Ryokan breakfast included',
+    };
   }
 
   // Calculate suggested time based on activity gaps
@@ -267,12 +286,18 @@ export function shouldShowMealOptions(
     }
   }
 
-  // Special handling for ryokan days
-  if (dayNumber === 7 && meal === 'dinner') {
-    return false; // Ryokan dinner on day 7
+  // Special handling for Hakone ryokan days
+  // Day 6: dinner included (arrival)
+  // Day 7: breakfast AND dinner included (full day)
+  // Day 8: breakfast included (checkout)
+  if (dayNumber === 6 && meal === 'dinner') {
+    return false;
+  }
+  if (dayNumber === 7 && (meal === 'breakfast' || meal === 'dinner')) {
+    return false;
   }
   if (dayNumber === 8 && meal === 'breakfast') {
-    return false; // Ryokan breakfast on day 8
+    return false;
   }
 
   return true;
