@@ -10,6 +10,7 @@ FTC: Nihon is an offline-first Progressive Web App (PWA) serving as a travel con
 | -------- | ------- |
 | [docs/plan.md](docs/plan.md) | Technical implementation plan |
 | [docs/tasks.md](docs/tasks.md) | Current task list and progress |
+| [Docs/AI_ITINERARY_EDITING_PROMPT.md](Docs/AI_ITINERARY_EDITING_PROMPT.md) | Rules for AI-assisted itinerary editing |
 | [Docs/product_docs/PRDs/FTC_Nihon_PRD.md](Docs/product_docs/PRDs/FTC_Nihon_PRD.md) | Product Requirements Document |
 | [Docs/product_docs/ADRs/FTC_Nihon_ADRs.md](Docs/product_docs/ADRs/FTC_Nihon_ADRs.md) | Architecture Decision Records (10 ADRs) |
 | [Docs/product_docs/FTC_Nihon_Design_System.md](Docs/product_docs/FTC_Nihon_Design_System.md) | Brand & Design System |
@@ -39,27 +40,33 @@ src/
 │   ├── layout.tsx          # Root layout with providers
 │   ├── page.tsx            # Dashboard home
 │   ├── schedule/           # Daily schedule views
+│   ├── restaurants/        # Restaurant selection pages
 │   ├── map/                # Map views
+│   ├── phrases/            # Japanese phrases
 │   ├── reservations/       # Accommodations
 │   └── manifest.ts         # PWA manifest
 ├── components/
 │   ├── ui/                 # Primitive/shared components
 │   ├── dashboard/          # Dashboard widgets
-│   ├── schedule/           # Schedule components
+│   ├── schedule/           # ActivityCard, TransitCard, SimplifiedTransitCard, WalkIndicator
+│   ├── restaurants/        # RestaurantOptionsCard, RestaurantCard
 │   ├── maps/               # Map components
 │   └── reservations/       # Reservation components
 ├── db/
 │   ├── database.ts         # Dexie.js database class
-│   ├── types.ts            # Database types
-│   └── hooks.ts            # React hooks for data
+│   ├── seed-data.ts        # Trip data (activities, restaurants, transit)
+│   └── hooks.ts            # React hooks for data access
 ├── lib/
+│   ├── meal-slots.ts       # Meal slot determination logic
+│   ├── time-utils.ts       # Time parsing and formatting
+│   ├── json-utils.ts       # Safe JSON parsing (safeJsonParse)
 │   ├── supabase.ts         # Supabase client
 │   ├── sync.ts             # Sync service
-│   └── utils.ts            # Utility functions
+│   └── utils.ts            # General utilities
 ├── stores/
 │   └── sync-store.ts       # Zustand stores
 └── types/
-    └── database.ts         # TypeScript types
+    └── database.ts         # TypeScript types (Activity, TransitSegment, etc.)
 public/
 ├── sw.js                   # Service worker
 ├── icon-192x192.png        # PWA icons
@@ -185,6 +192,25 @@ npm run test:e2e   # Run Playwright E2E tests
 .shadow-theme-sm/md/lg  /* Mode-aware shadows */
 ```
 
+### Schedule Components
+
+**Transit Rendering** - Activities with `transitRenderType` control how they appear in Timeline:
+
+| Value | Renders As | Use Case |
+|-------|------------|----------|
+| `'full'` | TransitCard only | Train journeys with detailed steps |
+| `'simplified'` | SimplifiedTransitCard | Scenic transit (ropeway, cable car, pirate ship) |
+| `'walk'` | WalkIndicator | Short walking segments |
+| `'keep'` | ActivityCard | Buffer time, keep as activity |
+| `'flight'` | ActivityCard | Flight activities |
+| `null` | ActivityCard + TransitCard | Regular activity with transit info |
+
+**Key Components:**
+- `TransitCard` - Full transit with countdown, steps, Map/Phrases quick actions
+- `SimplifiedTransitCard` - Icons: 🚡 ropeway, 🚃 cable car, ⛵ pirate ship, 🚌 bus
+- `WalkIndicator` - Minimal "🚶 Walk to X (Ymin)"
+- `RestaurantOptionsCard` - Meal selection with primary/alternative options
+
 ### Animation Guidelines
 - Duration: 150ms (fast), 250ms (normal), 400ms (slow)
 - Easing: ease-out for enter, ease-in for exit
@@ -234,6 +260,15 @@ npm run test:e2e   # Run Playwright E2E tests
 - Always use Dexie.js hooks (useActivities, etc.)
 - Supabase is sync layer only, not primary data source
 
+### Meal Slot Logic
+
+Meals show "included" (no restaurant options) when:
+- **Ryokan days hardcoded:** Day 6 dinner, Day 7 breakfast/dinner, Day 8 breakfast
+- **Plan note contains:** `"included"`, `"ryokan"`, or `"yoshimatsu"`
+- **Hotel breakfast:** Only if note says `"hotel breakfast"` or `"hotel"` + `"included"`
+
+Otherwise, RestaurantOptionsCard shows primary/alternative restaurant options.
+
 ### Git
 
 - Commit after each completed task
@@ -255,8 +290,14 @@ Key decisions documented in ADRs:
 
 See [docs/tasks.md](docs/tasks.md) for current implementation status.
 
-**Current Phase:** Phase 1 (Data Layer & Sync)
-**MVP Status:** In Progress
+**Current Phase:** Feature Complete (MVP)
+**Status:** Schedule, Restaurants, Transit, Checklist, Phrases all functional
+
+### Recent Completions
+- Transit refactor: TransitCard enhancements, SimplifiedTransitCard, WalkIndicator
+- Restaurant selection with meal slots
+- Checklist with confirmation modals
+- Timezone handling (Japan-first)
 
 ## Session Protocol
 
@@ -337,6 +378,17 @@ NEXT_PUBLIC_WEATHER_API_KEY=     # Weather API key (Phase 2)
 - Check Supabase real-time connection
 - Verify network connectivity
 - Check browser console for errors
+
+### Seed data not updating
+
+After modifying `src/db/seed-data.ts`, clear IndexedDB to force reseed:
+
+```javascript
+// Run in browser DevTools console:
+indexedDB.deleteDatabase('ftc-nihon-db')
+```
+
+Then refresh the page. The app will reseed from the updated seed-data.ts.
 
 ## Key Constraints
 
