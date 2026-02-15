@@ -26,7 +26,7 @@ import { PHRASES as phrases } from './seed-phrases';
  * Data version - increment this when seed data changes to trigger a reseed
  * This allows updating phrases/data without users needing to clear their browser data
  */
-const DATA_VERSION = 3; // Incremented: added Japan travel prep checklist items
+const DATA_VERSION = 5; // Added: Google Maps URLs, restaurant meal assignments for v3 itinerary, Tsukiji/Shibuya restaurants
 const DATA_VERSION_KEY = 'ftc-nihon-data-version';
 
 /**

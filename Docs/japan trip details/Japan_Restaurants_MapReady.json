@@ -48,8 +48,7 @@
         "kidFriendly": true,
         "notes": "Individual booths, customizable. Vending machine ordering.",
         "assignedMeals": [
-          {"day": 2, "date": "2026-03-07", "meal": "dinner", "priority": "alternative"},
-          {"day": 6, "date": "2026-03-11", "meal": "dinner", "priority": "primary"}
+          {"day": 2, "date": "2026-03-07", "meal": "dinner", "priority": "alternative"}
         ]
       },
       {
@@ -271,6 +270,84 @@
         "assignedMeals": [
           {"day": 6, "date": "2026-03-11", "meal": "dinner", "priority": "alternative"}
         ]
+      },
+      {
+        "id": "tsukiji-outer-market",
+        "name": "Tsukiji Outer Market",
+        "nameJapanese": "築地場外市場",
+        "type": "Market/Street Food",
+        "coordinates": {
+          "lat": 35.6654,
+          "lng": 139.7707
+        },
+        "address": "4-16-2 Tsukiji, Chuo-ku, Tokyo",
+        "addressJapanese": "〒104-0045 東京都中央区築地4-16-2",
+        "nearestStation": "Tsukiji Station (1 min)",
+        "hours": "5:00-14:00 (varies by stall)",
+        "priceRange": "¥500-3,000",
+        "kidFriendly": true,
+        "notes": "Former fish market. Fresh sushi, tamagoyaki, street food. Go early!",
+        "assignedMeals": [
+          {"day": 5, "date": "2026-03-10", "meal": "breakfast", "priority": "primary"}
+        ]
+      },
+      {
+        "id": "sushi-dai-tsukiji",
+        "name": "Sushi Dai",
+        "nameJapanese": "寿司大",
+        "type": "Sushi",
+        "coordinates": {
+          "lat": 35.6651,
+          "lng": 139.7701
+        },
+        "address": "Tsukiji Outer Market area",
+        "nearestStation": "Tsukiji Station",
+        "hours": "6:30-14:00 (Closed Sun/holidays)",
+        "priceRange": "¥3,000-5,000",
+        "kidFriendly": true,
+        "notes": "Famous omakase set. LONG LINES - arrive by 6am or skip.",
+        "assignedMeals": [
+          {"day": 5, "date": "2026-03-10", "meal": "breakfast", "priority": "alternative"}
+        ]
+      },
+      {
+        "id": "shibuya-scramble-square",
+        "name": "Shibuya Scramble Square Food Hall",
+        "nameJapanese": "渋谷スクランブルスクエア",
+        "type": "Food Hall",
+        "coordinates": {
+          "lat": 35.6584,
+          "lng": 139.7022
+        },
+        "address": "2-24-12 Shibuya, Shibuya-ku",
+        "addressJapanese": "〒150-0002 東京都渋谷区渋谷2-24-12",
+        "nearestStation": "Shibuya Station (direct access)",
+        "hours": "10:00-21:00",
+        "priceRange": "¥1,000-3,000",
+        "kidFriendly": true,
+        "notes": "Multiple restaurants, great views from Shibuya Sky observation deck.",
+        "assignedMeals": [
+          {"day": 6, "date": "2026-03-11", "meal": "dinner", "priority": "primary"}
+        ]
+      },
+      {
+        "id": "genki-sushi-shibuya",
+        "name": "Genki Sushi Shibuya",
+        "nameJapanese": "元気寿司 渋谷店",
+        "type": "Conveyor Belt Sushi",
+        "coordinates": {
+          "lat": 35.6595,
+          "lng": 139.6985
+        },
+        "address": "Shibuya area",
+        "nearestStation": "Shibuya Station",
+        "hours": "11:00-23:00",
+        "priceRange": "¥1,000-2,500",
+        "kidFriendly": true,
+        "notes": "Fun conveyor belt sushi. Tablet ordering. Great for kids!",
+        "assignedMeals": [
+          {"day": 6, "date": "2026-03-11", "meal": "dinner", "priority": "alternative"}
+        ]
       }
     ],
     "hakone": [
@@ -355,6 +432,7 @@
         "kidFriendly": true,
         "notes": "Historic geisha district. Riverside terraces in summer.",
         "assignedMeals": [
+          {"day": 9, "date": "2026-03-14", "meal": "dinner", "priority": "primary"},
           {"day": 11, "date": "2026-03-16", "meal": "dinner", "priority": "primary"}
         ]
       },
@@ -695,21 +773,21 @@
     {
       "day": 5,
       "date": "2026-03-10",
-      "location": "Tokyo",
+      "location": "Tokyo - Tsukiji + Akihabara",
       "meals": {
-        "breakfast": {"note": "Hotel"},
-        "lunch": {"primary": "syabu-yo-akihabara"},
+        "breakfast": {"primary": "tsukiji-outer-market", "alternatives": ["sushi-dai-tsukiji"], "note": "Tsukiji IS breakfast - go early!"},
+        "lunch": {"primary": "syabu-yo-akihabara", "note": "Late lunch after Akihabara exploration"},
         "dinner": {"primary": "ebisu-yokocho", "alternatives": ["afuri-ebisu"]}
       }
     },
     {
       "day": 6,
       "date": "2026-03-11",
-      "location": "Tokyo",
+      "location": "Tokyo - TeamLab + Shibuya",
       "meals": {
-        "breakfast": {"note": "Sleep in, late breakfast"},
-        "lunch": {"note": "Odaiba area"},
-        "dinner": {"primary": "ichiran-shinjuku", "alternatives": ["matsuya"]}
+        "breakfast": {"note": "Sleep in! Late leisurely breakfast near hotel"},
+        "lunch": {"note": "Azabudai Hills area near TeamLab"},
+        "dinner": {"primary": "shibuya-scramble-square", "alternatives": ["genki-sushi-shibuya"], "note": "Shibuya area after exploring"}
       }
     },
     {
@@ -737,9 +815,9 @@
       "date": "2026-03-14",
       "location": "Hakone → Kyoto",
       "meals": {
-        "breakfast": {"primary": "yoshimatsu-ryokan", "note": "INCLUDED"},
-        "lunch": {"note": "Shinkansen bento"},
-        "dinner": {"note": "Near Kyoto machiya"}
+        "breakfast": {"primary": "yoshimatsu-ryokan", "note": "INCLUDED at ryokan"},
+        "lunch": {"note": "Ekiben on Shinkansen or Kyoto Station Porta"},
+        "dinner": {"primary": "pontocho", "note": "First Kyoto evening - explore Pontocho Alley"}
       }
     },
     {
@@ -788,21 +866,21 @@
     {
       "day": 14,
       "date": "2026-03-19",
-      "location": "Osaka - Nara/Sumo",
+      "location": "Osaka - Mountain Day Trip",
       "meals": {
-        "breakfast": {"note": "MIMARU"},
-        "lunch": {"note": "Nara area"},
-        "dinner": {"note": "Emma's Birthday - TBD"}
+        "breakfast": {"note": "MIMARU - early for driver pickup"},
+        "lunch": {"note": "Mico/Driver will arrange"},
+        "dinner": {"note": "Return to Osaka, local area"}
       }
     },
     {
       "day": 15,
       "date": "2026-03-20",
-      "location": "Osaka",
+      "location": "Nara + Sumo - Emma's Birthday!",
       "meals": {
-        "breakfast": {"note": "MIMARU"},
-        "lunch": {"note": "Shopping area"},
-        "dinner": {"note": "Final Osaka meal"}
+        "breakfast": {"note": "MIMARU - quick, early departure 08:00"},
+        "lunch": {"note": "Nara area - light snacks/mochi"},
+        "dinner": {"note": "🎂 Emma's Birthday dinner - Ask Mico for recommendation"}
       }
     },
     {
@@ -810,8 +888,8 @@
       "date": "2026-03-21",
       "location": "Departure",
       "meals": {
-        "breakfast": {"note": "Early checkout"},
-        "lunch": {"note": "Airport/flight"}
+        "breakfast": {"note": "MIMARU - early checkout"},
+        "lunch": {"note": "Ekiben on Shinkansen or Haneda restaurants"}
       }
     }
   ],
