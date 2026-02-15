@@ -22,20 +22,18 @@ Related plan: [transit-refactor-plan.md](./transit-refactor-plan.md)
 
 ---
 
-## Phase 2: Create Supporting Components
+## Phase 2: Create Supporting Components ✓
 
-- [ ] **2.1** Create `SimplifiedTransitCard` component
+- [x] **2.1** Create `SimplifiedTransitCard` component ✓ 2026-02-15
   - Files: `src/components/schedule/SimplifiedTransitCard.tsx`
-  - Props: title, duration, mode, coveredByPass, startTime
-  - Modes: ropeway, cable_car, bus, walk
-  - Simpler design than full TransitCard
-  - Estimated: 20 min
+  - Props: title, duration, mode, coveredByPass, startTime, isCompleted
+  - Modes: ropeway, cable_car, bus, walk, pirate_ship
+  - Compact design for scenic transit
 
-- [ ] **2.2** Create `WalkIndicator` component
+- [x] **2.2** Create `WalkIndicator` component ✓ 2026-02-15
   - Files: `src/components/schedule/WalkIndicator.tsx`
   - Minimal design: 🚶 Walk to [destination] (Xmin)
-  - Used between activities without full transit
-  - Estimated: 10 min
+  - Used for activities with transitRenderType='walk'
 
 ---
 
@@ -60,27 +58,24 @@ Related plan: [transit-refactor-plan.md](./transit-refactor-plan.md)
 
 ---
 
-## Phase 4: Update Timeline Rendering
+## Phase 4: Update Timeline Rendering ✓
 
-- [ ] **4.1** Update Timeline.tsx to skip duplicate Activity cards
+- [x] **4.1** Update Timeline.tsx to skip duplicate Activity cards ✓ 2026-02-15
   - Files: `src/components/schedule/Timeline.tsx`
-  - When activity has linked TransitSegment, don't render ActivityCard
-  - Estimated: 15 min
+  - Activities with transitRenderType='full' now render as TransitCard (no ActivityCard)
 
-- [ ] **4.2** Update Timeline.tsx to render SimplifiedTransitCard
+- [x] **4.2** Update Timeline.tsx to render SimplifiedTransitCard ✓ 2026-02-15
   - Files: `src/components/schedule/Timeline.tsx`
-  - For activities with transitRenderType='simplified'
-  - Estimated: 15 min
+  - Activities with transitRenderType='simplified' render SimplifiedTransitCard
+  - Auto-detects mode from activity name (ropeway, cable_car, pirate_ship, bus, walk)
 
-- [ ] **4.3** Update Timeline.tsx to render WalkIndicator
+- [x] **4.3** Update Timeline.tsx to render WalkIndicator ✓ 2026-02-15
   - Files: `src/components/schedule/Timeline.tsx`
-  - For activities with transitRenderType='walk'
-  - Estimated: 10 min
+  - Activities with transitRenderType='walk' render WalkIndicator
 
-- [ ] **4.4** Pass title from Activity to TransitCard
+- [x] **4.4** Pass title from Activity to TransitCard ✓ 2026-02-15
   - Files: `src/components/schedule/Timeline.tsx`
-  - When rendering TransitCard, inject linked Activity's name as title
-  - Estimated: 10 min
+  - TransitCard now receives activity name as title prop
 
 ---
 
