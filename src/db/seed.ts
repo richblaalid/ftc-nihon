@@ -26,7 +26,7 @@ import { PHRASES as phrases } from './seed-phrases';
  * Data version - increment this when seed data changes to trigger a reseed
  * This allows updating phrases/data without users needing to clear their browser data
  */
-export const DATA_VERSION = 11; // Reseed activities to fix ID linking with transit segments
+export const DATA_VERSION = 12; // Reseed dayInfo to clear stale optimization notes
 const DATA_VERSION_KEY = 'ftc-nihon-data-version';
 
 /**
@@ -92,6 +92,16 @@ async function reseedActivities(): Promise<void> {
 }
 
 /**
+ * Reseed dayInfo table (for clearing stale optimization notes)
+ */
+async function reseedDayInfo(): Promise<void> {
+  console.log('[Seed] Reseeding dayInfo due to data version change...');
+  await db.dayInfo.clear();
+  await db.dayInfo.bulkAdd(dayInfo);
+  console.log(`[Seed] Reseeded ${dayInfo.length} day info records`);
+}
+
+/**
  * Check and update data if version changed
  */
 export async function checkDataVersion(): Promise<void> {
@@ -111,6 +121,9 @@ export async function checkDataVersion(): Promise<void> {
 
     // Reseed activities (to fix activity IDs matching transit segments)
     await reseedActivities();
+
+    // Reseed dayInfo (to clear stale optimization notes)
+    await reseedDayInfo();
 
     // Update stored version
     setStoredDataVersion(DATA_VERSION);
