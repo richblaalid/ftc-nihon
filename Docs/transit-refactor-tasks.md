@@ -39,28 +39,24 @@ Related plan: [transit-refactor-plan.md](./transit-refactor-plan.md)
 
 ---
 
-## Phase 3: Update Data Layer
+## Phase 3: Update Data Layer ✓
 
-- [ ] **3.1** Add `title` field to TransitSegment type
+- [x] **3.1** Add `title` field to TransitSegment type ✓ 2026-02-15
   - Files: `src/types/database.ts`
   - Optional string field
-  - Estimated: 5 min
 
-- [ ] **3.2** Add `transitRenderType` field to Activity type
+- [x] **3.2** Add `transitRenderType` field to Activity type ✓ 2026-02-15
   - Files: `src/types/database.ts`
   - Enum: 'full' | 'simplified' | 'walk' | 'keep' | 'flight' | null
-  - Estimated: 5 min
 
-- [ ] **3.3** Update seed-data.ts - Add titles to TransitSegments
+- [x] **3.3** Update seed-data.ts - Add titles to TransitSegments ✓ 2026-02-15
   - Files: `src/db/seed-data.ts`
-  - Add title field to all 23 TransitSegments from linked Activity names
-  - Estimated: 15 min
+  - Added title field to all 23 TransitSegments from linked Activity names
 
-- [ ] **3.4** Update seed-data.ts - Mark transit type on Activities
+- [x] **3.4** Update seed-data.ts - Mark transit type on Activities ✓ 2026-02-15
   - Files: `src/db/seed-data.ts`
-  - Add transitRenderType to all 32 transit activities
-  - Map each to appropriate render type
-  - Estimated: 20 min
+  - Added transitRenderType to all 32 transit activities
+  - Mapped each to appropriate render type (full, simplified, walk, keep, flight)
 
 ---
 
