@@ -1,5 +1,6 @@
 'use client';
 
+import { safeJsonParse } from '@/lib/json-utils';
 import type { DayInfo, DayType } from '@/types/database';
 
 interface DayHeaderProps {
@@ -40,7 +41,7 @@ const DAY_TYPE_CONFIG: Record<DayType, { label: string; icon: string; bgClass: s
  * Used at the top of daily schedule views
  */
 export function DayHeader({ dayInfo, className = '', compact = false }: DayHeaderProps) {
-  const highlights = dayInfo.highlights ? JSON.parse(dayInfo.highlights) : [];
+  const highlights = safeJsonParse<string[]>(dayInfo.highlights, []);
   const typeConfig = DAY_TYPE_CONFIG[dayInfo.type];
 
   // Format date for display - use Japan timezone since all dates are Japan dates

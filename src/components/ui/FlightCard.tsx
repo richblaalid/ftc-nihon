@@ -1,5 +1,6 @@
 'use client';
 
+import { safeJsonParse } from '@/lib/json-utils';
 import type { Flight } from '@/types/database';
 
 interface FlightCardProps {
@@ -13,7 +14,7 @@ interface FlightCardProps {
  */
 export function FlightCard({ flight, className = '' }: FlightCardProps) {
   const isOutbound = flight.type === 'outbound';
-  const seats = flight.seats ? JSON.parse(flight.seats) : [];
+  const seats = safeJsonParse<string[]>(flight.seats, []);
 
   // Format date for display
   const formatDate = (dateTime: string) => {

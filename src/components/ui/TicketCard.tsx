@@ -1,5 +1,6 @@
 'use client';
 
+import { safeJsonParse } from '@/lib/json-utils';
 import type { Ticket } from '@/types/database';
 
 interface TicketCardProps {
@@ -14,8 +15,8 @@ interface TicketCardProps {
  */
 export function TicketCard({ ticket, className = '', showPurchaseReminder = true }: TicketCardProps) {
   const isPurchased = ticket.status === 'purchased';
-  const confirmations = ticket.confirmations ? JSON.parse(ticket.confirmations) : [];
-  const tips = ticket.tips ? JSON.parse(ticket.tips) : [];
+  const confirmations = safeJsonParse<string[]>(ticket.confirmations, []);
+  const tips = safeJsonParse<string[]>(ticket.tips, []);
 
   // Parse date string as local date (avoids UTC timezone issues)
   const parseLocalDate = (dateStr: string) => {
