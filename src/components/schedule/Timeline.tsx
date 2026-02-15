@@ -1,9 +1,11 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import type { ActivityWithTransit, MealType, TransitSegment } from '@/types/database';
+import type { ActivityWithTransit, MealType, TransitSegment, TransitRenderType } from '@/types/database';
 import { ActivityCard } from './ActivityCard';
 import { TransitCard } from './TransitCard';
+import { SimplifiedTransitCard } from './SimplifiedTransitCard';
+import { WalkIndicator } from './WalkIndicator';
 import { RestaurantOptionsCard } from '@/components/restaurants/RestaurantOptionsCard';
 import {
   useDayInfo,
@@ -96,6 +98,20 @@ const MEAL_ICONS: Record<MealType, string> = {
   snack: '🍡',
   afternoon: '🍵',
 };
+
+/**
+ * Determine the mode for SimplifiedTransitCard based on activity name
+ */
+function getSimplifiedMode(name: string): 'ropeway' | 'cable_car' | 'bus' | 'walk' | 'pirate_ship' {
+  const lowerName = name.toLowerCase();
+  if (lowerName.includes('ropeway')) return 'ropeway';
+  if (lowerName.includes('cable car') || lowerName.includes('funicular')) return 'cable_car';
+  if (lowerName.includes('pirate') || lowerName.includes('ship') || lowerName.includes('boat')) return 'pirate_ship';
+  if (lowerName.includes('bus')) return 'bus';
+  if (lowerName.includes('walk')) return 'walk';
+  // Default to cable_car for Hakone scenic transit
+  return 'cable_car';
+}
 
 /**
  * Wrapper component for RestaurantOptionsCard that fetches its own data
@@ -229,16 +245,44 @@ export function Timeline({ activities, currentActivityId }: TimelineProps) {
   // Create a combined list of activities, transit cards, meal slots, and walking indicators
   type TimelineItem =
     | { type: 'activity'; activity: ActivityWithTransit; state: 'current' | 'completed' | 'upcoming' }
-    | { type: 'transit'; transit: TransitSegment; activityState: 'current' | 'completed' | 'upcoming' }
+    | { type: 'transit'; transit: TransitSegment; activityName: string; activityState: 'current' | 'completed' | 'upcoming' }
+    | { type: 'simplified'; activity: ActivityWithTransit; state: 'current' | 'completed' | 'upcoming' }
+    | { type: 'walk-activity'; activity: ActivityWithTransit; state: 'current' | 'completed' | 'upcoming' }
     | { type: 'meal'; slot: MealSlot; isPast: boolean }
     | { type: 'walk'; toActivity: string; activityState: 'current' | 'completed' | 'upcoming' };
 
-  // First, collect activities and meals (NOT transit) and sort them by time
+  // First, collect activities and meals, mapping them based on transitRenderType
   const activitiesAndMeals: TimelineItem[] = [];
 
   for (const activity of activities) {
     const state = getActivityState(activity, currentActivityId, isViewingToday, todayStr);
-    activitiesAndMeals.push({ type: 'activity', activity, state });
+    const renderType = activity.transitRenderType;
+
+    // Determine what type of item to render based on transitRenderType
+    if (renderType === 'full') {
+      // Skip 'full' transit activities entirely - they're duplicates
+      // The real transit info is shown via the destination activity's transit segment
+      continue;
+    } else if (renderType === 'simplified') {
+      // For 'simplified': render SimplifiedTransitCard
+      activitiesAndMeals.push({ type: 'simplified', activity, state });
+    } else if (renderType === 'walk') {
+      // For 'walk': render WalkIndicator
+      activitiesAndMeals.push({ type: 'walk-activity', activity, state });
+    } else {
+      // For 'keep', 'flight', or null: check if has linked transit segment
+      if (activity.transit && activity.transit.leaveBy) {
+        // Insert TransitCard BEFORE the activity
+        activitiesAndMeals.push({
+          type: 'transit',
+          transit: activity.transit,
+          activityName: activity.name,
+          activityState: state,
+        });
+      }
+      // Then add the activity itself
+      activitiesAndMeals.push({ type: 'activity', activity, state });
+    }
   }
 
   for (const slot of mealSlots) {
@@ -248,37 +292,24 @@ export function Timeline({ activities, currentActivityId }: TimelineProps) {
   // Sort activities and meals by time
   activitiesAndMeals.sort((a, b) => {
     const getTime = (item: TimelineItem): string => {
-      if (item.type === 'activity') return item.activity.startTime;
-      return (item as { type: 'meal'; slot: MealSlot }).slot.suggestedTime;
+      if (item.type === 'activity' || item.type === 'simplified' || item.type === 'walk-activity') {
+        return item.activity.startTime;
+      }
+      if (item.type === 'transit') {
+        return item.transit.leaveBy;
+      }
+      if (item.type === 'meal') {
+        return item.slot.suggestedTime;
+      }
+      // Walk fallback
+      return '08:00';
     };
     return timeToMinutes(getTime(a)) - timeToMinutes(getTime(b));
   });
 
-  // Now insert transit cards or walking indicators BEFORE their linked activities
-  const timelineItems: TimelineItem[] = [];
-  let prevActivityItem: TimelineItem | null = null;
-
-  for (const item of activitiesAndMeals) {
-    if (item.type === 'activity') {
-      if (item.activity.transit && item.activity.transit.leaveBy) {
-        // Insert transit card right before the activity it's linked to
-        timelineItems.push({
-          type: 'transit',
-          transit: item.activity.transit,
-          activityState: item.state,
-        });
-      } else if (prevActivityItem !== null) {
-        // No transit segment - add walking indicator if not the first activity
-        timelineItems.push({
-          type: 'walk',
-          toActivity: item.activity.name,
-          activityState: item.state,
-        });
-      }
-      prevActivityItem = item;
-    }
-    timelineItems.push(item);
-  }
+  // Transit cards are now added directly in the item creation loop above
+  // (no need to insert separately since transitRenderType='full' creates transit items directly)
+  const timelineItems: TimelineItem[] = [...activitiesAndMeals];
 
   // Group by period - transit cards stay with their linked activity
   const groupedItems: Record<'morning' | 'afternoon' | 'evening', TimelineItem[]> = {
@@ -292,19 +323,13 @@ export function Timeline({ activities, currentActivityId }: TimelineProps) {
     if (!item) continue;
     let time: string;
 
-    if (item.type === 'transit' || item.type === 'walk') {
-      // Transit/walk indicator should be in the same period as its linked activity (next item)
-      const nextItem = timelineItems[i + 1];
-      if (nextItem && nextItem.type === 'activity') {
-        time = nextItem.activity.startTime;
-      } else if (item.type === 'transit') {
-        time = item.transit.leaveBy;
-      } else {
-        // Walk indicator fallback - use morning
-        time = '08:00';
-      }
-    } else if (item.type === 'activity') {
+    if (item.type === 'transit') {
+      time = item.transit.leaveBy;
+    } else if (item.type === 'activity' || item.type === 'simplified' || item.type === 'walk-activity') {
       time = item.activity.startTime;
+    } else if (item.type === 'walk') {
+      // Walk indicator fallback - use morning
+      time = '08:00';
     } else {
       time = item.slot.suggestedTime;
     }
@@ -343,7 +368,8 @@ export function Timeline({ activities, currentActivityId }: TimelineProps) {
                     </li>
                   );
                 } else if (item.type === 'transit') {
-                  const { transit, activityState } = item;
+                  // Task 4.1 & 4.4: Render TransitCard with activity title (replaces ActivityCard)
+                  const { transit, activityName, activityState } = item;
                   const isTransitCompleted = activityState === 'completed';
 
                   return (
@@ -352,6 +378,41 @@ export function Timeline({ activities, currentActivityId }: TimelineProps) {
                         transit={transit}
                         isViewingToday={isViewingToday}
                         isCompleted={isTransitCompleted}
+                        title={activityName}
+                      />
+                    </li>
+                  );
+                } else if (item.type === 'simplified') {
+                  // Task 4.2: Render SimplifiedTransitCard for scenic/simple transit
+                  const { activity, state } = item;
+                  const isCompleted = state === 'completed';
+
+                  // Determine mode from activity name/description
+                  const mode = getSimplifiedMode(activity.name);
+
+                  return (
+                    <li key={activity.id}>
+                      <SimplifiedTransitCard
+                        title={activity.name}
+                        duration={activity.durationMinutes ?? 30}
+                        mode={mode}
+                        coveredByPass={activity.transit?.coveredByPass}
+                        startTime={activity.startTime}
+                        isCompleted={isCompleted}
+                      />
+                    </li>
+                  );
+                } else if (item.type === 'walk-activity') {
+                  // Task 4.3: Render WalkIndicator for short walks
+                  const { activity, state } = item;
+                  const isCompleted = state === 'completed';
+
+                  return (
+                    <li key={activity.id}>
+                      <WalkIndicator
+                        destination={activity.locationName ?? activity.name}
+                        duration={activity.durationMinutes ?? undefined}
+                        isCompleted={isCompleted}
                       />
                     </li>
                   );

@@ -10,6 +10,7 @@ export type TicketStatus = 'purchased' | 'not_purchased';
 export type DayType = 'travel' | 'self_guided' | 'guided_tour' | 'mixed';
 export type AttractionCategory = 'temple' | 'shrine' | 'museum' | 'natural' | 'park' | 'entertainment' | 'market';
 export type ShoppingCategory = 'shoes' | 'knives' | 'sports_merchandise' | 'eyewear' | 'general';
+export type TransitRenderType = 'full' | 'simplified' | 'walk' | 'keep' | 'flight';
 
 export interface Activity {
   id: string;
@@ -35,6 +36,8 @@ export interface Activity {
   sortOrder: number;
   createdAt: string;
   updatedAt: string;
+  // Transit rendering hint (only for category='transit')
+  transitRenderType?: TransitRenderType | null;
 }
 
 export interface TransitStep {
@@ -68,6 +71,7 @@ export interface TransitSegment {
   createdAt: string;
   updatedAt: string;
   // Enhanced fields from verified transit data
+  title?: string; // Display title (e.g., "Transit to Ghibli Museum") - inherited from linked activity
   summary?: string; // Human-readable one-liner (e.g., "Limousine Bus to Shinjuku (~50 min, ¥1,300)")
   notes?: string; // Additional context or tips (e.g., "Easiest option with luggage")
   googleMapsUrl?: string; // Deep link for Google Maps directions
