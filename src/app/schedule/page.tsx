@@ -9,6 +9,7 @@ import { useAppStore } from '@/stores/app-store';
 import { DayHeader } from '@/components/ui/DayHeader';
 import { HardDeadlineList } from '@/components/ui/HardDeadlineAlert';
 import { useSwipe } from '@/lib/hooks/useSwipe';
+import { safeJsonParse } from '@/lib/json-utils';
 import { TRIP_DAYS } from '@/types/database';
 import type { HardDeadline } from '@/types/database';
 
@@ -108,10 +109,11 @@ function ScheduleContent() {
   const currentActivity = useCurrentActivity();
   const dayInfo = useDayInfo(selectedDay);
 
-  // Parse hard deadlines from day info
-  const hardDeadlines: HardDeadline[] = dayInfo?.hardDeadlines
-    ? JSON.parse(dayInfo.hardDeadlines)
-    : [];
+  // Parse hard deadlines from day info (safe parse prevents crashes on corrupted data)
+  const hardDeadlines: HardDeadline[] = safeJsonParse<HardDeadline[]>(
+    dayInfo?.hardDeadlines,
+    []
+  );
 
   // Determine if we're viewing today
   const isToday = selectedDay === currentDayNumber;

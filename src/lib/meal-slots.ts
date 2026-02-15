@@ -4,6 +4,12 @@
  */
 
 import type { Activity, MealType, DayInfo, MealPlan } from '@/types/database';
+import { safeJsonParse } from '@/lib/json-utils';
+import {
+  parseTimeToMinutes,
+  isTimeBetween,
+  minutesToTimeString,
+} from '@/lib/time-utils';
 
 /**
  * Meal slot information for schedule display
@@ -32,21 +38,11 @@ const DEFAULT_MEAL_TIMES: Record<MealType, string> = {
 const MAIN_MEALS: MealType[] = ['breakfast', 'lunch', 'dinner'];
 
 /**
- * Parse time string to minutes since midnight
+ * Wrapper for parseTimeToMinutes that returns 0 for invalid times
+ * (maintains backward compatibility with existing logic)
  */
 function timeToMinutes(time: string): number {
-  const [hours, minutes] = time.split(':').map(Number);
-  return (hours ?? 0) * 60 + (minutes ?? 0);
-}
-
-/**
- * Check if a time falls within a range
- */
-function isTimeBetween(time: string, start: string, end: string): boolean {
-  const t = timeToMinutes(time);
-  const s = timeToMinutes(start);
-  const e = timeToMinutes(end);
-  return t >= s && t <= e;
+  return parseTimeToMinutes(time) ?? 0;
 }
 
 /**
@@ -64,15 +60,11 @@ export function getMealSlotsForDay(
 ): MealSlot[] {
   const slots: MealSlot[] = [];
 
-  // Parse meal plan from dayInfo if available
-  let mealPlan: MealPlan | null = null;
-  if (dayInfo?.meals) {
-    try {
-      mealPlan = JSON.parse(dayInfo.meals) as MealPlan;
-    } catch {
-      mealPlan = null;
-    }
-  }
+  // Parse meal plan from dayInfo if available (safe parse prevents crashes)
+  const mealPlan: MealPlan | null = safeJsonParse<MealPlan | null>(
+    dayInfo?.meals,
+    null
+  );
 
   for (const meal of MAIN_MEALS) {
     const slot = getMealSlotInfo(meal, dayNumber, activities, mealPlan);
@@ -249,10 +241,7 @@ function calculateMealTime(
  * Add minutes to a time string
  */
 function addMinutes(time: string, minutes: number): string {
-  const totalMinutes = timeToMinutes(time) + minutes;
-  const hours = Math.floor(totalMinutes / 60) % 24;
-  const mins = totalMinutes % 60;
-  return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
+  return minutesToTimeString(timeToMinutes(time) + minutes);
 }
 
 /**

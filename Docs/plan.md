@@ -206,6 +206,43 @@ Supabase real-time subscriptions → Update IndexedDB → UI refreshes
 - Add meeting point feature
 - Verify: Location shares visible to all users
 
+### Phase 10: Code Quality & Design System Improvements
+
+**Goal:** Address findings from comprehensive code audit
+**Depends on:** Phase 6 (current)
+
+#### 10.1 Critical: Error Handling
+- Add try-catch to all JSON.parse calls (7 locations)
+- Prevent app crashes on corrupted IndexedDB data
+- Implement safe JSON parsing utility function
+
+#### 10.2 Critical: Timezone Consistency
+- Fix NextWidget to use Japan timezone instead of local time
+- Create shared time utilities in lib/time-utils.ts
+- Consolidate duplicated time functions
+
+#### 10.3 Design System: Color Standardization
+- Replace Tailwind defaults with FTC design system colors
+- Add missing semantic colors (rose/pink → use existing palette)
+- Centralize city colors and day type colors
+
+#### 10.4 Code Organization: Hooks Refactoring
+- Split hooks.ts (900 lines) into focused modules
+- Create src/db/hooks/ directory with categorized hook files
+- Maintain backward-compatible re-exports
+
+#### 10.5 Accessibility: ARIA Improvements
+- Add aria-hidden to decorative SVGs
+- Add aria-expanded to expandable buttons
+- Ensure all interactive elements have proper labels
+
+**Verify:**
+- All JSON.parse calls wrapped in try-catch
+- Time calculations use Japan timezone consistently
+- No hardcoded Tailwind default colors in components
+- hooks.ts split into <300 line modules
+- All decorative SVGs have aria-hidden="true"
+
 ---
 
 ## External Dependencies

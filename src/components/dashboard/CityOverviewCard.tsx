@@ -27,6 +27,8 @@ export function CityOverviewCard() {
       <button
         onClick={() => setIsExpanded(!isExpanded)}
         className="flex w-full items-center justify-between text-left"
+        aria-expanded={isExpanded}
+        aria-label={`Learn about ${currentCity}. ${isExpanded ? 'Expanded' : 'Collapsed'}`}
       >
         <div className="flex items-center gap-3">
           <span className="text-2xl" aria-hidden="true">

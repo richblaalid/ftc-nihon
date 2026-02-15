@@ -202,7 +202,7 @@ export function RestaurantDetail({
           {restaurant.hours && (
             <div className="flex items-start gap-3">
               <dt className="text-foreground-tertiary">
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -219,7 +219,7 @@ export function RestaurantDetail({
           {(restaurant.address || restaurant.addressJapanese) && (
             <div className="flex items-start gap-3">
               <dt className="text-foreground-tertiary">
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -253,7 +253,7 @@ export function RestaurantDetail({
           {restaurant.nearestStation && (
             <div className="flex items-start gap-3">
               <dt className="text-foreground-tertiary">
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -270,7 +270,7 @@ export function RestaurantDetail({
           {restaurant.phone && (
             <div className="flex items-start gap-3">
               <dt className="text-foreground-tertiary">
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"

@@ -13,22 +13,11 @@ import {
 } from '@/db/hooks';
 import { getMealSlotsForDay, type MealSlot } from '@/lib/meal-slots';
 import { getCurrentDate, getJapanDateString } from '@/lib/utils';
+import { getJapanTimeString, parseTimeToMinutes, minutesToTimeString } from '@/lib/time-utils';
 
 interface TimelineProps {
   activities: ActivityWithTransit[];
   currentActivityId?: string | null;
-}
-
-/**
- * Get current time in Japan timezone as HH:MM
- */
-function getJapanTime(date: Date): string {
-  return date.toLocaleTimeString('en-US', {
-    timeZone: 'Asia/Tokyo',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  });
 }
 
 /**
@@ -55,17 +44,14 @@ function getActivityState(
 
   // Viewing today - compare times using Japan timezone
   const now = getCurrentDate();
-  const currentTime = getJapanTime(now);
+  const currentTime = getJapanTimeString(now);
 
-  // Calculate activity end time
+  // Calculate activity end time using shared utilities
   let endTime = activity.startTime;
   if (activity.durationMinutes) {
-    const [hours, mins] = activity.startTime.split(':').map(Number);
-    if (hours !== undefined && mins !== undefined) {
-      const totalMins = hours * 60 + mins + activity.durationMinutes;
-      const endHours = Math.floor(totalMins / 60) % 24;
-      const endMins = totalMins % 60;
-      endTime = `${endHours.toString().padStart(2, '0')}:${endMins.toString().padStart(2, '0')}`;
+    const startMins = parseTimeToMinutes(activity.startTime);
+    if (startMins !== null) {
+      endTime = minutesToTimeString(startMins + activity.durationMinutes);
     }
   }
 
@@ -175,7 +161,7 @@ export function Timeline({ activities, currentActivityId }: TimelineProps) {
   const nowRef = useRef<HTMLDivElement>(null);
   const [currentTime, setCurrentTime] = useState<string>(() => {
     const now = getCurrentDate();
-    return getJapanTime(now);
+    return getJapanTimeString(now);
   });
 
   // Get day number from activities
@@ -191,7 +177,7 @@ export function Timeline({ activities, currentActivityId }: TimelineProps) {
   useEffect(() => {
     const updateTime = () => {
       const now = getCurrentDate();
-      setCurrentTime(getJapanTime(now));
+      setCurrentTime(getJapanTimeString(now));
     };
 
     // Update immediately and then every minute

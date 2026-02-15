@@ -2,50 +2,8 @@
 
 import Link from 'next/link';
 import { useNextActivityWithTransit } from '@/db/hooks';
+import { formatTime, getTimeUntil } from '@/lib/time-utils';
 import type { Activity } from '@/types/database';
-
-/**
- * Format time for display (convert 24h to 12h)
- */
-function formatTime(time: string): string {
-  const [hours, minutes] = time.split(':').map(Number);
-  if (hours === undefined || minutes === undefined) return time;
-
-  const suffix = hours >= 12 ? 'PM' : 'AM';
-  const displayHours = hours % 12 || 12;
-  return `${displayHours}:${minutes.toString().padStart(2, '0')} ${suffix}`;
-}
-
-/**
- * Calculate time until activity starts
- */
-function getTimeUntil(startTime: string): string {
-  const now = new Date();
-  const [startH, startM] = startTime.split(':').map(Number);
-  const [nowH, nowM] = [now.getHours(), now.getMinutes()];
-
-  if (startH === undefined || startM === undefined) return '';
-
-  let diffMinutes = startH * 60 + startM - (nowH * 60 + nowM);
-
-  // If negative, it's tomorrow
-  if (diffMinutes < 0) {
-    diffMinutes += 24 * 60;
-  }
-
-  if (diffMinutes < 60) {
-    return `in ${diffMinutes}m`;
-  }
-
-  const hours = Math.floor(diffMinutes / 60);
-  const minutes = diffMinutes % 60;
-
-  if (minutes === 0) {
-    return `in ${hours}h`;
-  }
-
-  return `in ${hours}h ${minutes}m`;
-}
 
 /**
  * Get category color class

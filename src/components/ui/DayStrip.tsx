@@ -9,13 +9,13 @@ interface DayStripProps {
   onDayChange: (day: number) => void;
 }
 
-// City data with colors
+// City data with colors (using design system variables)
 const CITIES = {
-  Travel: { bgLight: 'bg-slate-500', bgMuted: 'bg-slate-100 dark:bg-slate-900/40', textMuted: 'text-slate-700 dark:text-slate-300' },
-  Tokyo: { bgLight: 'bg-coral-500', bgMuted: 'bg-coral-100 dark:bg-coral-900/40', textMuted: 'text-coral-700 dark:text-coral-300' },
-  Hakone: { bgLight: 'bg-emerald-500', bgMuted: 'bg-emerald-100 dark:bg-emerald-900/40', textMuted: 'text-emerald-700 dark:text-emerald-300' },
-  Kyoto: { bgLight: 'bg-violet-500', bgMuted: 'bg-violet-100 dark:bg-violet-900/40', textMuted: 'text-violet-700 dark:text-violet-300' },
-  Osaka: { bgLight: 'bg-amber-500', bgMuted: 'bg-amber-100 dark:bg-amber-900/40', textMuted: 'text-amber-700 dark:text-amber-300' },
+  Travel: { bgLight: 'bg-foreground-tertiary', bgMuted: 'bg-background-secondary dark:bg-background-tertiary', textMuted: 'text-foreground-secondary' },
+  Tokyo: { bgLight: 'bg-primary', bgMuted: 'bg-primary/10 dark:bg-primary/20', textMuted: 'text-primary' },
+  Hakone: { bgLight: 'bg-category-activity', bgMuted: 'bg-category-activity/10 dark:bg-category-activity/20', textMuted: 'text-category-activity' },
+  Kyoto: { bgLight: 'bg-category-temple', bgMuted: 'bg-category-temple/10 dark:bg-category-temple/20', textMuted: 'text-category-temple' },
+  Osaka: { bgLight: 'bg-secondary', bgMuted: 'bg-secondary/10 dark:bg-secondary/20', textMuted: 'text-secondary' },
 } as const;
 
 type CityName = keyof typeof CITIES;

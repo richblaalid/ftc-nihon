@@ -1,5 +1,6 @@
 'use client';
 
+import { safeJsonParse } from '@/lib/json-utils';
 import type { Ticket } from '@/types/database';
 
 interface TicketCardProps {
@@ -14,8 +15,8 @@ interface TicketCardProps {
  */
 export function TicketCard({ ticket, className = '', showPurchaseReminder = true }: TicketCardProps) {
   const isPurchased = ticket.status === 'purchased';
-  const confirmations = ticket.confirmations ? JSON.parse(ticket.confirmations) : [];
-  const tips = ticket.tips ? JSON.parse(ticket.tips) : [];
+  const confirmations = safeJsonParse<string[]>(ticket.confirmations, []);
+  const tips = safeJsonParse<string[]>(ticket.tips, []);
 
   // Parse date string as local date (avoids UTC timezone issues)
   const parseLocalDate = (dateStr: string) => {
@@ -54,10 +55,10 @@ export function TicketCard({ ticket, className = '', showPurchaseReminder = true
       className={`
         relative overflow-hidden rounded-xl
         ${isPurchased
-          ? 'bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/40 dark:to-teal-950/40 border border-emerald-200 dark:border-emerald-800'
+          ? 'bg-gradient-to-br from-category-activity/10 to-category-activity/5 dark:from-category-activity/20 dark:to-category-activity/10 border border-category-activity/30 dark:border-category-activity/40'
           : isUrgent
-            ? 'bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/40 dark:to-orange-950/40 border-2 border-amber-400 dark:border-amber-600'
-            : 'bg-gradient-to-br from-slate-50 to-gray-50 dark:from-slate-900/40 dark:to-gray-900/40 border border-slate-200 dark:border-slate-700'
+            ? 'bg-gradient-to-br from-secondary/10 to-secondary/5 dark:from-secondary/20 dark:to-secondary/10 border-2 border-secondary dark:border-secondary'
+            : 'bg-gradient-to-br from-background-secondary to-background-tertiary dark:from-background-secondary dark:to-background-tertiary border border-foreground-tertiary/20'
         }
         shadow-md
         ${className}
@@ -69,8 +70,8 @@ export function TicketCard({ ticket, className = '', showPurchaseReminder = true
           className={`
             px-4 py-2 text-xs font-bold uppercase tracking-wider text-center
             ${isUrgent
-              ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white animate-pulse'
-              : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200'
+              ? 'bg-gradient-to-r from-secondary to-primary text-white animate-pulse'
+              : 'bg-background-tertiary text-foreground-secondary'
             }
           `}
         >
@@ -93,8 +94,8 @@ export function TicketCard({ ticket, className = '', showPurchaseReminder = true
             className={`
               shrink-0 inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold
               ${isPurchased
-                ? 'bg-emerald-500 text-white'
-                : 'bg-slate-400 dark:bg-slate-600 text-white'
+                ? 'bg-success text-white'
+                : 'bg-foreground-tertiary text-white'
               }
             `}
           >
@@ -146,15 +147,15 @@ export function TicketCard({ ticket, className = '', showPurchaseReminder = true
 
         {/* Confirmation codes (if purchased) */}
         {isPurchased && confirmations.length > 0 && (
-          <div className="mb-3 p-3 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg">
-            <p className="text-xs text-emerald-700 dark:text-emerald-400 uppercase tracking-wider font-medium mb-1">
+          <div className="mb-3 p-3 bg-success/10 dark:bg-success/20 rounded-lg">
+            <p className="text-xs text-success uppercase tracking-wider font-medium mb-1">
               Confirmation {confirmations.length > 1 ? 'Codes' : 'Code'}
             </p>
             <div className="flex flex-wrap gap-2">
               {confirmations.map((code: string, i: number) => (
                 <code
                   key={i}
-                  className="px-2 py-1 bg-emerald-200 dark:bg-emerald-800 text-emerald-800 dark:text-emerald-200 rounded font-mono text-sm font-bold"
+                  className="px-2 py-1 bg-success/20 dark:bg-success/30 text-success rounded font-mono text-sm font-bold"
                 >
                   {code}
                 </code>
@@ -165,15 +166,15 @@ export function TicketCard({ ticket, className = '', showPurchaseReminder = true
 
         {/* Purchase info (if not purchased) */}
         {!isPurchased && ticket.purchaseWebsite && (
-          <div className="mb-3 p-3 bg-amber-100/50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
-            <p className="text-xs text-amber-700 dark:text-amber-400 uppercase tracking-wider font-medium mb-2">
+          <div className="mb-3 p-3 bg-secondary/10 dark:bg-secondary/20 rounded-lg border border-secondary/30 dark:border-secondary/40">
+            <p className="text-xs text-secondary uppercase tracking-wider font-medium mb-2">
               Purchase Details
             </p>
             <a
               href={ticket.purchaseWebsite}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-sm font-medium text-amber-700 dark:text-amber-400 hover:underline"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-secondary hover:underline"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
@@ -181,15 +182,15 @@ export function TicketCard({ ticket, className = '', showPurchaseReminder = true
               Open Purchase Site
             </a>
             {ticket.purchaseNotes && (
-              <p className="mt-2 text-xs text-amber-600 dark:text-amber-500">{ticket.purchaseNotes}</p>
+              <p className="mt-2 text-xs text-secondary/80">{ticket.purchaseNotes}</p>
             )}
           </div>
         )}
 
         {/* Special note (e.g., "Emma's Birthday!") */}
         {ticket.specialNote && (
-          <div className="mb-3 px-3 py-2 bg-pink-100 dark:bg-pink-900/30 rounded-lg border border-pink-200 dark:border-pink-800">
-            <p className="text-sm font-medium text-pink-700 dark:text-pink-300">
+          <div className="mb-3 px-3 py-2 bg-primary/10 dark:bg-primary/20 rounded-lg border border-primary/30 dark:border-primary/40">
+            <p className="text-sm font-medium text-primary">
               ✨ {ticket.specialNote}
             </p>
           </div>
@@ -197,12 +198,12 @@ export function TicketCard({ ticket, className = '', showPurchaseReminder = true
 
         {/* Tips section */}
         {tips.length > 0 && (
-          <div className="mt-3 pt-3 border-t border-slate-200 dark:border-slate-700">
+          <div className="mt-3 pt-3 border-t border-foreground-tertiary/20">
             <p className="text-xs text-foreground-tertiary uppercase tracking-wider font-medium mb-2">Tips</p>
             <ul className="space-y-1">
               {tips.slice(0, 2).map((tip: string, i: number) => (
                 <li key={i} className="text-xs text-foreground-secondary flex items-start gap-1.5">
-                  <span className="text-amber-500">•</span>
+                  <span className="text-secondary">•</span>
                   <span>{tip}</span>
                 </li>
               ))}
@@ -230,8 +231,8 @@ export function TicketCardCompact({ ticket, className = '' }: Omit<TicketCardPro
       className={`
         flex items-center gap-3 p-3 rounded-lg
         ${isPurchased
-          ? 'bg-emerald-50 dark:bg-emerald-950/30'
-          : 'bg-amber-50 dark:bg-amber-950/30'
+          ? 'bg-success/10 dark:bg-success/20'
+          : 'bg-secondary/10 dark:bg-secondary/20'
         }
         ${className}
       `}
@@ -240,8 +241,8 @@ export function TicketCardCompact({ ticket, className = '' }: Omit<TicketCardPro
         className={`
           shrink-0 w-10 h-10 rounded-full flex items-center justify-center text-lg
           ${isPurchased
-            ? 'bg-emerald-500 text-white'
-            : 'bg-amber-500 text-white'
+            ? 'bg-success text-white'
+            : 'bg-secondary text-foreground-inverse'
           }
         `}
       >
@@ -257,7 +258,7 @@ export function TicketCardCompact({ ticket, className = '' }: Omit<TicketCardPro
       </div>
 
       {!isPurchased && (
-        <span className="shrink-0 px-2 py-0.5 bg-amber-200 dark:bg-amber-800 text-amber-800 dark:text-amber-200 rounded text-xs font-medium">
+        <span className="shrink-0 px-2 py-0.5 bg-secondary/20 dark:bg-secondary/30 text-secondary rounded text-xs font-medium">
           Buy
         </span>
       )}
