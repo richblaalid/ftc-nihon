@@ -580,6 +580,9 @@
     --category-activity: #059669;
     --category-hotel: #8b5cf6;
 
+    /* Transit card background */
+    --transit-card-bg: rgba(59, 130, 246, 0.20);
+
     /* Shadows */
     --shadow-sm: 0 1px 2px rgba(45, 36, 32, 0.05);
     --shadow-md:
@@ -628,6 +631,9 @@
       --category-activity: #34d399;
       --category-hotel: #c4b5fd;
 
+      /* Transit card background - lighter blue for dark mode */
+      --transit-card-bg: rgba(96, 165, 250, 0.25);
+
       /* Shadows */
       --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
       --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
@@ -660,6 +666,7 @@
     --category-transit: #60a5fa;
     --category-activity: #34d399;
     --category-hotel: #c4b5fd;
+    --transit-card-bg: rgba(96, 165, 250, 0.25);
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
     --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
     --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5), 0 4px 6px rgba(0, 0, 0, 0.3);
@@ -718,6 +725,27 @@
   /* Touch action for swipeable elements */
   .swipeable {
     touch-action: pan-x;
+  }
+
+  /* Transit card text - force dark text in light mode for visibility */
+  .transit-card-text {
+    --tc-text-primary: #1e293b;
+    --tc-text-secondary: #334155;
+    --tc-text-tertiary: #475569;
+  }
+
+  .dark .transit-card-text {
+    --tc-text-primary: var(--foreground);
+    --tc-text-secondary: var(--foreground-secondary);
+    --tc-text-tertiary: var(--foreground-tertiary);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .transit-card-text {
+      --tc-text-primary: var(--foreground);
+      --tc-text-secondary: var(--foreground-secondary);
+      --tc-text-tertiary: var(--foreground-tertiary);
+    }
   }
 
   /* ============================================

@@ -105,15 +105,21 @@ export function TransitCard({ transit, isViewingToday, isCompleted = false }: Tr
 
   // Determine card styling based on state
   const cardClasses = [
-    'border-l-4 rounded-lg transition-all',
-    isCompleted
-      ? 'opacity-50 bg-background-secondary/50'
-      : 'bg-category-transit/10 dark:bg-category-transit/20',
-    isUrgent ? 'border-error bg-error/5' : 'border-category-transit',
+    'border-l-4 rounded-lg transition-all transit-card-text',
+    isCompleted ? 'opacity-50' : '',
+    isUrgent ? 'border-error' : 'border-category-transit',
   ].join(' ');
 
+  // Background color - using inline style since Tailwind opacity classes don't work with custom colors
+  // Uses CSS variable to adapt to light/dark mode
+  const getBgColor = () => {
+    if (isCompleted) return 'rgba(128, 128, 128, 0.3)';
+    if (isUrgent) return 'rgba(239, 68, 68, 0.15)';
+    return 'var(--transit-card-bg)';
+  };
+
   return (
-    <div className={cardClasses}>
+    <div className={cardClasses} style={{ backgroundColor: getBgColor() }}>
       {/* Collapsed view - always visible */}
       <button
         onClick={() => setIsExpanded(!isExpanded)}
@@ -127,22 +133,26 @@ export function TransitCard({ transit, isViewingToday, isCompleted = false }: Tr
             <span className="text-category-transit text-sm shrink-0">🚃</span>
             <div className="min-w-0">
               {/* Main route summary */}
-              <div className="flex items-center gap-1 text-sm">
-                <span className="font-medium text-foreground truncate">
-                  {transit.stationName?.split(' ')[0]}
+              <div className="flex items-center gap-1 text-sm flex-wrap">
+                <span className="font-medium truncate" style={{ color: 'var(--tc-text-primary)' }}>
+                  {transit.stationName}
                 </span>
-                <span className="text-foreground-tertiary">→</span>
-                <span className="font-medium text-foreground truncate">
-                  {transit.arrivalStation?.split(' ')[0]}
+                <span style={{ color: 'var(--tc-text-tertiary)' }}>→</span>
+                <span className="font-medium truncate" style={{ color: 'var(--tc-text-primary)' }}>
+                  {transit.arrivalStation}
                 </span>
-                <span className="text-foreground-tertiary text-xs ml-1">
+                <span className="text-xs ml-1" style={{ color: 'var(--tc-text-tertiary)' }}>
                   ({totalDuration}min)
                 </span>
               </div>
-              {/* Train line */}
-              <p className="text-xs text-foreground-secondary truncate">
-                {transit.trainLine?.split(' ')[0]}
-                {transit.transfers && ` • ${transit.transfers.split(' ')[0]}`}
+              {/* Summary or train line */}
+              <p className="text-xs truncate" style={{ color: 'var(--tc-text-secondary)' }}>
+                {transit.summary || (
+                  <>
+                    {transit.trainLine}
+                    {transit.transfers && ` • ${transit.transfers}`}
+                  </>
+                )}
               </p>
             </div>
           </div>
@@ -159,7 +169,7 @@ export function TransitCard({ transit, isViewingToday, isCompleted = false }: Tr
               </div>
             ) : (
               <div className="text-right">
-                <p className="text-xs text-foreground-tertiary">Leave by</p>
+                <p className="text-xs" style={{ color: 'var(--tc-text-tertiary)' }}>Leave by</p>
                 <p className="text-sm font-semibold text-category-transit">
                   {formatTime(transit.leaveBy)}
                 </p>
@@ -167,7 +177,8 @@ export function TransitCard({ transit, isViewingToday, isCompleted = false }: Tr
             )}
             {/* Expand indicator */}
             <svg
-              className={`w-4 h-4 text-foreground-tertiary transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+              className={`w-4 h-4 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+              style={{ color: 'var(--tc-text-tertiary)' }}
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -194,7 +205,7 @@ export function TransitCard({ transit, isViewingToday, isCompleted = false }: Tr
                   </span>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <p className="text-foreground-secondary">{step.instruction}</p>
+                      <p style={{ color: 'var(--tc-text-secondary)' }}>{step.instruction}</p>
                       {step.lineColor && step.type === 'train' && (
                         <span
                           className="inline-block w-2 h-2 rounded-full shrink-0"
@@ -203,7 +214,7 @@ export function TransitCard({ transit, isViewingToday, isCompleted = false }: Tr
                         />
                       )}
                     </div>
-                    <div className="flex items-center gap-2 flex-wrap text-xs text-foreground-tertiary">
+                    <div className="flex items-center gap-2 flex-wrap text-xs" style={{ color: 'var(--tc-text-tertiary)' }}>
                       <span>
                         {step.duration}min
                         {step.distance && ` (${step.distance})`}
@@ -216,7 +227,7 @@ export function TransitCard({ transit, isViewingToday, isCompleted = false }: Tr
                       )}
                     </div>
                     {step.exitInfo && (
-                      <p className="text-xs text-foreground-secondary mt-0.5">
+                      <p className="text-xs mt-0.5" style={{ color: 'var(--tc-text-secondary)' }}>
                         📍 {step.exitInfo}
                       </p>
                     )}
@@ -230,7 +241,7 @@ export function TransitCard({ transit, isViewingToday, isCompleted = false }: Tr
               {transit.walkToStationMinutes && (
                 <div className="flex items-center gap-2">
                   <span>🚶</span>
-                  <span className="text-foreground-secondary">
+                  <span style={{ color: 'var(--tc-text-secondary)' }}>
                     Walk to {transit.stationName} ({transit.walkToStationMinutes}min)
                   </span>
                 </div>
@@ -238,7 +249,7 @@ export function TransitCard({ transit, isViewingToday, isCompleted = false }: Tr
               {transit.travelMinutes && (
                 <div className="flex items-center gap-2">
                   <span>🚃</span>
-                  <span className="text-foreground-secondary">
+                  <span style={{ color: 'var(--tc-text-secondary)' }}>
                     {transit.trainLine} ({transit.travelMinutes}min)
                   </span>
                 </div>
@@ -246,17 +257,27 @@ export function TransitCard({ transit, isViewingToday, isCompleted = false }: Tr
               {transit.transfers && (
                 <div className="flex items-center gap-2">
                   <span>↔️</span>
-                  <span className="text-foreground-secondary">{transit.transfers}</span>
+                  <span style={{ color: 'var(--tc-text-secondary)' }}>{transit.transfers}</span>
                 </div>
               )}
               {transit.walkToDestinationMinutes && (
                 <div className="flex items-center gap-2">
                   <span>🚶</span>
-                  <span className="text-foreground-secondary">
+                  <span style={{ color: 'var(--tc-text-secondary)' }}>
                     Walk to destination ({transit.walkToDestinationMinutes}min)
                   </span>
                 </div>
               )}
+            </div>
+          )}
+
+          {/* Notes */}
+          {transit.notes && (
+            <div className="mt-3 p-2 bg-category-transit/5 rounded-lg border border-category-transit/20">
+              <div className="flex items-start gap-2 text-sm">
+                <span className="shrink-0">💡</span>
+                <p style={{ color: 'var(--tc-text-secondary)' }}>{transit.notes}</p>
+              </div>
             </div>
           )}
 
@@ -265,7 +286,7 @@ export function TransitCard({ transit, isViewingToday, isCompleted = false }: Tr
             <div className="mt-3 p-2 bg-amber-500/10 rounded-lg border border-amber-500/20">
               <div className="flex items-start gap-2 text-sm">
                 <span className="shrink-0">👨‍👩‍👧</span>
-                <p className="text-foreground-secondary">{transit.familyTip}</p>
+                <p style={{ color: 'var(--tc-text-secondary)' }}>{transit.familyTip}</p>
               </div>
             </div>
           )}
@@ -274,7 +295,7 @@ export function TransitCard({ transit, isViewingToday, isCompleted = false }: Tr
           {(transit.estimatedCostYen !== undefined || transit.coveredByPass) && (
             <div className="mt-3 flex items-center gap-2 flex-wrap">
               {transit.estimatedCostYen !== undefined && transit.estimatedCostYen > 0 && (
-                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-background-secondary text-foreground-secondary">
+                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-background-secondary" style={{ color: 'var(--tc-text-secondary)' }}>
                   ¥{transit.estimatedCostYen.toLocaleString()}
                 </span>
               )}
@@ -287,9 +308,9 @@ export function TransitCard({ transit, isViewingToday, isCompleted = false }: Tr
           )}
 
           {/* Summary row */}
-          <div className="mt-3 pt-2 border-t border-border/30 flex items-center justify-between text-xs text-foreground-tertiary">
+          <div className="mt-3 pt-2 border-t border-border/30 flex items-center justify-between text-xs" style={{ color: 'var(--tc-text-tertiary)' }}>
             <span>
-              Arrive at {transit.arrivalStation?.split(' ')[0]}
+              Arrive at {transit.arrivalStation}
             </span>
             <span>
               Total: {totalDuration}min

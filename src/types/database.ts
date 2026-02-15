@@ -55,17 +55,21 @@ export interface TransitSegment {
   leaveBy: string; // HH:MM format
   walkToStationMinutes: number | null;
   stationName: string | null;
+  stationNameJp?: string | null; // Japanese station name (kanji)
   trainLine: string | null;
   suggestedDeparture: string | null; // HH:MM format
   travelMinutes: number | null;
   transfers: string | null;
   arrivalStation: string | null;
+  arrivalStationJp?: string | null; // Japanese arrival station name (kanji)
   walkToDestinationMinutes: number | null;
   bufferMinutes: number;
   steps: TransitStep[] | null;
   createdAt: string;
   updatedAt: string;
   // Enhanced fields from verified transit data
+  summary?: string; // Human-readable one-liner (e.g., "Limousine Bus to Shinjuku (~50 min, ¥1,300)")
+  notes?: string; // Additional context or tips (e.g., "Easiest option with luggage")
   googleMapsUrl?: string; // Deep link for Google Maps directions
   estimatedCostYen?: number; // Cost in yen
   coveredByPass?: string; // Pass name that covers this segment (e.g., "Hakone Free Pass", "IC Card")
