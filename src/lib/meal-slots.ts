@@ -97,8 +97,8 @@ function getMealSlotInfo(
   if (planNote) {
     const lowerNote = planNote.toLowerCase();
 
-    // Skip if meal is at hotel
-    if (lowerNote.includes('hotel') && meal === 'breakfast') {
+    // Skip if meal is included at hotel (must explicitly say "included" or "hotel breakfast")
+    if (meal === 'breakfast' && (lowerNote.includes('hotel breakfast') || (lowerNote.includes('hotel') && lowerNote.includes('included')))) {
       return {
         meal,
         suggestedTime: defaultTime,
@@ -264,11 +264,11 @@ export function shouldShowMealOptions(
       const lowerNote = planNote.toLowerCase();
 
       // Don't show options if included with accommodation
+      // Must explicitly say "included" or be a ryokan (where meals are always included)
       if (
-        lowerNote.includes('hotel') ||
+        lowerNote.includes('included') ||
         lowerNote.includes('ryokan') ||
-        lowerNote.includes('yoshimatsu') ||
-        lowerNote.includes('included')
+        lowerNote.includes('yoshimatsu')
       ) {
         return false;
       }
