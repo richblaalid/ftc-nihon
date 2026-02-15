@@ -10,7 +10,6 @@ type ActivityState = 'upcoming' | 'current' | 'completed';
 interface ActivityCardProps {
   activity: ActivityWithTransit;
   state?: ActivityState;
-  showTransit?: boolean;
 }
 
 /**
@@ -69,10 +68,8 @@ function getStateStyles(state: ActivityState): {
 export function ActivityCard({
   activity,
   state = 'upcoming',
-  showTransit = true,
 }: ActivityCardProps) {
   const styles = getStateStyles(state);
-  const hasTransit = showTransit && activity.transit?.leaveBy;
   const hasTourGuide = getLocationIdForActivity(activity.name, activity.category) !== null;
 
   return (
@@ -126,24 +123,6 @@ export function ActivityCard({
           <div className="mt-2 inline-flex items-center gap-1 rounded bg-error/10 px-2 py-0.5 text-xs font-medium text-error">
             <span>⚠️</span>
             <span>Timed entry</span>
-          </div>
-        )}
-
-        {/* Transit info - Leave By */}
-        {hasTransit && activity.transit && state !== 'completed' && (
-          <div className="mt-3 rounded-lg bg-background-secondary p-2">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-foreground-secondary">Leave by</span>
-              <span className="text-sm font-bold text-primary">
-                {formatTime(activity.transit.leaveBy)}
-              </span>
-            </div>
-            {activity.transit.trainLine && (
-              <p className="mt-1 text-xs text-foreground-tertiary">
-                🚃 {activity.transit.trainLine}
-                {activity.transit.travelMinutes && ` · ${activity.transit.travelMinutes}min`}
-              </p>
-            )}
           </div>
         )}
 

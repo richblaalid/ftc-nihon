@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import type { ActivityWithTransit, MealType } from '@/types/database';
+import type { ActivityWithTransit, MealType, TransitSegment } from '@/types/database';
 import { ActivityCard } from './ActivityCard';
+import { TransitCard } from './TransitCard';
 import { RestaurantOptionsCard } from '@/components/restaurants/RestaurantOptionsCard';
 import {
   useDayInfo,
@@ -239,16 +240,23 @@ export function Timeline({ activities, currentActivityId }: TimelineProps) {
   // Determine if viewing a past day (for dimming meals)
   const isViewingPastDay = viewingDate < todayStr;
 
-  // Create a combined list of activities and meal slots, sorted by time
+  // Create a combined list of activities, transit cards, and meal slots, sorted by time
   type TimelineItem =
     | { type: 'activity'; activity: ActivityWithTransit; state: 'current' | 'completed' | 'upcoming' }
+    | { type: 'transit'; transit: TransitSegment; activityState: 'current' | 'completed' | 'upcoming' }
     | { type: 'meal'; slot: MealSlot; isPast: boolean };
 
   const timelineItems: TimelineItem[] = [];
 
-  // Add all activities
+  // Add activities with their transit cards
   for (const activity of activities) {
     const state = getActivityState(activity, currentActivityId, isViewingToday, todayStr);
+
+    // Add transit card BEFORE the destination activity if transit data exists
+    if (activity.transit && activity.transit.leaveBy) {
+      timelineItems.push({ type: 'transit', transit: activity.transit, activityState: state });
+    }
+
     timelineItems.push({ type: 'activity', activity, state });
   }
 
@@ -257,11 +265,14 @@ export function Timeline({ activities, currentActivityId }: TimelineProps) {
     timelineItems.push({ type: 'meal', slot, isPast: isViewingPastDay });
   }
 
-  // Sort by time
+  // Sort by time - transit uses leaveBy, activities use startTime, meals use suggestedTime
   timelineItems.sort((a, b) => {
-    const timeA = a.type === 'activity' ? a.activity.startTime : a.slot.suggestedTime;
-    const timeB = b.type === 'activity' ? b.activity.startTime : b.slot.suggestedTime;
-    return timeToMinutes(timeA) - timeToMinutes(timeB);
+    const getTime = (item: TimelineItem): string => {
+      if (item.type === 'activity') return item.activity.startTime;
+      if (item.type === 'transit') return item.transit.leaveBy;
+      return item.slot.suggestedTime;
+    };
+    return timeToMinutes(getTime(a)) - timeToMinutes(getTime(b));
   });
 
   // Group by period
@@ -272,7 +283,12 @@ export function Timeline({ activities, currentActivityId }: TimelineProps) {
   };
 
   for (const item of timelineItems) {
-    const time = item.type === 'activity' ? item.activity.startTime : item.slot.suggestedTime;
+    const time =
+      item.type === 'activity'
+        ? item.activity.startTime
+        : item.type === 'transit'
+          ? item.transit.leaveBy
+          : item.slot.suggestedTime;
     const period = getTimePeriod(time);
     groupedItems[period].push(item);
   }
@@ -304,6 +320,19 @@ export function Timeline({ activities, currentActivityId }: TimelineProps) {
                       ref={isCurrent ? currentRef : undefined}
                     >
                       <ActivityCard activity={activity} state={state} />
+                    </li>
+                  );
+                } else if (item.type === 'transit') {
+                  const { transit, activityState } = item;
+                  const isTransitCompleted = activityState === 'completed';
+
+                  return (
+                    <li key={`transit-${transit.id}`}>
+                      <TransitCard
+                        transit={transit}
+                        isViewingToday={isViewingToday}
+                        isCompleted={isTransitCompleted}
+                      />
                     </li>
                   );
                 } else {
