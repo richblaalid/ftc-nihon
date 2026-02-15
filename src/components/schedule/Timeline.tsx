@@ -260,8 +260,17 @@ export function Timeline({ activities, currentActivityId }: TimelineProps) {
 
     // Determine what type of item to render based on transitRenderType
     if (renderType === 'full') {
-      // Skip 'full' transit activities entirely - they're duplicates
-      // The real transit info is shown via the destination activity's transit segment
+      // For 'full': Skip the ActivityCard but show the TransitCard if linked
+      // This replaces the duplicate ActivityCard with just the transit information
+      if (activity.transit && activity.transit.leaveBy) {
+        activitiesAndMeals.push({
+          type: 'transit',
+          transit: activity.transit,
+          activityName: activity.name,
+          activityState: state,
+        });
+      }
+      // Don't add an ActivityCard for 'full' transit activities
       continue;
     } else if (renderType === 'simplified') {
       // For 'simplified': render SimplifiedTransitCard
