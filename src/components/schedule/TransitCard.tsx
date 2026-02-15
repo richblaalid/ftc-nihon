@@ -106,7 +106,9 @@ export function TransitCard({ transit, isViewingToday, isCompleted = false }: Tr
   // Determine card styling based on state
   const cardClasses = [
     'border-l-4 rounded-lg transition-all',
-    isCompleted ? 'opacity-50 bg-background-secondary/50' : 'bg-category-transit/5',
+    isCompleted
+      ? 'opacity-50 bg-background-secondary/50'
+      : 'bg-category-transit/10 dark:bg-category-transit/20',
     isUrgent ? 'border-error bg-error/5' : 'border-category-transit',
   ].join(' ');
 
