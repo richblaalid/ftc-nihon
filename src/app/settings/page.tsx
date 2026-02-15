@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { db } from '@/db/database';
-import { reseedDatabase } from '@/db/seed';
+import { reseedDatabase, DATA_VERSION } from '@/db/seed';
 import { seedAICache } from '@/db/seed-ai-cache';
 import { seedTourContent } from '@/db/seed-tour-content';
 
@@ -80,8 +80,8 @@ export default function SettingsPage() {
               <span className="text-foreground">1.0.0</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-foreground-secondary">Database</span>
-              <span className="text-foreground">IndexedDB v5</span>
+              <span className="text-foreground-secondary">Data Version</span>
+              <span className="text-foreground font-mono">v{DATA_VERSION}</span>
             </div>
           </div>
         </section>

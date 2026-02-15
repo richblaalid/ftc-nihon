@@ -5225,12 +5225,12 @@ export const restaurants: Restaurant[] = [
     backupAlternative: null,
     city: 'Hakone',
     assignedMeals: JSON.stringify([
-      { day: 7, date: '2026-03-12', meal: 'dinner', priority: 'INCLUDED' },
-      { day: 8, date: '2026-03-13', meal: 'breakfast', priority: 'INCLUDED' },
-      { day: 8, date: '2026-03-13', meal: 'dinner', priority: 'INCLUDED' },
-      { day: 9, date: '2026-03-14', meal: 'breakfast', priority: 'INCLUDED' },
+      { day: 6, date: '2026-03-12', meal: 'dinner', priority: 'INCLUDED' },
+      { day: 7, date: '2026-03-13', meal: 'breakfast', priority: 'INCLUDED' },
+      { day: 7, date: '2026-03-13', meal: 'dinner', priority: 'INCLUDED' },
+      { day: 8, date: '2026-03-14', meal: 'breakfast', priority: 'INCLUDED' },
     ]),
-    dayNumber: 7,
+    dayNumber: 6,
     meal: 'dinner',
     createdAt: now,
     updatedAt: now,
@@ -5365,9 +5365,9 @@ export const restaurants: Restaurant[] = [
     whatToOrder: 'Amazake (sweet sake), yaki mochi',
     backupAlternative: null,
     city: 'Hakone',
-    assignedMeals: JSON.stringify([{ day: 7, date: '2026-03-12', meal: 'breakfast', priority: 'primary' }]),
+    assignedMeals: JSON.stringify([{ day: 7, date: '2026-03-13', meal: 'snack', priority: 'primary' }]),
     dayNumber: 7,
-    meal: 'breakfast',
+    meal: 'snack',
     createdAt: now,
     updatedAt: now,
   },
@@ -5385,21 +5385,21 @@ export const restaurants: Restaurant[] = [
     hours: '8:30-17:00',
     priceRange: '¥600-1,500',
     isKidFriendly: true,
-    notes: 'Lake Ashi views. Fresh bakery and breakfast.',
+    notes: 'Lake Ashi views. Great snack stop during sightseeing.',
     googleMapsUrl: null,
     websiteUrl: null,
     whatToOrder: 'Curry pan, croissants, footbath coffee',
     backupAlternative: null,
     city: 'Hakone',
-    assignedMeals: JSON.stringify([{ day: 7, date: '2026-03-12', meal: 'breakfast', priority: 'alternative' }]),
+    assignedMeals: JSON.stringify([{ day: 7, date: '2026-03-13', meal: 'snack', priority: 'alternative' }]),
     dayNumber: 7,
-    meal: 'breakfast',
+    meal: 'snack',
     createdAt: now,
     updatedAt: now,
   },
   // ============================================================================
   // KYOTO RESTAURANTS (Days 9-11)
-  // Note: Day 9 breakfast is INCLUDED at ryokan, Day 10 lunch is MICO GUIDED (skip)
+  // Note: Day 8 breakfast is INCLUDED at ryokan (checkout day), Day 10 lunch is MICO GUIDED (skip)
   // ============================================================================
 
   // --- Day 9 (Mar 14): Ryokan→Kyoto ---
