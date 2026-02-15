@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import type { ActivityWithTransit, MealType } from '@/types/database';
+import type { ActivityWithTransit, MealType, TransitSegment } from '@/types/database';
 import { ActivityCard } from './ActivityCard';
+import { TransitCard } from './TransitCard';
 import { RestaurantOptionsCard } from '@/components/restaurants/RestaurantOptionsCard';
 import {
   useDayInfo,
@@ -239,40 +240,89 @@ export function Timeline({ activities, currentActivityId }: TimelineProps) {
   // Determine if viewing a past day (for dimming meals)
   const isViewingPastDay = viewingDate < todayStr;
 
-  // Create a combined list of activities and meal slots, sorted by time
+  // Create a combined list of activities, transit cards, meal slots, and walking indicators
   type TimelineItem =
     | { type: 'activity'; activity: ActivityWithTransit; state: 'current' | 'completed' | 'upcoming' }
-    | { type: 'meal'; slot: MealSlot; isPast: boolean };
+    | { type: 'transit'; transit: TransitSegment; activityState: 'current' | 'completed' | 'upcoming' }
+    | { type: 'meal'; slot: MealSlot; isPast: boolean }
+    | { type: 'walk'; toActivity: string; activityState: 'current' | 'completed' | 'upcoming' };
 
-  const timelineItems: TimelineItem[] = [];
+  // First, collect activities and meals (NOT transit) and sort them by time
+  const activitiesAndMeals: TimelineItem[] = [];
 
-  // Add all activities
   for (const activity of activities) {
     const state = getActivityState(activity, currentActivityId, isViewingToday, todayStr);
-    timelineItems.push({ type: 'activity', activity, state });
+    activitiesAndMeals.push({ type: 'activity', activity, state });
   }
 
-  // Add all meal slots
   for (const slot of mealSlots) {
-    timelineItems.push({ type: 'meal', slot, isPast: isViewingPastDay });
+    activitiesAndMeals.push({ type: 'meal', slot, isPast: isViewingPastDay });
   }
 
-  // Sort by time
-  timelineItems.sort((a, b) => {
-    const timeA = a.type === 'activity' ? a.activity.startTime : a.slot.suggestedTime;
-    const timeB = b.type === 'activity' ? b.activity.startTime : b.slot.suggestedTime;
-    return timeToMinutes(timeA) - timeToMinutes(timeB);
+  // Sort activities and meals by time
+  activitiesAndMeals.sort((a, b) => {
+    const getTime = (item: TimelineItem): string => {
+      if (item.type === 'activity') return item.activity.startTime;
+      return (item as { type: 'meal'; slot: MealSlot }).slot.suggestedTime;
+    };
+    return timeToMinutes(getTime(a)) - timeToMinutes(getTime(b));
   });
 
-  // Group by period
+  // Now insert transit cards or walking indicators BEFORE their linked activities
+  const timelineItems: TimelineItem[] = [];
+  let prevActivityItem: TimelineItem | null = null;
+
+  for (const item of activitiesAndMeals) {
+    if (item.type === 'activity') {
+      if (item.activity.transit && item.activity.transit.leaveBy) {
+        // Insert transit card right before the activity it's linked to
+        timelineItems.push({
+          type: 'transit',
+          transit: item.activity.transit,
+          activityState: item.state,
+        });
+      } else if (prevActivityItem !== null) {
+        // No transit segment - add walking indicator if not the first activity
+        timelineItems.push({
+          type: 'walk',
+          toActivity: item.activity.name,
+          activityState: item.state,
+        });
+      }
+      prevActivityItem = item;
+    }
+    timelineItems.push(item);
+  }
+
+  // Group by period - transit cards stay with their linked activity
   const groupedItems: Record<'morning' | 'afternoon' | 'evening', TimelineItem[]> = {
     morning: [],
     afternoon: [],
     evening: [],
   };
 
-  for (const item of timelineItems) {
-    const time = item.type === 'activity' ? item.activity.startTime : item.slot.suggestedTime;
+  for (let i = 0; i < timelineItems.length; i++) {
+    const item = timelineItems[i];
+    if (!item) continue;
+    let time: string;
+
+    if (item.type === 'transit' || item.type === 'walk') {
+      // Transit/walk indicator should be in the same period as its linked activity (next item)
+      const nextItem = timelineItems[i + 1];
+      if (nextItem && nextItem.type === 'activity') {
+        time = nextItem.activity.startTime;
+      } else if (item.type === 'transit') {
+        time = item.transit.leaveBy;
+      } else {
+        // Walk indicator fallback - use morning
+        time = '08:00';
+      }
+    } else if (item.type === 'activity') {
+      time = item.activity.startTime;
+    } else {
+      time = item.slot.suggestedTime;
+    }
+
     const period = getTimePeriod(time);
     groupedItems[period].push(item);
   }
@@ -304,6 +354,33 @@ export function Timeline({ activities, currentActivityId }: TimelineProps) {
                       ref={isCurrent ? currentRef : undefined}
                     >
                       <ActivityCard activity={activity} state={state} />
+                    </li>
+                  );
+                } else if (item.type === 'transit') {
+                  const { transit, activityState } = item;
+                  const isTransitCompleted = activityState === 'completed';
+
+                  return (
+                    <li key={`transit-${transit.id}`}>
+                      <TransitCard
+                        transit={transit}
+                        isViewingToday={isViewingToday}
+                        isCompleted={isTransitCompleted}
+                      />
+                    </li>
+                  );
+                } else if (item.type === 'walk') {
+                  const isCompleted = item.activityState === 'completed';
+
+                  return (
+                    <li
+                      key={`walk-to-${item.toActivity}`}
+                      className={`flex items-center gap-2 px-3 py-1.5 text-sm ${
+                        isCompleted ? 'opacity-50' : 'text-foreground-secondary'
+                      }`}
+                    >
+                      <span className="text-base">🚶</span>
+                      <span>Walk to next location</span>
                     </li>
                   );
                 } else {

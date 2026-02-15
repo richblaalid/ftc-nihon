@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useActivityWithTransit } from '@/db/hooks';
 import { CategoryIcon, getCategoryPillClass } from '@/components/ui/CategoryIcon';
+import type { TransitStep } from '@/types/database';
 import { ContextualPhrases } from '@/components/phrases/ContextualPhrases';
 import { TourGuide } from '@/components/ai';
 import { getLocationIdForActivity } from '@/lib/tour-guide';
@@ -201,39 +202,117 @@ function ActivityDetailContent({ params }: PageProps) {
 
         {/* Transit info */}
         {activity.transit && (
-          <div className="mt-6 rounded-lg bg-background-secondary p-4">
-            <h2 className="text-sm font-medium text-foreground-tertiary">Getting There</h2>
+          <div className="mt-6 rounded-lg bg-category-transit/5 border border-category-transit/20 p-4">
+            <h2 className="text-sm font-medium text-category-transit">🚃 Getting There</h2>
 
             <div className="mt-2 flex items-center justify-between">
               <span className="font-medium text-foreground">Leave by</span>
-              <span className="text-xl font-bold text-primary">
+              <span className="text-xl font-bold text-category-transit">
                 {formatTime(activity.transit.leaveBy)}
               </span>
             </div>
 
-            <div className="mt-3 space-y-2 text-sm text-foreground-secondary">
-              {activity.transit.walkToStationMinutes && (
-                <p>🚶 Walk to station: {activity.transit.walkToStationMinutes} min</p>
-              )}
-              {activity.transit.stationName && (
-                <p>🚉 From: {activity.transit.stationName}</p>
-              )}
-              {activity.transit.trainLine && (
-                <p>🚃 Take: {activity.transit.trainLine}</p>
-              )}
-              {activity.transit.arrivalStation && (
-                <p>🚉 To: {activity.transit.arrivalStation}</p>
-              )}
-              {activity.transit.travelMinutes && (
-                <p>⏱️ Travel time: {activity.transit.travelMinutes} min</p>
-              )}
-              {activity.transit.walkToDestinationMinutes && (
-                <p>🚶 Walk to destination: {activity.transit.walkToDestinationMinutes} min</p>
-              )}
-              {activity.transit.transfers && (
-                <p>🔄 Transfers: {activity.transit.transfers}</p>
-              )}
-            </div>
+            {/* Step-by-step instructions if available */}
+            {activity.transit.steps && activity.transit.steps.length > 0 ? (
+              <ol className="mt-3 space-y-2">
+                {activity.transit.steps.map((step, index) => (
+                  <li key={index} className="flex items-start gap-2 text-sm">
+                    <span
+                      className="shrink-0 w-5 text-center"
+                      style={step.lineColor && step.type === 'train' ? { color: step.lineColor } : undefined}
+                    >
+                      {step.type === 'walk' ? '🚶' : step.type === 'train' ? '🚃' : '↔️'}
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-foreground-secondary">{step.instruction}</p>
+                      <div className="flex items-center gap-2 flex-wrap text-xs text-foreground-tertiary">
+                        <span>
+                          {step.duration}min
+                          {step.distance && ` (${step.distance})`}
+                          {step.departure && ` · Depart ${formatTime(step.departure)}`}
+                        </span>
+                        {step.platform && (
+                          <span className="px-1.5 py-0.5 bg-category-transit/10 rounded text-category-transit">
+                            {step.platform}
+                          </span>
+                        )}
+                      </div>
+                      {step.exitInfo && (
+                        <p className="text-xs text-foreground-secondary mt-0.5">
+                          📍 {step.exitInfo}
+                        </p>
+                      )}
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            ) : (
+              /* Fallback when no steps available */
+              <div className="mt-3 space-y-2 text-sm text-foreground-secondary">
+                {activity.transit.walkToStationMinutes && (
+                  <p>🚶 Walk to station: {activity.transit.walkToStationMinutes} min</p>
+                )}
+                {activity.transit.stationName && (
+                  <p>🚉 From: {activity.transit.stationName}</p>
+                )}
+                {activity.transit.trainLine && (
+                  <p>🚃 Take: {activity.transit.trainLine}</p>
+                )}
+                {activity.transit.arrivalStation && (
+                  <p>🚉 To: {activity.transit.arrivalStation}</p>
+                )}
+                {activity.transit.travelMinutes && (
+                  <p>⏱️ Travel time: {activity.transit.travelMinutes} min</p>
+                )}
+                {activity.transit.walkToDestinationMinutes && (
+                  <p>🚶 Walk to destination: {activity.transit.walkToDestinationMinutes} min</p>
+                )}
+                {activity.transit.transfers && (
+                  <p>🔄 Transfers: {activity.transit.transfers}</p>
+                )}
+              </div>
+            )}
+
+            {/* Family tip */}
+            {activity.transit.familyTip && (
+              <div className="mt-3 p-2 bg-amber-500/10 rounded-lg border border-amber-500/20">
+                <div className="flex items-start gap-2 text-sm">
+                  <span className="shrink-0">👨‍👩‍👧</span>
+                  <p className="text-foreground-secondary">{activity.transit.familyTip}</p>
+                </div>
+              </div>
+            )}
+
+            {/* Cost and pass coverage */}
+            {(activity.transit.estimatedCostYen !== undefined || activity.transit.coveredByPass) && (
+              <div className="mt-3 flex items-center gap-2 flex-wrap">
+                {activity.transit.estimatedCostYen !== undefined && activity.transit.estimatedCostYen > 0 && (
+                  <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-background-secondary text-foreground-secondary">
+                    ¥{activity.transit.estimatedCostYen.toLocaleString()}
+                  </span>
+                )}
+                {activity.transit.coveredByPass && (
+                  <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-success/10 text-success">
+                    ✓ {activity.transit.coveredByPass}
+                  </span>
+                )}
+              </div>
+            )}
+
+            {/* Google Maps directions button */}
+            {activity.transit.googleMapsUrl && (
+              <a
+                href={activity.transit.googleMapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-4 flex items-center justify-center gap-2 w-full py-2.5 bg-category-transit text-white rounded-lg text-sm font-medium hover:bg-category-transit/90 active:scale-[0.98] transition-all"
+              >
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                </svg>
+                Get Directions
+              </a>
+            )}
           </div>
         )}
 

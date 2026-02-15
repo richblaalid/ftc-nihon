@@ -26,7 +26,7 @@ import { PHRASES as phrases } from './seed-phrases';
  * Data version - increment this when seed data changes to trigger a reseed
  * This allows updating phrases/data without users needing to clear their browser data
  */
-export const DATA_VERSION = 6; // Fixed: ryokan meal day assignments, removed breakfast alternatives on included days, DATA_VERSION display in settings
+export const DATA_VERSION = 11; // Reseed activities to fix ID linking with transit segments
 const DATA_VERSION_KEY = 'ftc-nihon-data-version';
 
 /**
@@ -72,6 +72,26 @@ async function reseedChecklistItems(): Promise<void> {
 }
 
 /**
+ * Reseed just the transit segments table (for data version updates)
+ */
+async function reseedTransitSegments(): Promise<void> {
+  console.log('[Seed] Reseeding transit segments due to data version change...');
+  await db.transitSegments.clear();
+  await db.transitSegments.bulkAdd(transitSegments);
+  console.log(`[Seed] Reseeded ${transitSegments.length} transit segments`);
+}
+
+/**
+ * Reseed activities table (for activity ID updates to match transit segments)
+ */
+async function reseedActivities(): Promise<void> {
+  console.log('[Seed] Reseeding activities due to data version change...');
+  await db.activities.clear();
+  await db.activities.bulkAdd(activities);
+  console.log(`[Seed] Reseeded ${activities.length} activities`);
+}
+
+/**
  * Check and update data if version changed
  */
 export async function checkDataVersion(): Promise<void> {
@@ -85,6 +105,12 @@ export async function checkDataVersion(): Promise<void> {
 
     // Reseed checklist items (Japan travel prep)
     await reseedChecklistItems();
+
+    // Reseed transit segments (enhanced with Google Maps, costs, platform info)
+    await reseedTransitSegments();
+
+    // Reseed activities (to fix activity IDs matching transit segments)
+    await reseedActivities();
 
     // Update stored version
     setStoredDataVersion(DATA_VERSION);

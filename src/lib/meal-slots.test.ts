@@ -49,7 +49,27 @@ describe('meal-slots', () => {
       expect(slots.map(s => s.meal)).toContain('dinner');
     });
 
-    it('marks ryokan dinner as not showing options on day 7', () => {
+    it('marks ryokan dinner as not showing options on day 6 (arrival)', () => {
+      const activities: Activity[] = [];
+      const slots = getMealSlotsForDay(6, activities);
+
+      const dinnerSlot = slots.find(s => s.meal === 'dinner');
+      expect(dinnerSlot).toBeDefined();
+      expect(dinnerSlot?.showOptions).toBe(false);
+      expect(dinnerSlot?.reason).toContain('Ryokan');
+    });
+
+    it('marks ryokan breakfast as not showing options on day 7', () => {
+      const activities: Activity[] = [];
+      const slots = getMealSlotsForDay(7, activities);
+
+      const breakfastSlot = slots.find(s => s.meal === 'breakfast');
+      expect(breakfastSlot).toBeDefined();
+      expect(breakfastSlot?.showOptions).toBe(false);
+      expect(breakfastSlot?.reason).toContain('Ryokan');
+    });
+
+    it('marks ryokan dinner as not showing options on day 7 (full day)', () => {
       const activities: Activity[] = [];
       const slots = getMealSlotsForDay(7, activities);
 
@@ -59,7 +79,7 @@ describe('meal-slots', () => {
       expect(dinnerSlot?.reason).toContain('Ryokan');
     });
 
-    it('marks ryokan breakfast as not showing options on day 8', () => {
+    it('marks ryokan breakfast as not showing options on day 8 (checkout)', () => {
       const activities: Activity[] = [];
       const slots = getMealSlotsForDay(8, activities);
 
@@ -114,19 +134,30 @@ describe('meal-slots', () => {
       expect(shouldShowMealOptions(5, 'breakfast')).toBe(true);
     });
 
-    it('returns false for ryokan dinner on day 7', () => {
+    it('returns false for ryokan dinner on day 6 (arrival)', () => {
+      expect(shouldShowMealOptions(6, 'dinner')).toBe(false);
+    });
+
+    it('returns false for ryokan breakfast on day 7', () => {
+      expect(shouldShowMealOptions(7, 'breakfast')).toBe(false);
+    });
+
+    it('returns false for ryokan dinner on day 7 (full day)', () => {
       expect(shouldShowMealOptions(7, 'dinner')).toBe(false);
     });
 
-    it('returns false for ryokan breakfast on day 8', () => {
+    it('returns false for ryokan breakfast on day 8 (checkout)', () => {
       expect(shouldShowMealOptions(8, 'breakfast')).toBe(false);
     });
 
     it('returns true for other meals on ryokan days', () => {
-      expect(shouldShowMealOptions(7, 'breakfast')).toBe(true);
+      // Lunch is always flexible on ryokan days
+      expect(shouldShowMealOptions(6, 'lunch')).toBe(true);
       expect(shouldShowMealOptions(7, 'lunch')).toBe(true);
       expect(shouldShowMealOptions(8, 'lunch')).toBe(true);
-      expect(shouldShowMealOptions(8, 'dinner')).toBe(true);
+      // Breakfast and dinner only flexible when not included
+      expect(shouldShowMealOptions(6, 'breakfast')).toBe(true); // Before check-in
+      expect(shouldShowMealOptions(8, 'dinner')).toBe(true); // After checkout
     });
 
     it('respects meal plan indicating hotel breakfast', () => {
