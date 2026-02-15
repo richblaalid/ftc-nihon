@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import type { TransitSegment, TransitStep } from '@/types/database';
 import { getCurrentDate } from '@/lib/utils';
 
@@ -8,6 +9,8 @@ interface TransitCardProps {
   transit: TransitSegment;
   isViewingToday: boolean;
   isCompleted?: boolean;
+  /** Optional title to display prominently (e.g., "Transit to Ghibli Museum") */
+  title?: string;
 }
 
 /**
@@ -80,7 +83,7 @@ function getStepIcon(type: TransitStep['type']): string {
   }
 }
 
-export function TransitCard({ transit, isViewingToday, isCompleted = false }: TransitCardProps) {
+export function TransitCard({ transit, isViewingToday, isCompleted = false, title }: TransitCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [minutesUntil, setMinutesUntil] = useState<number>(() =>
     getMinutesUntilDeparture(transit.leaveBy)
@@ -125,35 +128,43 @@ export function TransitCard({ transit, isViewingToday, isCompleted = false }: Tr
         onClick={() => setIsExpanded(!isExpanded)}
         className="w-full px-3 py-2 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
         aria-expanded={isExpanded}
-        aria-label={`Transit from ${transit.stationName} to ${transit.arrivalStation}. ${isExpanded ? 'Collapse' : 'Expand'} for details.`}
+        aria-label={`${title || `Transit from ${transit.stationName} to ${transit.arrivalStation}`}. ${isExpanded ? 'Collapse' : 'Expand'} for details.`}
       >
         <div className="flex items-center justify-between gap-3">
           {/* Left side: Transit info */}
           <div className="flex items-center gap-2 min-w-0 flex-1">
             <span className="text-category-transit text-sm shrink-0">🚃</span>
             <div className="min-w-0">
+              {/* Title (when provided) */}
+              {title && (
+                <p className="font-semibold text-sm truncate" style={{ color: 'var(--tc-text-primary)' }}>
+                  {title}
+                </p>
+              )}
               {/* Main route summary */}
-              <div className="flex items-center gap-1 text-sm flex-wrap">
-                <span className="font-medium truncate" style={{ color: 'var(--tc-text-primary)' }}>
+              <div className={`flex items-center gap-1 ${title ? 'text-xs' : 'text-sm'} flex-wrap`}>
+                <span className={`${title ? '' : 'font-medium'} truncate`} style={{ color: title ? 'var(--tc-text-secondary)' : 'var(--tc-text-primary)' }}>
                   {transit.stationName}
                 </span>
                 <span style={{ color: 'var(--tc-text-tertiary)' }}>→</span>
-                <span className="font-medium truncate" style={{ color: 'var(--tc-text-primary)' }}>
+                <span className={`${title ? '' : 'font-medium'} truncate`} style={{ color: title ? 'var(--tc-text-secondary)' : 'var(--tc-text-primary)' }}>
                   {transit.arrivalStation}
                 </span>
                 <span className="text-xs ml-1" style={{ color: 'var(--tc-text-tertiary)' }}>
                   ({totalDuration}min)
                 </span>
               </div>
-              {/* Summary or train line */}
-              <p className="text-xs truncate" style={{ color: 'var(--tc-text-secondary)' }}>
-                {transit.summary || (
-                  <>
-                    {transit.trainLine}
-                    {transit.transfers && ` • ${transit.transfers}`}
-                  </>
-                )}
-              </p>
+              {/* Summary or train line - hide when title is shown to reduce visual noise */}
+              {!title && (
+                <p className="text-xs truncate" style={{ color: 'var(--tc-text-secondary)' }}>
+                  {transit.summary || (
+                    <>
+                      {transit.trainLine}
+                      {transit.transfers && ` • ${transit.transfers}`}
+                    </>
+                  )}
+                </p>
+              )}
             </div>
           </div>
 
@@ -188,6 +199,36 @@ export function TransitCard({ transit, isViewingToday, isCompleted = false }: Tr
           </div>
         </div>
       </button>
+
+      {/* Quick action links - always visible */}
+      {!isExpanded && (
+        <div className="px-3 pb-2 flex items-center gap-3">
+          {transit.googleMapsUrl && (
+            <a
+              href={transit.googleMapsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-xs text-category-transit hover:underline"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+              </svg>
+              <span>Map</span>
+            </a>
+          )}
+          <Link
+            href="/phrases#travel"
+            className="inline-flex items-center gap-1 text-xs text-category-transit hover:underline"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+            <span>Phrases</span>
+          </Link>
+        </div>
+      )}
 
       {/* Expanded view */}
       {isExpanded && (
