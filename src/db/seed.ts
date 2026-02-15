@@ -26,7 +26,7 @@ import { PHRASES as phrases } from './seed-phrases';
  * Data version - increment this when seed data changes to trigger a reseed
  * This allows updating phrases/data without users needing to clear their browser data
  */
-export const DATA_VERSION = 6; // Fixed: ryokan meal day assignments, removed breakfast alternatives on included days, DATA_VERSION display in settings
+export const DATA_VERSION = 7; // Removed schedule change tips (optimizationNote), cleaned up day highlights
 const DATA_VERSION_KEY = 'ftc-nihon-data-version';
 
 /**
