@@ -42,6 +42,11 @@ export interface TransitStep {
   instruction: string;
   duration: number; // minutes
   departure?: string; // HH:MM for train departures
+  // Enhanced fields from verified transit data
+  lineColor?: string; // Hex color for train line (e.g., "#F15A22")
+  platform?: string; // Platform info (e.g., "Platforms 7-8")
+  exitInfo?: string; // Exit directions (e.g., "Exit 1 → Kaminarimon Gate")
+  distance?: string; // Walking distance (e.g., "400m")
 }
 
 export interface TransitSegment {
@@ -60,6 +65,14 @@ export interface TransitSegment {
   steps: TransitStep[] | null;
   createdAt: string;
   updatedAt: string;
+  // Enhanced fields from verified transit data
+  googleMapsUrl?: string; // Deep link for Google Maps directions
+  estimatedCostYen?: number; // Cost in yen
+  coveredByPass?: string; // Pass name that covers this segment (e.g., "Hakone Free Pass", "IC Card")
+  familyTip?: string; // Kid-specific advice for this transit
+  isHardDeadline?: boolean; // Whether this transit has a hard deadline (e.g., timed entry)
+  originCoords?: { lat: number; lng: number }; // Starting point coordinates
+  destinationCoords?: { lat: number; lng: number }; // End point coordinates
 }
 
 export interface Accommodation {

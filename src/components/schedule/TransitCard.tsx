@@ -122,7 +122,7 @@ export function TransitCard({ transit, isViewingToday, isCompleted = false }: Tr
         <div className="flex items-center justify-between gap-3">
           {/* Left side: Transit info */}
           <div className="flex items-center gap-2 min-w-0 flex-1">
-            <span className="text-category-transit text-sm flex-shrink-0">🚃</span>
+            <span className="text-category-transit text-sm shrink-0">🚃</span>
             <div className="min-w-0">
               {/* Main route summary */}
               <div className="flex items-center gap-1 text-sm">
@@ -146,7 +146,7 @@ export function TransitCard({ transit, isViewingToday, isCompleted = false }: Tr
           </div>
 
           {/* Right side: Leave by time / countdown */}
-          <div className="flex items-center gap-2 flex-shrink-0">
+          <div className="flex items-center gap-2 shrink-0">
             {showCountdown ? (
               <div className={`px-2 py-1 rounded text-xs font-medium ${
                 isUrgent
@@ -184,15 +184,40 @@ export function TransitCard({ transit, isViewingToday, isCompleted = false }: Tr
             <ol className="space-y-2">
               {transit.steps.map((step, index) => (
                 <li key={index} className="flex items-start gap-2 text-sm">
-                  <span className="flex-shrink-0 w-5 text-center">
+                  <span
+                    className="shrink-0 w-5 text-center"
+                    style={step.lineColor && step.type === 'train' ? { color: step.lineColor } : undefined}
+                  >
                     {getStepIcon(step.type)}
                   </span>
                   <div className="flex-1 min-w-0">
-                    <p className="text-foreground-secondary">{step.instruction}</p>
-                    <p className="text-xs text-foreground-tertiary">
-                      {step.duration}min
-                      {step.departure && ` • Depart ${formatTime(step.departure)}`}
-                    </p>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <p className="text-foreground-secondary">{step.instruction}</p>
+                      {step.lineColor && step.type === 'train' && (
+                        <span
+                          className="inline-block w-2 h-2 rounded-full shrink-0"
+                          style={{ backgroundColor: step.lineColor }}
+                          title="Train line color"
+                        />
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2 flex-wrap text-xs text-foreground-tertiary">
+                      <span>
+                        {step.duration}min
+                        {step.distance && ` (${step.distance})`}
+                        {step.departure && ` • Depart ${formatTime(step.departure)}`}
+                      </span>
+                      {step.platform && (
+                        <span className="px-1.5 py-0.5 bg-category-transit/10 rounded text-category-transit">
+                          {step.platform}
+                        </span>
+                      )}
+                    </div>
+                    {step.exitInfo && (
+                      <p className="text-xs text-foreground-secondary mt-0.5">
+                        📍 {step.exitInfo}
+                      </p>
+                    )}
                   </div>
                 </li>
               ))}
@@ -233,6 +258,32 @@ export function TransitCard({ transit, isViewingToday, isCompleted = false }: Tr
             </div>
           )}
 
+          {/* Family tip */}
+          {transit.familyTip && (
+            <div className="mt-3 p-2 bg-amber-500/10 rounded-lg border border-amber-500/20">
+              <div className="flex items-start gap-2 text-sm">
+                <span className="shrink-0">👨‍👩‍👧</span>
+                <p className="text-foreground-secondary">{transit.familyTip}</p>
+              </div>
+            </div>
+          )}
+
+          {/* Cost and pass coverage */}
+          {(transit.estimatedCostYen !== undefined || transit.coveredByPass) && (
+            <div className="mt-3 flex items-center gap-2 flex-wrap">
+              {transit.estimatedCostYen !== undefined && transit.estimatedCostYen > 0 && (
+                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-background-secondary text-foreground-secondary">
+                  ¥{transit.estimatedCostYen.toLocaleString()}
+                </span>
+              )}
+              {transit.coveredByPass && (
+                <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-success/10 text-success">
+                  ✓ {transit.coveredByPass}
+                </span>
+              )}
+            </div>
+          )}
+
           {/* Summary row */}
           <div className="mt-3 pt-2 border-t border-border/30 flex items-center justify-between text-xs text-foreground-tertiary">
             <span>
@@ -243,6 +294,22 @@ export function TransitCard({ transit, isViewingToday, isCompleted = false }: Tr
               {transit.bufferMinutes > 0 && ` (+${transit.bufferMinutes}min buffer)`}
             </span>
           </div>
+
+          {/* Google Maps button */}
+          {transit.googleMapsUrl && (
+            <a
+              href={transit.googleMapsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3 flex items-center justify-center gap-2 w-full py-2.5 bg-category-transit text-white rounded-lg text-sm font-medium hover:bg-category-transit/90 active:scale-[0.98] transition-all"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+              </svg>
+              Open in Google Maps
+            </a>
+          )}
         </div>
       )}
     </div>

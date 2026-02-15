@@ -775,6 +775,54 @@
 - [x] Online/offline hybrid works correctly
 - [x] Commit: "feat: complete AI assistant and tour guide (Phase 6)"
 
+### Phase 6.5: Transit Enhancement
+
+> Leveraging verified transit data with Google Maps URLs, costs, platform info, and family tips.
+
+#### 6.5.1 Schema Enhancement
+
+- [x] 6.5.1.1: Enhance TransitSegment type with new fields
+  - Files: src/types/database.ts
+  - Fields: googleMapsUrl, estimatedCostYen, coveredByPass, familyTip, isHardDeadline, originCoords, destinationCoords
+  - Test: Types compile without errors
+
+- [x] 6.5.1.2: Enhance TransitStep type with new fields
+  - Files: src/types/database.ts
+  - Fields: lineColor, platform, exitInfo, distance
+  - Test: Types compile without errors
+
+#### 6.5.2 TransitCard Enhancement
+
+- [x] 6.5.2.1: Add Google Maps button to TransitCard
+  - Files: src/components/schedule/TransitCard.tsx
+  - Feature: "Open in Maps" button using googleMapsUrl
+  - Test: Button opens Google Maps with directions
+
+- [x] 6.5.2.2: Display cost info and pass coverage
+  - Files: src/components/schedule/TransitCard.tsx
+  - Display: ¥ amount, "Covered by [Pass Name]" badge
+  - Test: Cost displays correctly, pass coverage shown
+
+- [x] 6.5.2.3: Add platform/exit info to expanded view
+  - Files: src/components/schedule/TransitCard.tsx
+  - Display: Platform numbers, exit info in step instructions
+  - Test: Platform and exit info visible in expanded view
+
+- [x] 6.5.2.4: Add family tip callout
+  - Files: src/components/schedule/TransitCard.tsx
+  - Display: Kid-specific advice when familyTip is present
+  - Style: Subtle callout with family-friendly icon
+  - Test: Family tips display on relevant transit segments
+
+**Phase 6.5 Checkpoint:**
+
+- [x] TransitSegment/TransitStep types support all verified data fields
+- [x] Google Maps button opens correct directions
+- [x] Cost and pass coverage display correctly
+- [x] Platform/exit info visible in expanded view
+- [x] Family tips show for relevant segments
+- [ ] Commit: "feat: enhance transit cards with verified data (Phase 6.5)"
+
 ### Phase 7: Push Notifications
 
 > Proactive reminders via PWA push notifications on iOS 16.4+.
