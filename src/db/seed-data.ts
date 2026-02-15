@@ -154,7 +154,7 @@ export const activities: Activity[] = [
     durationMinutes: 50,
     name: 'Airport Limousine Bus to Shinjuku',
     category: 'transit',
-    transitRenderType: 'keep',
+    transitRenderType: 'full',
     locationName: 'Haneda Airport Limousine Bus Counter',
     locationAddress: 'Arrivals floor, Haneda Terminal 3',
     locationAddressJp: null,
@@ -173,7 +173,7 @@ export const activities: Activity[] = [
     updatedAt: now,
   },
   {
-    id: genId('act'),
+    id: 'day1-checkin',
     dayNumber: 1,
     date: '2026-03-07',
     startTime: '18:00',
@@ -3021,6 +3021,39 @@ idCounter = 0;
 // ============================================================================
 
 export const transitSegments: TransitSegment[] = [
+  // ============================================================================
+  // DAY 1: Arrival - Haneda to Shinjuku
+  // ============================================================================
+
+  // Day 1: Haneda Airport → &Here Shinjuku Hotel
+  {
+    id: genId('transit'),
+    activityId: 'day1-checkin', // Check-in at &Here Shinjuku
+    title: 'Airport Limousine Bus to Shinjuku',
+    leaveBy: '16:30',
+    walkToStationMinutes: 5,
+    stationName: 'Haneda Airport T3 羽田空港第3ターミナル',
+    trainLine: 'Airport Limousine Bus',
+    suggestedDeparture: '16:40',
+    travelMinutes: 50,
+    transfers: null,
+    arrivalStation: 'Busta Shinjuku バスタ新宿',
+    walkToDestinationMinutes: 14,
+    bufferMinutes: 26, // Extra buffer for first-day navigation
+    steps: [
+      { type: 'walk', instruction: 'Follow signs to Airport Limousine Bus Counter (arrivals floor)', duration: 5, distance: '300m' },
+      { type: 'train', instruction: 'Buy tickets at counter (¥1,300/adult, ¥650/child). Board bus to Busta Shinjuku', duration: 50, lineColor: '#FF6B00' },
+      { type: 'walk', instruction: 'Exit Busta Shinjuku via South Exit. Walk toward Shinjuku Gyoen park direction', duration: 14, distance: '1km', exitInfo: 'South Exit → head toward Shinjuku 2-chome' },
+    ],
+    summary: 'Airport Limousine to Busta Shinjuku (~50 min, ¥1,300/adult)',
+    googleMapsUrl: 'https://www.google.com/maps/dir/?api=1&origin=Haneda+Airport+Terminal+3&destination=Busta+Shinjuku&travelmode=transit',
+    estimatedCostYen: 1300,
+    notes: 'Buses depart every 20-30 minutes. Last bus around 11 PM. Luggage stored under bus.',
+    familyTip: 'Kids can nap on the comfortable bus ride. Less stressful than trains with luggage on first day.',
+    createdAt: now,
+    updatedAt: now,
+  },
+
   // ============================================================================
   // DAY 2: East Tokyo Loop
   // ============================================================================
