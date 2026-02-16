@@ -26,7 +26,7 @@ import { PHRASES as phrases } from './seed-phrases';
  * Data version - increment this when seed data changes to trigger a reseed
  * This allows updating phrases/data without users needing to clear their browser data
  */
-export const DATA_VERSION = 12; // Reseed dayInfo to clear stale optimization notes
+export const DATA_VERSION = 13; // Comprehensive itinerary updates (March 8-20)
 const DATA_VERSION_KEY = 'ftc-nihon-data-version';
 
 /**
