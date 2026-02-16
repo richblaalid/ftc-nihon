@@ -379,16 +379,22 @@ NEXT_PUBLIC_WEATHER_API_KEY=     # Weather API key (Phase 2)
 - Verify network connectivity
 - Check browser console for errors
 
-### Seed data not updating
+### Updating Seed Data (IMPORTANT)
 
-After modifying `src/db/seed-data.ts`, clear IndexedDB to force reseed:
+**When modifying `src/db/seed-data.ts`, you MUST increment `DATA_VERSION` in `src/db/seed.ts`.**
 
+```typescript
+// In src/db/seed.ts - increment this number:
+export const DATA_VERSION = 13; // Description of changes
+```
+
+This triggers automatic reseed on next app load via `checkDataVersion()`. Users don't need to clear their browser data.
+
+**Manual reset (development only):**
 ```javascript
 // Run in browser DevTools console:
 indexedDB.deleteDatabase('ftc-nihon-db')
 ```
-
-Then refresh the page. The app will reseed from the updated seed-data.ts.
 
 ## Key Constraints
 
