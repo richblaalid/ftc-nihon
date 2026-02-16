@@ -26,7 +26,7 @@ import { PHRASES as phrases } from './seed-phrases';
  * Data version - increment this when seed data changes to trigger a reseed
  * This allows updating phrases/data without users needing to clear their browser data
  */
-export const DATA_VERSION = 13; // Comprehensive itinerary updates (March 8-20)
+export const DATA_VERSION = 14; // Mark Ghibli & Sumo tickets as purchased
 const DATA_VERSION_KEY = 'ftc-nihon-data-version';
 
 /**
@@ -102,6 +102,16 @@ async function reseedDayInfo(): Promise<void> {
 }
 
 /**
+ * Reseed tickets table (for purchase status updates)
+ */
+async function reseedTickets(): Promise<void> {
+  console.log('[Seed] Reseeding tickets due to data version change...');
+  await db.tickets.clear();
+  await db.tickets.bulkAdd(tickets);
+  console.log(`[Seed] Reseeded ${tickets.length} tickets`);
+}
+
+/**
  * Check and update data if version changed
  */
 export async function checkDataVersion(): Promise<void> {
@@ -124,6 +134,9 @@ export async function checkDataVersion(): Promise<void> {
 
     // Reseed dayInfo (to clear stale optimization notes)
     await reseedDayInfo();
+
+    // Reseed tickets (for purchase status updates)
+    await reseedTickets();
 
     // Update stored version
     setStoredDataVersion(DATA_VERSION);

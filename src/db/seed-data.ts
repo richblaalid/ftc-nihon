@@ -4185,7 +4185,7 @@ export const tickets: Ticket[] = [
     id: 'ticket-ghibli',
     name: 'Ghibli Museum',
     date: '2026-03-09',
-    status: 'not_purchased',
+    status: 'purchased',
     entryTime: '10:00',
     confirmations: null,
     purchaseSaleDate: '2026-02-10',
@@ -4214,7 +4214,7 @@ export const tickets: Ticket[] = [
     id: 'ticket-sumo',
     name: 'Osaka Sumo Tournament',
     date: '2026-03-20',
-    status: 'not_purchased',
+    status: 'purchased',
     entryTime: '15:00',
     confirmations: null,
     purchaseSaleDate: '2026-02-07',
@@ -7300,32 +7300,6 @@ export const transportRoutes: TransportRoute[] = [
 // ============================================================================
 
 export const checklistItems: ChecklistItem[] = [
-  {
-    id: 'checklist-001',
-    title: 'Buy Sumo Tickets',
-    description:
-      'Sale opens Feb 7 at 10:00 AM JST. Website: https://sumo.pia.jp/en/sumo03.jsp',
-    dueDate: '2026-02-06',
-    dueTime: '19:00',
-    isCompleted: false,
-    isPreTrip: true,
-    sortOrder: 1,
-    createdAt: now,
-    updatedAt: now,
-  },
-  {
-    id: 'checklist-002',
-    title: 'Buy Ghibli Tickets',
-    description:
-      'Sale opens Feb 10 at 10:00 AM JST. Website: https://l-tike.com/ghibli/. Buy for MARCH 9!',
-    dueDate: '2026-02-09',
-    dueTime: '19:00',
-    isCompleted: false,
-    isPreTrip: true,
-    sortOrder: 2,
-    createdAt: now,
-    updatedAt: now,
-  },
   {
     id: 'checklist-003',
     title: 'Call bank about overseas charges',

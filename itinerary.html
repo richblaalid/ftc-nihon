@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FTC: Nihon Itinerary</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 9pt;
+      line-height: 1.3;
+      color: #333;
+      padding: 15px;
+    }
+    .header {
+      text-align: center;
+      padding: 10px 0 15px;
+      border-bottom: 2px solid #F46B55;
+      margin-bottom: 15px;
+    }
+    .header h1 { font-size: 20pt; color: #F46B55; margin-bottom: 3px; }
+    .header .dates { font-size: 11pt; color: #666; }
+
+    h2 { font-size: 12pt; color: #F46B55; margin: 12px 0 8px; border-bottom: 1px solid #ddd; padding-bottom: 3px; }
+
+    .accommodations {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .acc {
+      background: #f5f5f5;
+      padding: 8px;
+      border-radius: 4px;
+      font-size: 8pt;
+    }
+    .acc-name { font-weight: bold; font-size: 9pt; margin-bottom: 2px; }
+    .acc-dates { color: #F46B55; font-size: 8pt; margin-bottom: 3px; }
+    .acc-info { color: #666; }
+    .acc-info strong { color: #333; }
+
+    .day {
+      page-break-inside: avoid;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .day-header {
+      background: linear-gradient(135deg, #F46B55, #F5B800);
+      color: white;
+      padding: 6px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .day-title { font-weight: bold; font-size: 10pt; }
+    .day-meta { font-size: 8pt; opacity: 0.9; }
+
+    .schedule {
+      padding: 6px 8px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px 12px;
+    }
+    .schedule-item {
+      display: flex;
+      gap: 6px;
+      padding: 2px 0;
+      font-size: 8pt;
+    }
+    .time {
+      color: #666;
+      min-width: 32px;
+      font-family: monospace;
+      font-size: 7.5pt;
+    }
+    .name { flex: 1; }
+    .emoji { width: 12px; text-align: center; }
+
+    .no-activities {
+      padding: 8px;
+      color: #888;
+      font-style: italic;
+      font-size: 8pt;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 10px;
+      color: #888;
+      font-size: 7pt;
+      border-top: 1px solid #ddd;
+      margin-top: 10px;
+    }
+
+    @media print {
+      body { padding: 10px; }
+      .day { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>FTC: Nihon</h1>
+    <div class="dates">March 6-21, 2026 • 4 Adults, 3 Kids</div>
+  </div>
+
+  <h2>Accommodations</h2>
+  <div class="accommodations">
+    
+    <div class="acc">
+      <div class="acc-name">&Here Shinjuku</div>
+      <div class="acc-dates">Mar 7 - Mar 12</div>
+      <div class="acc-info">
+        <strong>Conf:</strong> 5464976388 PIN: 5562<br>
+        <strong>Tel:</strong> +81 3-6384-2040<br>
+        Bus to Busta Shinjuku, 14-min walk. Cash NOT accepted.
+      </div>
+    </div>
+    
+    <div class="acc">
+      <div class="acc-name">Yoshimatsu Ryokan</div>
+      <div class="acc-dates">Mar 12 - Mar 14</div>
+      <div class="acc-info">
+        <strong>Conf:</strong> XEVXZWUZ / 9SPM1U1T<br>
+        <strong>Tel:</strong> 0460-83-6661<br>
+        CALL for pickup from Hakonemachi Port. Kaiseki dinner included.
+      </div>
+    </div>
+    
+    <div class="acc">
+      <div class="acc-name">Fujinoma Machiya</div>
+      <div class="acc-dates">Mar 14 - Mar 17</div>
+      <div class="acc-info">
+        <strong>Conf:</strong> 6306540803 PIN: 5278<br>
+        <strong>Tel:</strong> +81 90-8161-3870<br>
+        Check-in at MACHIYA INNS desk. PAY ¥8,400 CASH.
+      </div>
+    </div>
+    
+    <div class="acc">
+      <div class="acc-name">MIMARU Osaka Shinsaibashi</div>
+      <div class="acc-dates">Mar 17 - Mar 21</div>
+      <div class="acc-info">
+        <strong>Conf:</strong> 5937762447 PIN: 7761<br>
+        <strong>Tel:</strong> +81 6-4256-4010<br>
+        FULLY PAID. Near Dotonbori.
+      </div>
+    </div>
+    
+  </div>
+
+  <h2>Daily Schedule</h2>
+  
+  <div class="day">
+    <div class="day-header">
+      <span class="day-title">Day 0: Departure Day</span>
+      <span class="day-meta">Fri Mar 6 • MSP → Transit</span>
+    </div>
+    <div class="no-activities">Guided tour or travel day - see notes</div>
+  </div>
+    
+  <div class="day">
+    <div class="day-header">
+      <span class="day-title">Day 1: Arrival in Tokyo</span>
+      <span class="day-meta">Sat Mar 7 • Tokyo</span>
+    </div>
+    
+    <div class="schedule">
+      
+      <div class="schedule-item">
+        <span class="time">15:20</span>
+        <span class="emoji">🚃</span>
+        <span class="name">Arrive Tokyo Haneda</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">16:30</span>
+        <span class="emoji">🚃</span>
+        <span class="name">Airport Limousine Bus to Shinjuku</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">18:00</span>
+        <span class="emoji">🏨</span>
+        <span class="name">Check-in at &Here Shinjuku</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">18:45</span>
+        <span class="emoji">📍</span>
+        <span class="name">Godzilla Head at Shinjuku Toho Building</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">19:00</span>
+        <span class="emoji">🍜</span>
+        <span class="name">Kabukicho Evening Walk + Dinner</span>
+      </div>
+      
+    </div>
+    
+  </div>
+    
+  <div class="day">
+    <div class="day-header">
+      <span class="day-title">Day 2: East Tokyo Loop</span>
+      <span class="day-meta">Sun Mar 8 • Tokyo</span>
+    </div>
+    
+    <div class="schedule">
+      
+      <div class="schedule-item">
+        <span class="time">08:00</span>
+        <span class="emoji">🍜</span>
+        <span class="name">Breakfast</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">09:00</span>
+        <span class="emoji">⛩️</span>
+        <span class="name">Kaminarimon Gate (Asakusa)</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">09:10</span>
+        <span class="emoji">🛍️</span>
+        <span class="name">Nakamise-Dori</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">09:30</span>
+        <span class="emoji">⛩️</span>
+        <span class="name">Senso-ji Temple</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">10:10</span>
+        <span class="emoji">📍</span>
+        <span class="name">Azumabashi Bridge</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">10:30</span>
+        <span class="emoji">📍</span>
+        <span class="name">Tokyo Skytree & Solamachi</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">12:30</span>
+        <span class="emoji">🛍️</span>
+        <span class="name">Ueno Park & Ameyoko Market</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">15:00</span>
+        <span class="emoji">🛍️</span>
+        <span class="name">Yanaka Ginza - Old Tokyo</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">17:30</span>
+        <span class="emoji">🍜</span>
+        <span class="name">Omoide Yokocho Dinner</span>
+      </div>
+      
+    </div>
+    
+  </div>
+    
+  <div class="day">
+    <div class="day-header">
+      <span class="day-title">Day 3: Ghibli + Harajuku</span>
+      <span class="day-meta">Mon Mar 9 • Tokyo</span>
+    </div>
+    
+    <div class="schedule">
+      
+      <div class="schedule-item">
+        <span class="time">08:15</span>
+        <span class="emoji">🚃</span>
+        <span class="name">Transit to Ghibli Museum</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">10:00</span>
+        <span class="emoji">📍</span>
+        <span class="name">Ghibli Museum</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">12:15</span>
+        <span class="emoji">🚃</span>
+        <span class="name">Train to Harajuku</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">12:45</span>
+        <span class="emoji">🍜</span>
+        <span class="name">Lunch in Harajuku</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">13:45</span>
+        <span class="emoji">⛩️</span>
+        <span class="name">Meiji Shrine</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">14:30</span>
+        <span class="emoji">🛍️</span>
+        <span class="name">Takeshita Street</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">15:30</span>
+        <span class="emoji">📍</span>
+        <span class="name">Animal Cafe</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">16:30</span>
+        <span class="emoji">🛍️</span>
+        <span class="name">Onitsuka Tiger Omotesando</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">18:00</span>
+        <span class="emoji">🍜</span>
+        <span class="name">Dinner in Harajuku/Omotesando</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">19:15</span>
+        <span class="emoji">🚃</span>
+        <span class="name">Train to Shinjuku</span>
+      </div>
+      
+    </div>
+    
+  </div>
+    
+  <div class="day">
+    <div class="day-header">
+      <span class="day-title">Day 4: Tsukiji + Akihabara</span>
+      <span class="day-meta">Tue Mar 10 • Tokyo</span>
+    </div>
+    
+    <div class="schedule">
+      
+      <div class="schedule-item">
+        <span class="time">07:00</span>
+        <span class="emoji">🚃</span>
+        <span class="name">Train to Tsukiji</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">07:30</span>
+        <span class="emoji">🍜</span>
+        <span class="name">Tsukiji Outer Market (Breakfast)</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">09:30</span>
+        <span class="emoji">🚃</span>
+        <span class="name">Train to Akihabara</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">10:00</span>
+        <span class="emoji">📍</span>
+        <span class="name">Akihabara - Gaming & Anime</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">13:00</span>
+        <span class="emoji">🍜</span>
+        <span class="name">Lunch in Akihabara</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">14:00</span>
+        <span class="emoji">🛍️</span>
+        <span class="name">More Akihabara</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">16:00</span>
+        <span class="emoji">🚃</span>
+        <span class="name">Train to Shinjuku</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">16:30</span>
+        <span class="emoji">🏨</span>
+        <span class="name">Free Time / Rest</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">18:30</span>
+        <span class="emoji">🍜</span>
+        <span class="name">Shinjuku Dinner</span>
+      </div>
+      
+    </div>
+    
+  </div>
+    
+  <div class="day">
+    <div class="day-header">
+      <span class="day-title">Day 5: TeamLab + Shibuya</span>
+      <span class="day-meta">Wed Mar 11 • Tokyo</span>
+    </div>
+    
+    <div class="schedule">
+      
+      <div class="schedule-item">
+        <span class="time">09:00</span>
+        <span class="emoji">🛍️</span>
+        <span class="name">Eyeglasses Shopping (Angie)</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">10:00</span>
+        <span class="emoji">🏨</span>
+        <span class="name">Pre-pack for Hakone</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">11:00</span>
+        <span class="emoji">🏨</span>
+        <span class="name">Relaxed Time</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">12:00</span>
+        <span class="emoji">📍</span>
+        <span class="name">TeamLab Borderless</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">15:00</span>
+        <span class="emoji">🚃</span>
+        <span class="name">Walk through Azabudai Hills</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">15:15</span>
+        <span class="emoji">🚃</span>
+        <span class="name">Subway to Shibuya</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">15:30</span>
+        <span class="emoji">📍</span>
+        <span class="name">Hachiko Statue & Shibuya Crossing</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">15:45</span>
+        <span class="emoji">🛍️</span>
+        <span class="name">Nintendo & Pokemon</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">17:00</span>
+        <span class="emoji">📍</span>
+        <span class="name">Shibuya Scramble Square or More Shopping</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">18:00</span>
+        <span class="emoji">🍜</span>
+        <span class="name">Dinner in Shibuya</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">19:30</span>
+        <span class="emoji">🚃</span>
+        <span class="name">Train to Shinjuku</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">20:00</span>
+        <span class="emoji">🏨</span>
+        <span class="name">Add Toiletries to Bags</span>
+      </div>
+      
+    </div>
+    
+  </div>
+    
+  <div class="day">
+    <div class="day-header">
+      <span class="day-title">Day 6: Tokyo → Hakone</span>
+      <span class="day-meta">Thu Mar 12 • Hakone</span>
+    </div>
+    
+    <div class="schedule">
+      
+      <div class="schedule-item">
+        <span class="time">08:00</span>
+        <span class="emoji">🏨</span>
+        <span class="name">Breakfast & Check-out</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">11:30</span>
+        <span class="emoji">🚃</span>
+        <span class="name">Buy Hakone Free Pass & Romancecar</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">12:00</span>
+        <span class="emoji">🚃</span>
+        <span class="name">Romancecar to Hakone-Yumoto</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">13:30</span>
+        <span class="emoji">🛍️</span>
+        <span class="name">Konbini Stop</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">13:45</span>
+        <span class="emoji">🚃</span>
+        <span class="name">Bus to Hakonemachi Port</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">14:30</span>
+        <span class="emoji">⛩️</span>
+        <span class="name">Hakone Shrine</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">15:15</span>
+        <span class="emoji">📍</span>
+        <span class="name">Lake Ashi Area</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">17:00</span>
+        <span class="emoji">🏨</span>
+        <span class="name">Ryokan Pickup at Hakonemachi Port</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">18:00</span>
+        <span class="emoji">🍜</span>
+        <span class="name">Kaiseki Dinner at Ryokan</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">20:00</span>
+        <span class="emoji">📍</span>
+        <span class="name">Onsen (Hot Spring Baths)</span>
+      </div>
+      
+    </div>
+    
+  </div>
+    
+  <div class="day">
+    <div class="day-header">
+      <span class="day-title">Day 7: Hakone Full Day</span>
+      <span class="day-meta">Fri Mar 13 • Hakone</span>
+    </div>
+    
+    <div class="schedule">
+      
+      <div class="schedule-item">
+        <span class="time">07:30</span>
+        <span class="emoji">🍜</span>
+        <span class="name">Breakfast at Ryokan</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">09:00</span>
+        <span class="emoji">🚃</span>
+        <span class="name">Walk/Bus to Hakonemachi Port</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">10:00</span>
+        <span class="emoji">🚃</span>
+        <span class="name">Pirate Ship Cruise</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">10:30</span>
+        <span class="emoji">🚃</span>
+        <span class="name">Ropeway to Owakudani</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">11:00</span>
+        <span class="emoji">📍</span>
+        <span class="name">Owakudani (Hell Valley)</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">12:15</span>
+        <span class="emoji">🚃</span>
+        <span class="name">Ropeway/Cable Car to Gora</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">13:00</span>
+        <span class="emoji">🍜</span>
+        <span class="name">Lunch near Gora</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">14:00</span>
+        <span class="emoji">🚃</span>
+        <span class="name">Walk to Open-Air Museum</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">14:10</span>
+        <span class="emoji">📍</span>
+        <span class="name">Hakone Open-Air Museum (OPTIONAL)</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">15:10</span>
+        <span class="emoji">🚃</span>
+        <span class="name">Return to Ryokan Area</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">16:30</span>
+        <span class="emoji">🏨</span>
+        <span class="name">Free Time at Ryokan</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">18:00</span>
+        <span class="emoji">🍜</span>
+        <span class="name">Kaiseki Dinner</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">20:00</span>
+        <span class="emoji">📍</span>
+        <span class="name">Onsen</span>
+      </div>
+      
+    </div>
+    
+  </div>
+    
+  <div class="day">
+    <div class="day-header">
+      <span class="day-title">Day 8: Hakone → Kyoto</span>
+      <span class="day-meta">Sat Mar 14 • Kyoto</span>
+    </div>
+    
+    <div class="schedule">
+      
+      <div class="schedule-item">
+        <span class="time">07:00</span>
+        <span class="emoji">🍜</span>
+        <span class="name">Breakfast at Ryokan</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">08:00</span>
+        <span class="emoji">📍</span>
+        <span class="name">Final Onsen or Lakeside Walk</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">09:00</span>
+        <span class="emoji">🏨</span>
+        <span class="name">Check-out & Drop-off to Port</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">09:30</span>
+        <span class="emoji">🚃</span>
+        <span class="name">Bus to Odawara Station</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">12:30</span>
+        <span class="emoji">🚃</span>
+        <span class="name">Shinkansen Odawara → Kyoto</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">14:30</span>
+        <span class="emoji">🏨</span>
+        <span class="name">Arrive Kyoto & Check-in at Desk</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">16:00</span>
+        <span class="emoji">🚃</span>
+        <span class="name">Walk to Fujinoma Machiya House</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">16:30</span>
+        <span class="emoji">🏨</span>
+        <span class="name">Rest & Settle In</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">18:00</span>
+        <span class="emoji">🍜</span>
+        <span class="name">Pontocho Alley Dinner</span>
+      </div>
+      
+    </div>
+    
+  </div>
+    
+  <div class="day">
+    <div class="day-header">
+      <span class="day-title">Day 9: Kyoto with Mico</span>
+      <span class="day-meta">Sun Mar 15 • Kyoto</span>
+    </div>
+    
+    <div class="schedule">
+      
+      <div class="schedule-item">
+        <span class="time">09:00</span>
+        <span class="emoji">⛩️</span>
+        <span class="name">Kiyomizudera Temple</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">12:00</span>
+        <span class="emoji">🛍️</span>
+        <span class="name">Gion Backstreets & Nishiki Market</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">14:00</span>
+        <span class="emoji">⛩️</span>
+        <span class="name">Sanjusangendo Temple</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">16:00</span>
+        <span class="emoji">⛩️</span>
+        <span class="name">Fushimi Inari</span>
+      </div>
+      
+    </div>
+    
+  </div>
+    
+  <div class="day">
+    <div class="day-header">
+      <span class="day-title">Day 10: Arashiyama</span>
+      <span class="day-meta">Mon Mar 16 • Kyoto</span>
+    </div>
+    
+    <div class="schedule">
+      
+      <div class="schedule-item">
+        <span class="time">09:00</span>
+        <span class="emoji">📍</span>
+        <span class="name">Arashiyama Bamboo Grove</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">09:30</span>
+        <span class="emoji">⛩️</span>
+        <span class="name">Tenryu-ji Temple</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">10:15</span>
+        <span class="emoji">🚃</span>
+        <span class="name">Walk to Togetsukyo</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">10:30</span>
+        <span class="emoji">📍</span>
+        <span class="name">Togetsukyo Bridge</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">10:45</span>
+        <span class="emoji">📍</span>
+        <span class="name">Iwatayama Monkey Park</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">12:00</span>
+        <span class="emoji">🍜</span>
+        <span class="name">Lunch in Arashiyama</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">13:15</span>
+        <span class="emoji">🛍️</span>
+        <span class="name">Free Time & Arashiyama Shopping</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">15:00</span>
+        <span class="emoji">🚃</span>
+        <span class="name">Return to Central Kyoto</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">16:00</span>
+        <span class="emoji">🏨</span>
+        <span class="name">Rest & Hotel Time</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">18:30</span>
+        <span class="emoji">🍜</span>
+        <span class="name">Pontocho Alley Dinner</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">20:30</span>
+        <span class="emoji">🍜</span>
+        <span class="name">Dessert Stop</span>
+      </div>
+      
+    </div>
+    
+  </div>
+    
+  <div class="day">
+    <div class="day-header">
+      <span class="day-title">Day 11: Kyoto → Osaka</span>
+      <span class="day-meta">Tue Mar 17 • Osaka</span>
+    </div>
+    
+    <div class="schedule">
+      
+      <div class="schedule-item">
+        <span class="time">09:00</span>
+        <span class="emoji">🏨</span>
+        <span class="name">Breakfast & Pack Up</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">10:30</span>
+        <span class="emoji">🚃</span>
+        <span class="name">Train to Osaka</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">11:30</span>
+        <span class="emoji">🍜</span>
+        <span class="name">Arrive Osaka & Lunch in Shinsaibashi</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">13:00</span>
+        <span class="emoji">📍</span>
+        <span class="name">Explore Shinsaibashi Area</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">15:00</span>
+        <span class="emoji">🏨</span>
+        <span class="name">Check-in at MIMARU</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">16:30</span>
+        <span class="emoji">🛍️</span>
+        <span class="name">Shinsaibashi Shopping</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">19:00</span>
+        <span class="emoji">📍</span>
+        <span class="name">Dotonbori Evening</span>
+      </div>
+      
+    </div>
+    
+  </div>
+    
+  <div class="day">
+    <div class="day-header">
+      <span class="day-title">Day 12: Osaka with Mico</span>
+      <span class="day-meta">Wed Mar 18 • Osaka</span>
+    </div>
+    
+    <div class="schedule">
+      
+      <div class="schedule-item">
+        <span class="time">09:00</span>
+        <span class="emoji">🛍️</span>
+        <span class="name">Kuromon Market with Mico</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">12:00</span>
+        <span class="emoji">🍜</span>
+        <span class="name">Food Tour with Mico</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">18:00</span>
+        <span class="emoji">🍜</span>
+        <span class="name">Rest & Dinner</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">19:00</span>
+        <span class="emoji">📍</span>
+        <span class="name">Buy March 21 Shinkansen Tickets</span>
+      </div>
+      
+    </div>
+    
+  </div>
+    
+  <div class="day">
+    <div class="day-header">
+      <span class="day-title">Day 13: Mountain Day Trip</span>
+      <span class="day-meta">Thu Mar 19 • Kyoto Mountains</span>
+    </div>
+    
+    <div class="schedule">
+      
+      <div class="schedule-item">
+        <span class="time">08:00</span>
+        <span class="emoji">📍</span>
+        <span class="name">Full Day Mountain Tour with Mico + Driver</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">20:00</span>
+        <span class="emoji">🍜</span>
+        <span class="name">Return & Dinner</span>
+      </div>
+      
+    </div>
+    
+  </div>
+    
+  <div class="day">
+    <div class="day-header">
+      <span class="day-title">Day 14: Nara + Sumo (Emma's Bday!)</span>
+      <span class="day-meta">Fri Mar 20 • Nara/Osaka</span>
+    </div>
+    
+    <div class="schedule">
+      
+      <div class="schedule-item">
+        <span class="time">08:00</span>
+        <span class="emoji">🚃</span>
+        <span class="name">Train to Nara</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">08:45</span>
+        <span class="emoji">⛩️</span>
+        <span class="name">Todai-ji Temple (Giant Buddha)</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">09:30</span>
+        <span class="emoji">📍</span>
+        <span class="name">Nara Park - Deer Time!</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">12:00</span>
+        <span class="emoji">🚃</span>
+        <span class="name">🦌 DEER ALARM - Start Walking!</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">12:15</span>
+        <span class="emoji">🍜</span>
+        <span class="name">Quick Lunch near Station</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">12:45</span>
+        <span class="emoji">🚃</span>
+        <span class="name">Train to EDION Arena</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">13:30</span>
+        <span class="emoji">📍</span>
+        <span class="name">Arrive EDION Arena (Buffer)</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">14:30</span>
+        <span class="emoji">📍</span>
+        <span class="name">🎫 Osaka Sumo Tournament</span>
+      </div>
+      
+    </div>
+    
+  </div>
+    
+  <div class="day">
+    <div class="day-header">
+      <span class="day-title">Day 15: Departure Day</span>
+      <span class="day-meta">Sat Mar 21 • Osaka → MSP</span>
+    </div>
+    
+    <div class="schedule">
+      
+      <div class="schedule-item">
+        <span class="time">08:00</span>
+        <span class="emoji">🍜</span>
+        <span class="name">Breakfast at MIMARU</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">09:00</span>
+        <span class="emoji">🏨</span>
+        <span class="name">Final Pack & Luggage Check</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">09:30</span>
+        <span class="emoji">🚃</span>
+        <span class="name">Walk/Subway to Shin-Osaka</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">10:00</span>
+        <span class="emoji">🚃</span>
+        <span class="name">Buffer at Shin-Osaka + Grab Ekiben</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">10:30</span>
+        <span class="emoji">🚃</span>
+        <span class="name">Shinkansen to Shinagawa</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">12:50</span>
+        <span class="emoji">🚃</span>
+        <span class="name">Arrive Shinagawa</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">13:00</span>
+        <span class="emoji">🚃</span>
+        <span class="name">Keikyu Line to Haneda</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">13:20</span>
+        <span class="emoji">🍜</span>
+        <span class="name">Arrive Haneda T3 - Last Shopping & Lunch</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">15:00</span>
+        <span class="emoji">🚃</span>
+        <span class="name">At Gate / Pre-Boarding</span>
+      </div>
+      
+      <div class="schedule-item">
+        <span class="time">17:20</span>
+        <span class="emoji">🚃</span>
+        <span class="name">Flight DL0120 Home</span>
+      </div>
+      
+    </div>
+    
+  </div>
+    
+
+  <div class="footer">
+    Generated February 15, 2026 • FTC: Nihon App
+  </div>
+</body>
+</html>
