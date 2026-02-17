@@ -1,12 +1,14 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { useChat } from '@ai-sdk/react';
+import { DefaultChatTransport } from 'ai';
+import type { UIMessage } from 'ai';
 import {
   ChatLayout,
   ChatMessage,
   ChatTypingIndicator,
   ChatInput,
-  type ChatMessageData,
 } from '@/components/ai';
 import { useSyncStore } from '@/stores/sync-store';
 import {
@@ -25,38 +27,42 @@ import type { ChatMessage as DBChatMessage } from '@/types/database';
 import { findCachedResponse } from '@/db/seed-ai-cache';
 
 /**
- * Convert database chat message to component format
+ * Convert a database chat message to a UIMessage for the useChat hook.
  */
-function toMessageData(msg: DBChatMessage): ChatMessageData {
+function dbMessageToUIMessage(msg: DBChatMessage): UIMessage {
   return {
     id: msg.id,
     role: msg.role,
-    content: msg.content,
-    timestamp: new Date(msg.timestamp),
+    parts: [{ type: 'text', text: msg.content }],
   };
 }
 
 /**
+ * Extract text content from a UIMessage's parts.
+ */
+function getMessageText(message: UIMessage): string {
+  return message.parts
+    .filter((part): part is Extract<typeof part, { type: 'text' }> => part.type === 'text')
+    .map((part) => part.text)
+    .join('');
+}
+
+const chatTransport = new DefaultChatTransport({ api: '/api/chat' });
+
+/**
  * AI Assistant chat page.
- * Provides a conversational interface for trip-related questions.
+ * Uses the Vercel AI SDK useChat hook for streaming chat with Claude.
  */
 export default function AIPage() {
   const [input, setInput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [streamingMessage, setStreamingMessage] = useState<ChatMessageData | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const historySeededRef = useRef(false);
 
   // Track online status
   const isOnline = useSyncStore((state) => state.isOnline);
 
   // Load persisted chat history from IndexedDB
   const chatHistory = useChatHistory(50);
-
-  // Convert DB messages to component format
-  const messages: ChatMessageData[] = useMemo(
-    () => chatHistory?.map(toMessageData) ?? [],
-    [chatHistory]
-  );
 
   // Get trip context for AI
   const currentDay = useCurrentDayNumber();
@@ -76,138 +82,81 @@ export default function AIPage() {
     accommodation: accommodations?.tonight ?? null,
   }), [currentDay, currentActivity, nextActivity, todayActivities, currentCity, accommodations]);
 
-  // Scroll to bottom when new messages arrive
+  // useChat hook — handles streaming, message state, stop
+  const { messages, setMessages, sendMessage, status, stop } = useChat({
+    transport: chatTransport,
+    onFinish: async ({ message }) => {
+      // Persist completed assistant message to IndexedDB
+      const text = getMessageText(message);
+      if (text) {
+        await addChatMessage('assistant', text);
+      }
+    },
+  });
+
+  const isStreaming = status === 'streaming';
+  const historyLoaded = chatHistory !== undefined;
+
+  // Seed chat history from IndexedDB into useChat on first load
+  useEffect(() => {
+    if (historySeededRef.current) return;
+    if (!chatHistory) return;
+    historySeededRef.current = true;
+    if (chatHistory.length > 0) {
+      setMessages(chatHistory.map(dbMessageToUIMessage));
+    }
+  }, [chatHistory, setMessages]);
+
+  // Scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, streamingMessage]);
+  }, [messages]);
 
   const handleClearHistory = async () => {
     if (window.confirm('Clear all chat history?')) {
       await clearChatHistory();
+      setMessages([]);
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSend = async () => {
     const trimmedInput = input.trim();
-    if (!trimmedInput || isLoading) return;
+    if (!trimmedInput || isStreaming) return;
 
-    // Save user message to database
-    const userMessage = await addChatMessage('user', trimmedInput);
-    setInput('');
-    setIsLoading(true);
+    // Persist user message to IndexedDB
+    await addChatMessage('user', trimmedInput);
 
-    try {
-      if (!isOnline) {
-        // Offline fallback - try cached responses first
-        const cachedResponse = findCachedResponse(trimmedInput);
-        if (cachedResponse) {
-          await addChatMessage('assistant', cachedResponse);
-        } else {
-          await addChatMessage(
-            'assistant',
-            'I\'m currently offline and couldn\'t find a cached answer for your question. Try asking about:\n\n• Temple or restaurant etiquette\n• Common Japanese phrases (thank you, excuse me, etc.)\n• Practical tips (WiFi, bathrooms, money)\n• Emergency information\n\nOr try again when you have an internet connection!'
-          );
-        }
-        return;
-      }
+    if (!isOnline) {
+      // Offline fallback — inject user message + cached response directly
+      const userMsg: UIMessage = {
+        id: `user-${Date.now()}`,
+        role: 'user',
+        parts: [{ type: 'text', text: trimmedInput }],
+      };
 
-      // Get all messages including the new user message for API
-      const allMessages = [...messages, toMessageData(userMessage)];
-      const uiMessages = allMessages.map((m) => ({
-        id: m.id,
-        role: m.role as 'user' | 'assistant',
-        content: m.content,
-      }));
+      const cachedResponse = findCachedResponse(trimmedInput);
+      const responseText = cachedResponse
+        ?? 'I\'m currently offline and couldn\'t find a cached answer for your question. Try asking about:\n\n\u2022 Temple or restaurant etiquette\n\u2022 Common Japanese phrases (thank you, excuse me, etc.)\n\u2022 Practical tips (WiFi, bathrooms, money)\n\u2022 Emergency information\n\nOr try again when you have an internet connection!';
 
-      // Call the API with streaming
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          messages: uiMessages,
-          tripContext: getTripContext(),
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('API request failed');
-      }
-
-      // Handle streaming response
-      const reader = response.body?.getReader();
-      if (!reader) {
-        throw new Error('No response body');
-      }
-
-      // Create streaming message state
-      const streamingId = `streaming-${Date.now()}`;
-      let assistantContent = '';
-
-      setStreamingMessage({
-        id: streamingId,
+      const assistantMsg: UIMessage = {
+        id: `assistant-${Date.now()}`,
         role: 'assistant',
-        content: '',
-        timestamp: new Date(),
-      });
+        parts: [{ type: 'text', text: responseText }],
+      };
 
-      const decoder = new TextDecoder();
-      let done = false;
-      let buffer = '';
-
-      while (!done) {
-        const { value, done: readerDone } = await reader.read();
-        done = readerDone;
-
-        if (value) {
-          buffer += decoder.decode(value, { stream: true });
-          // Parse SSE format: data: {"type":"text-delta","delta":"text"}
-          const lines = buffer.split('\n');
-          // Keep the last potentially incomplete line in buffer
-          buffer = lines.pop() || '';
-
-          for (const line of lines) {
-            const trimmedLine = line.trim();
-            if (trimmedLine.startsWith('data: ')) {
-              try {
-                const json = JSON.parse(trimmedLine.slice(6));
-                // Handle both possible field names: 'delta' or 'textDelta'
-                const text = json.delta ?? json.textDelta;
-                if (json.type === 'text-delta' && typeof text === 'string') {
-                  assistantContent += text;
-                  setStreamingMessage((prev) =>
-                    prev ? { ...prev, content: assistantContent } : null
-                  );
-                }
-              } catch {
-                // Ignore parsing errors for non-JSON chunks
-              }
-            }
-          }
-        }
-      }
-
-      // Save the completed message to database
-      if (assistantContent) {
-        await addChatMessage('assistant', assistantContent);
-      } else {
-        await addChatMessage('assistant', 'Sorry, I couldn\'t generate a response. Please try again.');
-      }
-
-      // Clear streaming state
-      setStreamingMessage(null);
-    } catch (error) {
-      console.error('[AI] Error:', error);
-      await addChatMessage('assistant', 'Sorry, I encountered an error. Please try again.');
-      setStreamingMessage(null);
-    } finally {
-      setIsLoading(false);
+      setMessages([...messages, userMsg, assistantMsg]);
+      await addChatMessage('assistant', responseText);
+      setInput('');
+      return;
     }
-  };
 
-  // Combine persisted messages with streaming message
-  const displayMessages = streamingMessage
-    ? [...messages, streamingMessage]
-    : messages;
+    // Online — send via useChat with trip context
+    setInput('');
+    sendMessage(
+      { text: trimmedInput },
+      { body: { tripContext: getTripContext() } },
+    );
+  };
 
   return (
     <ChatLayout
@@ -216,15 +165,18 @@ export default function AIPage() {
     >
       {/* Messages area */}
       <div className="flex-1 overflow-y-auto px-4 py-4">
-        {displayMessages.length === 0 ? (
+        {messages.length === 0 ? (
           <EmptyState onSuggestionClick={setInput} />
         ) : (
           <div className="space-y-4 max-w-2xl mx-auto">
-            {displayMessages.map((message) => (
+            {messages.map((message) => (
               <ChatMessage key={message.id} message={message} />
             ))}
 
-            {isLoading && (!streamingMessage || streamingMessage.content === '') && (
+            {isStreaming && (
+              messages.length === 0 ||
+              getMessageText(messages[messages.length - 1]!) === ''
+            ) && (
               <ChatTypingIndicator />
             )}
 
@@ -237,8 +189,10 @@ export default function AIPage() {
       <ChatInput
         value={input}
         onChange={setInput}
-        onSubmit={handleSubmit}
-        disabled={isLoading}
+        onSubmit={handleSend}
+        onStop={stop}
+        isStreaming={isStreaming}
+        disabled={!historyLoaded}
       />
     </ChatLayout>
   );
