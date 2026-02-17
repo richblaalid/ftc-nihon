@@ -7,6 +7,7 @@ import { reseedDatabase, DATA_VERSION } from '@/db/seed';
 import { seedAICache } from '@/db/seed-ai-cache';
 import { seedTourContent } from '@/db/seed-tour-content';
 import { NotificationPrompt } from '@/components/ui/NotificationPrompt';
+import { NotificationPreferences } from '@/components/ui/NotificationPreferences';
 
 export default function SettingsPage() {
   const [isResetting, setIsResetting] = useState(false);
@@ -76,6 +77,14 @@ export default function SettingsPage() {
             Notifications
           </h2>
           <NotificationPrompt compact />
+        </section>
+
+        {/* Notification Preferences */}
+        <section className="card">
+          <h2 className="text-sm font-semibold text-foreground-secondary uppercase tracking-wider mb-3">
+            Notification Types
+          </h2>
+          <NotificationPreferences />
         </section>
 
         {/* App Info */}
