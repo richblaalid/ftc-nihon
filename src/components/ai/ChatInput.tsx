@@ -70,7 +70,7 @@ export function ChatInput({
           disabled={disabled || isStreaming}
           aria-label="Chat message input"
           data-testid="chat-input-field"
-          className="flex-1 rounded-full bg-background-secondary px-4 py-3 text-sm text-foreground placeholder:text-foreground-tertiary focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50"
+          className="flex-1 rounded-full bg-background-secondary px-4 py-3 text-base text-foreground placeholder:text-foreground-tertiary focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50"
         />
 
         {isStreaming ? (
