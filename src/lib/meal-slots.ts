@@ -13,12 +13,18 @@ import {
 
 /**
  * Meal slot information for schedule display
+ *
+ * Design Rules (see docs/meal-card-refactor-plan.md):
+ * - One card per meal slot: exactly one card in timeline per meal
+ * - Food activities take precedence: if exists in time range, becomes the meal plan
+ * - MealSlot is the single source of truth for rendering
  */
 export interface MealSlot {
   meal: MealType;
   suggestedTime: string; // HH:MM format
   showOptions: boolean; // Whether to show restaurant options
   reason?: string; // Reason if not showing (e.g., "Hotel breakfast")
+  scheduledActivity?: Activity; // Food activity covering this slot (if any)
 }
 
 /**
@@ -80,7 +86,36 @@ export function getMealSlotsForDay(
 }
 
 /**
+ * Generic meal activity names that are placeholders, not specific venues
+ * These should still show restaurant options
+ */
+const GENERIC_MEAL_NAMES = [
+  'breakfast',
+  'lunch',
+  'dinner',
+  'snack',
+  'meal',
+  'food',
+  'eat',
+];
+
+/**
+ * Check if an activity name is a generic placeholder vs a specific venue
+ */
+function isGenericMealActivity(name: string): boolean {
+  const lowerName = name.toLowerCase().trim();
+  return GENERIC_MEAL_NAMES.some(generic =>
+    lowerName === generic || lowerName.startsWith(generic + ' ')
+  );
+}
+
+/**
  * Get meal slot info for a specific meal
+ *
+ * Design Rules:
+ * - Food activities take precedence over restaurant options
+ * - Generic activities (e.g., "Breakfast") still show options as they're placeholders
+ * - Specific venues (e.g., "Tsukiji Market") suppress options
  */
 function getMealSlotInfo(
   meal: MealType,
@@ -94,26 +129,31 @@ function getMealSlotInfo(
   const planNote = mealPlan?.[meal as keyof MealPlan];
 
   // Check if meal is included with accommodation
+  // Also find and attach any food activity to prevent duplicate rendering
   if (planNote) {
     const lowerNote = planNote.toLowerCase();
 
     // Skip if meal is included at hotel (must explicitly say "included" or "hotel breakfast")
     if (meal === 'breakfast' && (lowerNote.includes('hotel breakfast') || (lowerNote.includes('hotel') && lowerNote.includes('included')))) {
+      const scheduledActivity = findFoodActivityForMeal(meal, activities);
       return {
         meal,
-        suggestedTime: defaultTime,
+        suggestedTime: scheduledActivity?.startTime ?? defaultTime,
         showOptions: false,
         reason: 'Hotel breakfast included',
+        scheduledActivity,
       };
     }
 
     // Skip if included with ryokan
     if (lowerNote.includes('ryokan') || lowerNote.includes('yoshimatsu')) {
+      const scheduledActivity = findFoodActivityForMeal(meal, activities);
       return {
         meal,
-        suggestedTime: defaultTime,
+        suggestedTime: scheduledActivity?.startTime ?? defaultTime,
         showOptions: false,
         reason: 'Included with accommodation',
+        scheduledActivity,
       };
     }
 
@@ -127,38 +167,62 @@ function getMealSlotInfo(
   // Day 6: Arrive, dinner included
   // Day 7: Full day - breakfast AND dinner included
   // Day 8: Checkout - breakfast included
+  // Also find and attach the food activity to prevent duplicate rendering
   if (dayNumber === 6 && meal === 'dinner') {
+    const scheduledActivity = findFoodActivityForMeal(meal, activities);
     return {
       meal,
-      suggestedTime: '18:00',
+      suggestedTime: scheduledActivity?.startTime ?? '18:00',
       showOptions: false,
       reason: 'Ryokan dinner included',
+      scheduledActivity,
     };
   }
   if (dayNumber === 7) {
     if (meal === 'breakfast') {
+      const scheduledActivity = findFoodActivityForMeal(meal, activities);
       return {
         meal,
-        suggestedTime: '07:30',
+        suggestedTime: scheduledActivity?.startTime ?? '07:30',
         showOptions: false,
         reason: 'Ryokan breakfast included',
+        scheduledActivity,
       };
     }
     if (meal === 'dinner') {
+      const scheduledActivity = findFoodActivityForMeal(meal, activities);
       return {
         meal,
-        suggestedTime: '18:00',
+        suggestedTime: scheduledActivity?.startTime ?? '18:00',
         showOptions: false,
         reason: 'Ryokan dinner included',
+        scheduledActivity,
       };
     }
   }
   if (dayNumber === 8 && meal === 'breakfast') {
+    const scheduledActivity = findFoodActivityForMeal(meal, activities);
     return {
       meal,
-      suggestedTime: '07:00',
+      suggestedTime: scheduledActivity?.startTime ?? '07:00',
       showOptions: false,
       reason: 'Ryokan breakfast included',
+      scheduledActivity,
+    };
+  }
+
+  // Check for food activities in this meal's time range
+  const scheduledActivity = findFoodActivityForMeal(meal, activities);
+
+  if (scheduledActivity) {
+    const isGeneric = isGenericMealActivity(scheduledActivity.name);
+
+    return {
+      meal,
+      suggestedTime: scheduledActivity.startTime,
+      showOptions: isGeneric, // Generic placeholders still show options
+      scheduledActivity,
+      reason: isGeneric ? undefined : scheduledActivity.name,
     };
   }
 
@@ -173,6 +237,46 @@ function getMealSlotInfo(
 }
 
 /**
+ * Time ranges for each meal type
+ * Used for both finding food activities and calculating gaps
+ */
+const MEAL_TIME_RANGES: Record<MealType, { start: string; end: string }> = {
+  breakfast: { start: '07:00', end: '10:00' },
+  lunch: { start: '11:30', end: '14:00' },
+  dinner: { start: '17:30', end: '21:00' },
+  snack: { start: '14:00', end: '17:00' },
+  afternoon: { start: '14:00', end: '17:00' },
+};
+
+/**
+ * Find a food activity scheduled within a meal's time range
+ *
+ * @param meal - The meal type to search for
+ * @param activities - All activities for the day
+ * @returns The food activity if found, undefined otherwise
+ */
+function findFoodActivityForMeal(
+  meal: MealType,
+  activities: Activity[]
+): Activity | undefined {
+  const range = MEAL_TIME_RANGES[meal];
+
+  const sortedActivities = [...activities].sort(
+    (a, b) => timeToMinutes(a.startTime) - timeToMinutes(b.startTime)
+  );
+
+  for (const activity of sortedActivities) {
+    if (activity.category === 'food') {
+      if (isTimeBetween(activity.startTime, range.start, range.end)) {
+        return activity;
+      }
+    }
+  }
+
+  return undefined;
+}
+
+/**
  * Calculate meal time based on gaps between activities
  */
 function calculateMealTime(
@@ -184,16 +288,7 @@ function calculateMealTime(
     return defaultTime;
   }
 
-  // Time ranges for each meal
-  const mealRanges: Record<MealType, { start: string; end: string }> = {
-    breakfast: { start: '07:00', end: '10:00' },
-    lunch: { start: '11:30', end: '14:00' },
-    dinner: { start: '17:30', end: '21:00' },
-    snack: { start: '14:00', end: '17:00' },
-    afternoon: { start: '14:00', end: '17:00' },
-  };
-
-  const range = mealRanges[meal];
+  const range = MEAL_TIME_RANGES[meal];
 
   // Find gaps in activities within the meal time range
   const sortedActivities = [...activities].sort(
@@ -201,6 +296,7 @@ function calculateMealTime(
   );
 
   // Check if there's a food activity already scheduled in this range
+  // (This is a fallback - getMealSlotInfo should have already handled this)
   for (const activity of sortedActivities) {
     if (activity.category === 'food') {
       if (isTimeBetween(activity.startTime, range.start, range.end)) {
