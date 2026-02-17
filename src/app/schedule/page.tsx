@@ -5,7 +5,8 @@ import { useSearchParams } from 'next/navigation';
 import { useActivitiesWithTransit, useCurrentActivity, useCurrentDayNumber, useDayInfo } from '@/db/hooks';
 import { DayStrip, PageHeader } from '@/components/ui';
 import { Timeline } from '@/components/schedule/Timeline';
-import { useAppStore } from '@/stores/app-store';
+import { AllDaysView } from '@/components/schedule/AllDaysView';
+import { useAppStore, type ScheduleViewMode } from '@/stores/app-store';
 import { DayHeader } from '@/components/ui/DayHeader';
 import { HardDeadlineList } from '@/components/ui/HardDeadlineAlert';
 import { useSwipe } from '@/lib/hooks/useSwipe';
@@ -13,14 +14,57 @@ import { safeJsonParse } from '@/lib/json-utils';
 import { TRIP_DAYS } from '@/types/database';
 import type { HardDeadline } from '@/types/database';
 
+/**
+ * View mode toggle component - segmented control style
+ */
+function ViewModeToggle({
+  mode,
+  onChange,
+}: {
+  mode: ScheduleViewMode;
+  onChange: (mode: ScheduleViewMode) => void;
+}) {
+  return (
+    <div className="flex rounded-full bg-background-secondary p-0.5">
+      <button
+        onClick={() => onChange('day')}
+        className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+          mode === 'day'
+            ? 'bg-primary text-on-primary'
+            : 'text-foreground-secondary hover:text-foreground'
+        }`}
+        aria-pressed={mode === 'day'}
+      >
+        Day
+      </button>
+      <button
+        onClick={() => onChange('all')}
+        className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+          mode === 'all'
+            ? 'bg-primary text-on-primary'
+            : 'text-foreground-secondary hover:text-foreground'
+        }`}
+        aria-pressed={mode === 'all'}
+      >
+        All Days
+      </button>
+    </div>
+  );
+}
+
 type SlideDirection = 'left' | 'right' | null;
 
 function ScheduleContent() {
   const searchParams = useSearchParams();
   const currentDayNumber = useCurrentDayNumber();
 
-  // Global day selection from store
+  // Global day selection and view mode from store
   const globalSelectedDay = useAppStore((state) => state.selectedDay);
+  const viewMode = useAppStore((state) => state.scheduleViewMode);
+  const setViewMode = useAppStore((state) => state.setScheduleViewMode);
+
+  // Refs for day sections in All Days view (for scroll-to navigation)
+  const daySectionRefs = useRef<Map<number, HTMLDivElement>>(new Map());
 
   // Transition state for smooth animations
   const [slideDirection, setSlideDirection] = useState<SlideDirection>(null);
@@ -70,12 +114,22 @@ function ScheduleContent() {
     }, 150);
   }, [globalSelectedDay, currentDayNumber]);
 
-  // Direct day change (from DayStrip tap) - no animation
+  // Direct day change (from DayStrip tap)
+  // In "day" mode: switch day, no animation
+  // In "all" mode: scroll to that day's section
   const handleDirectDayChange = useCallback((day: number) => {
-    useAppStore.getState().setSelectedDay(day);
-    const scrollContainer = document.getElementById('main-scroll-container');
-    scrollContainer?.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
+    if (viewMode === 'all') {
+      // Scroll to the day section
+      const section = daySectionRefs.current.get(day);
+      if (section) {
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    } else {
+      useAppStore.getState().setSelectedDay(day);
+      const scrollContainer = document.getElementById('main-scroll-container');
+      scrollContainer?.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [viewMode]);
 
   // Cleanup timeout on unmount
   useEffect(() => {
@@ -124,66 +178,77 @@ function ScheduleContent() {
       <PageHeader
         title="Schedule"
         rightAction={
-          !isToday && currentDayNumber ? (
-            <button
-              onClick={() => handleDayChange(currentDayNumber)}
-              className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary hover:bg-primary/20 transition-colors"
-            >
-              Today
-            </button>
-          ) : undefined
+          <div className="flex items-center gap-2">
+            {viewMode === 'day' && !isToday && currentDayNumber ? (
+              <button
+                onClick={() => handleDayChange(currentDayNumber)}
+                className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary hover:bg-primary/20 transition-colors"
+              >
+                Today
+              </button>
+            ) : null}
+            <ViewModeToggle mode={viewMode} onChange={setViewMode} />
+          </div>
         }
       >
         {/* Day strip navigation */}
         <div className="pb-2">
           <DayStrip
-            selectedDay={selectedDay}
+            selectedDay={viewMode === 'day' ? selectedDay : null}
             currentDay={currentDayNumber}
             onDayChange={handleDirectDayChange}
           />
         </div>
       </PageHeader>
 
-      {/* Main content - swipeable area with slide transitions */}
-      <main
-        className={`flex-1 px-4 py-4 pb-4 transition-all duration-200 ease-out ${
-          isTransitioning
-            ? slideDirection === 'left'
-              ? '-translate-x-4 opacity-0'
-              : 'translate-x-4 opacity-0'
-            : 'translate-x-0 opacity-100'
-        }`}
-        {...swipeHandlers}
-      >
-        {activities === undefined ? (
-          // Loading state
-          <div className="flex flex-col gap-3">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="card animate-pulse">
-                <div className="h-4 w-20 rounded bg-background-secondary" />
-                <div className="mt-2 h-6 w-48 rounded bg-background-secondary" />
-                <div className="mt-2 h-4 w-32 rounded bg-background-secondary" />
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="flex flex-col gap-4">
-            {/* Day header with metadata */}
-            {dayInfo && <DayHeader dayInfo={dayInfo} />}
+      {/* Main content */}
+      {viewMode === 'all' ? (
+        // All Days view
+        <main className="flex-1">
+          <AllDaysView daySectionRefs={daySectionRefs} />
+        </main>
+      ) : (
+        // Day view - swipeable area with slide transitions
+        <main
+          className={`flex-1 px-4 py-4 pb-4 transition-all duration-200 ease-out ${
+            isTransitioning
+              ? slideDirection === 'left'
+                ? '-translate-x-4 opacity-0'
+                : 'translate-x-4 opacity-0'
+              : 'translate-x-0 opacity-100'
+          }`}
+          {...swipeHandlers}
+        >
+          {activities === undefined ? (
+            // Loading state
+            <div className="flex flex-col gap-3">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="card animate-pulse">
+                  <div className="h-4 w-20 rounded bg-background-secondary" />
+                  <div className="mt-2 h-6 w-48 rounded bg-background-secondary" />
+                  <div className="mt-2 h-4 w-32 rounded bg-background-secondary" />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col gap-4">
+              {/* Day header with metadata */}
+              {dayInfo && <DayHeader dayInfo={dayInfo} />}
 
-            {/* Hard deadlines for this day */}
-            {hardDeadlines.length > 0 && (
-              <HardDeadlineList deadlines={hardDeadlines} />
-            )}
+              {/* Hard deadlines for this day */}
+              {hardDeadlines.length > 0 && (
+                <HardDeadlineList deadlines={hardDeadlines} />
+              )}
 
-            {/* Activity timeline */}
-            <Timeline
-              activities={activities}
-              currentActivityId={isToday ? currentActivity?.id : null}
-            />
-          </div>
-        )}
-      </main>
+              {/* Activity timeline */}
+              <Timeline
+                activities={activities}
+                currentActivityId={isToday ? currentActivity?.id : null}
+              />
+            </div>
+          )}
+        </main>
+      )}
     </div>
   );
 }

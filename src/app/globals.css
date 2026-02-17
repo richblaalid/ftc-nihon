@@ -796,3 +796,99 @@
     outline-color: var(--color-vermillion-400);
   }
 }
+
+/* ============================================
+   Print Styles
+   For All Days View itinerary printing
+   ============================================ */
+@media print {
+  /* Reset body for print */
+  body {
+    height: auto !important;
+    overflow: visible !important;
+    background: white !important;
+    color: black !important;
+  }
+
+  /* Hide non-essential elements */
+  nav,
+  [data-print-hide] {
+    display: none !important;
+  }
+
+  /* Force light theme colors for print */
+  :root {
+    --background: white;
+    --background-secondary: #f5f5f5;
+    --background-tertiary: #e5e5e5;
+    --surface: white;
+    --foreground: black;
+    --foreground-secondary: #333;
+    --foreground-tertiary: #666;
+    --primary: #f46b55;
+    --category-food: #f46b55;
+    --category-temple: #7c3aed;
+    --category-shopping: #f5b800;
+    --category-transit: #2563eb;
+    --category-activity: #059669;
+    --category-hotel: #8b5cf6;
+  }
+
+  /* Remove shadows and effects */
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  /* Day sections should not split */
+  .all-days-view > div > div {
+    break-inside: avoid;
+  }
+
+  /* Reduce padding for compact print */
+  .all-days-view {
+    padding: 0;
+    font-size: 10pt;
+  }
+
+  /* Day headers should be visible, not sticky */
+  .all-days-view .sticky {
+    position: static !important;
+    background: #f0f0f0 !important;
+  }
+
+  /* Activity list items compact for print */
+  [data-testid="activity-list-item"] {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    break-inside: avoid;
+  }
+
+  /* Print header/footer */
+  @page {
+    size: A4;
+    margin: 1cm;
+  }
+
+  /* Hide bottom navigation */
+  [data-testid="bottom-nav"] {
+    display: none !important;
+  }
+
+  /* Make links not underlined for cleaner print */
+  a {
+    text-decoration: none !important;
+    color: inherit !important;
+  }
+
+  /* Category color bars - ensure they print */
+  .bg-category-food,
+  .bg-category-temple,
+  .bg-category-shopping,
+  .bg-category-transit,
+  .bg-category-activity,
+  .bg-category-hotel {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}

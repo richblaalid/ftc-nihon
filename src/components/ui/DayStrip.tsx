@@ -4,7 +4,8 @@ import { useEffect, useRef } from 'react';
 import { TRIP_START_DATE, TRIP_DAYS } from '@/types/database';
 
 interface DayStripProps {
-  selectedDay: number;
+  /** Currently selected day number, or null if no day selected (e.g., in All Days view) */
+  selectedDay: number | null;
   currentDay: number | null;
   onDayChange: (day: number) => void;
 }
@@ -88,7 +89,7 @@ export function DayStrip({ selectedDay, currentDay, onDayChange }: DayStripProps
 
   // Scroll selected day into view on mount and when selection changes
   useEffect(() => {
-    if (selectedRef.current && scrollRef.current) {
+    if (selectedDay !== null && selectedRef.current && scrollRef.current) {
       const container = scrollRef.current;
       const element = selectedRef.current;
       const containerRect = container.getBoundingClientRect();
@@ -140,7 +141,7 @@ export function DayStrip({ selectedDay, currentDay, onDayChange }: DayStripProps
           {/* Day buttons row */}
           <div className="flex" style={{ gap: `${DAY_GAP}px` }}>
             {days.map((day) => {
-              const isSelected = day === selectedDay;
+              const isSelected = selectedDay !== null && day === selectedDay;
               const isCurrent = day === currentDay;
               const weekday = getWeekday(day);
               const city = DAY_TO_CITY[day] ?? 'Tokyo';
@@ -188,11 +189,11 @@ export function DayStrip({ selectedDay, currentDay, onDayChange }: DayStripProps
         </div>
       </div>
 
-      {/* Progress indicator */}
+      {/* Progress indicator - show full progress in All Days mode, or based on selected day */}
       <div className="mt-1 mx-4 h-1 rounded-full bg-background-secondary overflow-hidden">
         <div
           className="h-full bg-primary/60 transition-all duration-normal"
-          style={{ width: `${(selectedDay / TRIP_DAYS) * 100}%` }}
+          style={{ width: selectedDay !== null ? `${(selectedDay / TRIP_DAYS) * 100}%` : '100%' }}
           aria-hidden="true"
         />
       </div>
