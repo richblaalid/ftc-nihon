@@ -37,6 +37,9 @@ export function RestaurantCard({
           <div className="flex items-center gap-2 flex-wrap">
             <h3 className="font-semibold text-foreground truncate">
               {restaurant.name}
+              {restaurant.type && (
+                <span className="font-normal text-foreground-secondary text-sm"> — {restaurant.type}</span>
+              )}
             </h3>
             {isPrimary && (
               <span className="shrink-0 rounded-full bg-amber-500/10 px-2 py-0.5 text-xs font-medium text-amber-600 dark:text-amber-400">
@@ -57,16 +60,12 @@ export function RestaurantCard({
             </p>
           )}
 
-          {/* Type and price */}
-          <div className="mt-2 flex items-center gap-3 text-sm text-foreground-secondary">
-            {restaurant.type && <span>{restaurant.type}</span>}
-            {restaurant.priceRange && (
-              <>
-                <span className="text-foreground-tertiary">·</span>
-                <span>{restaurant.priceRange}</span>
-              </>
-            )}
-          </div>
+          {/* Price */}
+          {restaurant.priceRange && (
+            <p className="mt-2 text-sm text-foreground-secondary">
+              {restaurant.priceRange}
+            </p>
+          )}
 
           {/* Location info */}
           {restaurant.nearestStation && (
