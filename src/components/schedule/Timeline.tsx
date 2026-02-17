@@ -114,13 +114,73 @@ function getSimplifiedMode(name: string): 'ropeway' | 'cable_car' | 'bus' | 'wal
 }
 
 /**
- * Wrapper component for RestaurantOptionsCard that fetches its own data
+ * Unified MealSlotCard component for schedule display
+ *
+ * Design Rules (see docs/meal-card-refactor-plan.md):
+ * - One card per meal slot: exactly one card in timeline per meal
+ * - Handles three display modes:
+ *   1. Scheduled: Show activity name, location, tips (specific venue)
+ *   2. Options: Show primary recommendation, "Choose" badge, tap to select
+ *   3. Included: Show "Included with accommodation" text
  */
-function MealSlotCard({ dayNumber, meal }: { dayNumber: number; meal: MealType }) {
+function MealSlotCard({
+  dayNumber,
+  slot,
+}: {
+  dayNumber: number;
+  slot: MealSlot;
+}) {
+  const { meal, scheduledActivity, showOptions, reason } = slot;
   const options = useRestaurantOptionsForMeal(dayNumber, meal);
   const selection = useMealSelection(dayNumber, meal);
   const selectedRestaurant = useSelectedRestaurant(dayNumber, meal);
 
+  // Case 1: Meal is included (ryokan, hotel breakfast) - no scheduled activity
+  if (!showOptions && !scheduledActivity) {
+    return (
+      <div className="card border-l-4 border-category-food/30 bg-category-food/5">
+        <div className="flex items-center gap-3">
+          <span className="text-xl" role="img" aria-label={MEAL_LABELS[meal]} aria-hidden="true">
+            {MEAL_ICONS[meal]}
+          </span>
+          <div>
+            <h4 className="font-medium text-foreground">{MEAL_LABELS[meal]}</h4>
+            <p className="text-sm text-foreground-secondary">{reason}</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Case 2: Specific scheduled activity (e.g., "Tsukiji Market") - show activity details
+  if (!showOptions && scheduledActivity) {
+    return (
+      <div className="card border-l-4 border-category-food bg-category-food/5">
+        <div className="flex items-center gap-3">
+          <span className="text-xl" role="img" aria-label={MEAL_LABELS[meal]} aria-hidden="true">
+            {MEAL_ICONS[meal]}
+          </span>
+          <div className="flex-1 min-w-0">
+            <h4 className="font-medium text-foreground">
+              {MEAL_LABELS[meal]}: {scheduledActivity.name}
+            </h4>
+            {scheduledActivity.locationName && (
+              <p className="text-sm text-foreground-secondary truncate">
+                📍 {scheduledActivity.locationName}
+              </p>
+            )}
+            {scheduledActivity.tips && (
+              <p className="text-xs text-foreground-tertiary mt-1 line-clamp-2">
+                💡 {scheduledActivity.tips}
+              </p>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Case 3: Show restaurant options (either no scheduled activity or generic placeholder)
   // Loading state - show skeleton
   if (options === undefined) {
     return (
@@ -136,16 +196,18 @@ function MealSlotCard({ dayNumber, meal }: { dayNumber: number; meal: MealType }
     );
   }
 
-  // No options available for this meal - still show the slot
+  // No options available for this meal - still show the slot with placeholder name if available
   if (!options.primary && options.alternatives.length === 0 && !options.isIncluded) {
     return (
       <div className="card border-l-4 border-category-food/30 bg-category-food/5">
         <div className="flex items-center gap-3">
-          <span className="text-xl" role="img" aria-label={MEAL_LABELS[meal]}>
+          <span className="text-xl" role="img" aria-label={MEAL_LABELS[meal]} aria-hidden="true">
             {MEAL_ICONS[meal]}
           </span>
           <div>
-            <h4 className="font-medium text-foreground">{MEAL_LABELS[meal]}</h4>
+            <h4 className="font-medium text-foreground">
+              {scheduledActivity ? `${MEAL_LABELS[meal]}: ${scheduledActivity.name}` : MEAL_LABELS[meal]}
+            </h4>
             <p className="text-sm text-foreground-tertiary">No restaurant options</p>
           </div>
         </div>
@@ -251,10 +313,25 @@ export function Timeline({ activities, currentActivityId }: TimelineProps) {
     | { type: 'meal'; slot: MealSlot; isPast: boolean }
     | { type: 'walk'; toActivity: string; activityState: 'current' | 'completed' | 'upcoming' };
 
+  // Collect activity IDs that are "covered" by meal slots
+  // These food activities will be rendered as part of the MealSlotCard, not separately
+  const coveredActivityIds = new Set<string>();
+  for (const slot of mealSlots) {
+    if (slot.scheduledActivity) {
+      coveredActivityIds.add(slot.scheduledActivity.id);
+    }
+  }
+
   // First, collect activities and meals, mapping them based on transitRenderType
   const activitiesAndMeals: TimelineItem[] = [];
 
   for (const activity of activities) {
+    // Skip food activities that are covered by meal slots
+    // They will be rendered as part of the unified MealSlotCard
+    if (coveredActivityIds.has(activity.id)) {
+      continue;
+    }
+
     const state = getActivityState(activity, currentActivityId, isViewingToday, todayStr);
     const renderType = activity.transitRenderType;
 
@@ -443,15 +520,7 @@ export function Timeline({ activities, currentActivityId }: TimelineProps) {
                   const { slot, isPast } = item;
                   return (
                     <li key={`meal-${slot.meal}`} className={isPast ? 'opacity-60' : ''}>
-                      {slot.showOptions ? (
-                        <MealSlotCard dayNumber={dayNumber} meal={slot.meal} />
-                      ) : (
-                        <div className="card border-l-4 border-category-food/30 bg-category-food/5">
-                          <p className="text-sm text-foreground-secondary">
-                            {slot.reason}
-                          </p>
-                        </div>
-                      )}
+                      <MealSlotCard dayNumber={dayNumber} slot={slot} />
                     </li>
                   );
                 }
