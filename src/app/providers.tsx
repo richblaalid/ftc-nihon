@@ -6,6 +6,7 @@ import { warmAllCaches } from '@/lib/cache-warmer';
 import { initOnlineListeners } from '@/stores/sync-store';
 import { seedAICache } from '@/db/seed-ai-cache';
 import { seedTourContent } from '@/db/seed-tour-content';
+import { NotificationScheduler } from '@/components/NotificationScheduler';
 
 interface ProvidersProps {
   children: React.ReactNode;
@@ -71,5 +72,10 @@ export function Providers({ children }: ProvidersProps) {
     };
   }, []);
 
-  return <>{children}</>;
+  return (
+    <>
+      <NotificationScheduler />
+      {children}
+    </>
+  );
 }

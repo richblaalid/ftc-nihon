@@ -18,7 +18,7 @@
 - Phase 5.5: [x] Complete - Quick Utility Features
 - Phase 6: [x] Complete - AI Assistant + Tour Guide
 - Phase 6.5: [x] Complete - Transit Enhancement
-- Phase 7: [ ] Not Started - Push Notifications
+- Phase 7: [x] Complete - Push Notifications
 - Phase 8: [ ] Not Started - Admin Panel
 - Phase 9: [ ] Not Started - Group Location Sharing
 - **Phase 10: [x] Complete - Code Quality & Design System Improvements (from audit)**
@@ -829,52 +829,52 @@
 
 > Proactive reminders via PWA push notifications on iOS 16.4+.
 
-- [ ] 7.1.1: Set up Web Push with VAPID keys
+- [x] 7.1.1: Set up Web Push with VAPID keys
   - Files: src/lib/push.ts, environment variables
   - Setup: Generate VAPID key pair, configure in env
   - Test: Keys configured correctly
 
-- [ ] 7.1.2: Create notification permission flow
+- [x] 7.1.2: Create notification permission flow
   - Files: src/components/ui/NotificationPrompt.tsx, src/app/settings/page.tsx
   - UI: Explain value, request permission, handle denial gracefully
   - Fallback: In-app notification center if push denied
   - Test: Permission flow works on iOS Safari
 
-- [ ] 7.1.3: Create notification scheduling service
+- [x] 7.1.3: Create notification scheduling service
   - Files: src/lib/notifications.ts, src/app/api/notifications/route.ts
   - Logic: Schedule notifications based on itinerary times
   - Storage: Track scheduled notifications in IndexedDB
   - Test: Notifications schedule correctly
 
-- [ ] 7.1.4: Implement morning briefing notifications
+- [x] 7.1.4: Implement morning briefing notifications
   - Time: 8:00 AM JST daily
   - Content: Today's highlights, weather, hard deadlines
   - Test: Morning notification fires at correct time
 
-- [ ] 7.1.5: Implement departure reminders
+- [x] 7.1.5: Implement departure reminders
   - Time: 30 minutes before "leave by" time
   - Content: "Time to head to [destination]"
   - Test: Departure reminder fires correctly
 
-- [ ] 7.1.6: Implement deadline alerts
+- [x] 7.1.6: Implement deadline alerts
   - Time: 60 minutes before hard deadlines
   - Content: "[Activity] in 1 hour - head back!"
   - Test: Deadline alert fires correctly
 
-- [ ] 7.1.7: Add notification preferences to settings
+- [x] 7.1.7: Add notification preferences to settings
   - Files: src/app/settings/page.tsx
   - Options: Toggle each notification type on/off
-  - Persistence: Store preferences in IndexedDB
+  - Persistence: Store preferences in localStorage
   - Test: Preferences save and apply
 
 **Phase 7 Checkpoint:**
 
-- [ ] Push notifications work on iOS 16.4+ PWA
-- [ ] Morning briefing fires at 8:00 AM JST
-- [ ] Departure reminders fire 30 min before leave time
-- [ ] Deadline alerts fire 60 min before deadlines
-- [ ] Notification preferences configurable
-- [ ] Commit: "feat: complete push notifications (Phase 7)"
+- [x] Push notifications work on iOS 16.4+ PWA
+- [x] Morning briefing fires at 8:00 AM JST
+- [x] Departure reminders fire 30 min before leave time
+- [x] Deadline alerts fire 60 min before deadlines
+- [x] Notification preferences configurable
+- [x] Commit: "feat: complete push notifications (Phase 7)"
 
 ### Phase 8: Admin Panel
 

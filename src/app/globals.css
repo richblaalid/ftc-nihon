@@ -796,3 +796,94 @@
     outline-color: var(--color-vermillion-400);
   }
 }
+
+/* ============================================
+   Print Styles for All Days View
+   ============================================ */
+
+@media print {
+  /* Reset body for print */
+  body {
+    height: auto !important;
+    overflow: visible !important;
+    background: white !important;
+    color: black !important;
+  }
+
+  /* Hide navigation and interactive elements */
+  nav,
+  [data-print-hide],
+  .scrollbar-hide,
+  header > div:first-child /* Back button area */ {
+    display: none !important;
+  }
+
+  /* Reset fixed/sticky positioning */
+  header,
+  .sticky {
+    position: relative !important;
+    top: auto !important;
+  }
+
+  /* Critical: Reset the fixed layout container to allow content flow */
+  body > div,
+  #__next,
+  .fixed {
+    position: static !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  /* Reset the scroll container */
+  #main-scroll-container {
+    overflow: visible !important;
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  /* Ensure content flows naturally */
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
+    height: auto !important;
+  }
+
+  /* Day sections - avoid breaks within activities */
+  .all-days-view > div > div {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Day headers - keep with content */
+  .all-days-view h3 {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  /* Remove shadows and reduce visual noise */
+  .card,
+  .shadow-lg,
+  .shadow-md,
+  .shadow-sm {
+    box-shadow: none !important;
+    border: 1px solid #e5e5e5 !important;
+  }
+
+  /* Compact spacing for print */
+  .all-days-view {
+    padding: 0.5rem !important;
+  }
+
+  /* Ensure readable text */
+  * {
+    color: black !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Keep category border colors */
+  .border-l-4 {
+    border-left-color: currentColor !important;
+  }
+}
