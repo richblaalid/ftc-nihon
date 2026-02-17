@@ -10,6 +10,22 @@ interface PinInfoProps {
   onNavigate?: () => void;
 }
 
+/** Get the correct detail page href for a pin based on its ID prefix */
+function getPinDetailHref(id: string): string {
+  if (id.startsWith('hotel-')) {
+    return `/reservations?hotel=${id.replace('hotel-', '')}`;
+  }
+  if (id.startsWith('restaurant-')) {
+    // ID format: restaurant-{dayNumber}-{meal}-{restaurantId}
+    const parts = id.replace('restaurant-', '').split('-');
+    const dayNumber = parts[0];
+    const meal = parts[1];
+    const restaurantId = parts.slice(2).join('-');
+    return `/restaurants/day-${dayNumber}-${meal}/${restaurantId}`;
+  }
+  return `/schedule/${id}`;
+}
+
 /**
  * Info popup shown when tapping a map pin
  * Displays activity summary with quick actions
@@ -76,11 +92,7 @@ export function PinInfo({ activity, onClose, onNavigate }: PinInfoProps) {
         {/* Actions */}
         <div className="mt-4 flex gap-2">
           <Link
-            href={
-              activity.category === 'hotel'
-                ? `/reservations?hotel=${activity.id.replace('hotel-', '')}`
-                : `/schedule/${activity.id}`
-            }
+            href={getPinDetailHref(activity.id)}
             className="flex-1 btn btn-secondary text-sm py-2"
           >
             View Details

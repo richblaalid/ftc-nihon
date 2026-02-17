@@ -5,9 +5,13 @@ import { useSearchParams } from 'next/navigation';
 import { Map, PinLegend, PinInfo, Directions } from '@/components/maps';
 import { DayStrip, PageHeader } from '@/components/ui';
 import { useGeolocation } from '@/lib/hooks/useGeolocation';
-import { useActivitiesWithTransit, useCurrentDayNumber, useAccommodationsForDay } from '@/db/hooks';
+import { useActivitiesWithTransit, useCurrentDayNumber, useAccommodationsForDay, useRestaurantOptionsForDay } from '@/db/hooks';
 import { useAppStore } from '@/stores/app-store';
-import type { ActivityWithTransit, Accommodation } from '@/types/database';
+import type { ActivityWithTransit, Accommodation, Restaurant, MealType } from '@/types/database';
+
+// Default meal times and labels for restaurant pin display
+const MEAL_TIMES: Record<string, string> = { breakfast: '08:00', lunch: '12:30', dinner: '18:30' };
+const MEAL_LABELS: Record<string, string> = { breakfast: 'Breakfast', lunch: 'Lunch', dinner: 'Dinner' };
 
 function MapContent() {
   const searchParams = useSearchParams();
@@ -49,6 +53,9 @@ function MapContent() {
   // Load accommodations for this day (last night's hotel and tonight's hotel)
   const accommodations = useAccommodationsForDay(selectedDay);
 
+  // Load restaurant options for this day
+  const restaurantOptions = useRestaurantOptionsForDay(selectedDay);
+
   // Convert accommodation to activity-like object for map display
   const accommodationToActivity = useCallback((acc: Accommodation, label: string): ActivityWithTransit => ({
     id: `hotel-${acc.id}`,
@@ -76,6 +83,34 @@ function MapContent() {
     updatedAt: acc.updatedAt,
     transit: null,
   }), [selectedDay]);
+
+  // Convert restaurant to activity-like object for map display
+  const restaurantToActivity = useCallback((restaurant: Restaurant, dayNum: number, meal: MealType): ActivityWithTransit => ({
+    id: `restaurant-${dayNum}-${meal}-${restaurant.id}`,
+    dayNumber: dayNum,
+    date: '',
+    startTime: MEAL_TIMES[meal] ?? '12:00',
+    durationMinutes: null,
+    name: `${MEAL_LABELS[meal] ?? meal}: ${restaurant.name}`,
+    category: 'food',
+    locationName: restaurant.name,
+    locationAddress: restaurant.address,
+    locationAddressJp: restaurant.addressJapanese,
+    locationLat: restaurant.locationLat,
+    locationLng: restaurant.locationLng,
+    googleMapsUrl: restaurant.googleMapsUrl,
+    websiteUrl: restaurant.websiteUrl,
+    description: restaurant.notes,
+    tips: restaurant.whatToOrder ? `Order: ${restaurant.whatToOrder}` : null,
+    whatToOrder: restaurant.whatToOrder,
+    backupAlternative: restaurant.backupAlternative,
+    isHardDeadline: false,
+    isKidFriendly: restaurant.isKidFriendly,
+    sortOrder: 0,
+    createdAt: restaurant.createdAt,
+    updatedAt: restaurant.updatedAt,
+    transit: null,
+  }), []);
 
   // Memoize activities to prevent unnecessary re-renders and marker recreation
   const activities = useMemo(() => {
@@ -107,8 +142,20 @@ function MapContent() {
       hotelMarkers.push(accommodationToActivity(accommodations.tonight, 'Tonight'));
     }
 
-    return [...dayActivities, ...hotelMarkers];
-  }, [activitiesWithTransit, accommodations, accommodationToActivity]);
+    // Build restaurant markers for meals with assigned restaurants
+    const restaurantMarkers: ActivityWithTransit[] = [];
+    if (restaurantOptions) {
+      const mainMeals: MealType[] = ['breakfast', 'lunch', 'dinner'];
+      for (const meal of mainMeals) {
+        const options = restaurantOptions.get(meal);
+        if (!options || options.isIncluded || !options.primary) continue;
+        if (options.primary.locationLat == null || options.primary.locationLng == null) continue;
+        restaurantMarkers.push(restaurantToActivity(options.primary, selectedDay, meal));
+      }
+    }
+
+    return [...dayActivities, ...hotelMarkers, ...restaurantMarkers];
+  }, [activitiesWithTransit, accommodations, accommodationToActivity, restaurantOptions, restaurantToActivity, selectedDay]);
 
   // Compute map center from selected activity
   const mapCenter = useMemo(() => {
