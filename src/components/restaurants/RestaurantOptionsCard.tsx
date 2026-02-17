@@ -96,10 +96,10 @@ export function RestaurantOptionsCard({
             </div>
             <p className="mt-0.5 truncate text-sm font-medium text-foreground">
               {selectedRestaurant.name}
+              {selectedRestaurant.type && (
+                <span className="font-normal text-foreground-secondary"> — {selectedRestaurant.type}</span>
+              )}
             </p>
-            {selectedRestaurant.type && (
-              <p className="text-xs text-foreground-secondary">{selectedRestaurant.type}</p>
-            )}
           </div>
           <span className="text-foreground-tertiary">›</span>
         </div>
@@ -129,14 +129,12 @@ export function RestaurantOptionsCard({
             </span>
           </div>
           {options.primary ? (
-            <>
-              <p className="mt-0.5 truncate text-sm text-foreground-secondary">
-                Suggested: {primaryName}
-              </p>
+            <p className="mt-0.5 truncate text-sm text-foreground-secondary">
+              Suggested: {primaryName}
               {primaryType && (
-                <p className="text-xs text-foreground-tertiary">{primaryType}</p>
+                <span className="text-foreground-tertiary"> — {primaryType}</span>
               )}
-            </>
+            </p>
           ) : (
             <p className="mt-0.5 text-sm text-foreground-secondary">
               {totalOptions} option{totalOptions !== 1 ? 's' : ''} available

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 import type { ActivityWithTransit, MealType, TransitSegment, TransitRenderType } from '@/types/database';
 import { ActivityCard } from './ActivityCard';
 import { TransitCard } from './TransitCard';
@@ -155,7 +156,10 @@ function MealSlotCard({
   // Case 2: Specific scheduled activity (e.g., "Tsukiji Market") - show activity details
   if (!showOptions && scheduledActivity) {
     return (
-      <div className="card border-l-4 border-category-food bg-category-food/5">
+      <Link
+        href={`/schedule/${scheduledActivity.id}`}
+        className="card relative block border-l-4 border-category-food bg-category-food/5 transition-transform active:scale-[0.98]"
+      >
         <div className="flex items-center gap-3">
           <span className="text-xl" role="img" aria-label={MEAL_LABELS[meal]} aria-hidden="true">
             {MEAL_ICONS[meal]}
@@ -175,8 +179,9 @@ function MealSlotCard({
               </p>
             )}
           </div>
+          <span className="text-foreground-tertiary">›</span>
         </div>
-      </div>
+      </Link>
     );
   }
 

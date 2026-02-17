@@ -22,6 +22,7 @@
 - Phase 8: [ ] Not Started - Admin Panel
 - Phase 9: [ ] Not Started - Group Location Sharing
 - **Phase 10: [x] Complete - Code Quality & Design System Improvements (from audit)**
+- **Phase 11: [x] Complete - Restaurant-Schedule Alignment Fix**
 
 ---
 
@@ -1185,6 +1186,80 @@
 
 ---
 
+## Phase 11: Restaurant-Schedule Alignment Fix
+
+> After itinerary restructuring (Odaiba removed, Tsukiji/Imperial Palace/Ginza added to Day 4, etc.), many restaurant `assignedMeals` were not updated. This causes wrong-neighborhood restaurants to appear as meal suggestions. App matches on `assignedMeals[].day === activity.dayNumber` in `src/db/hooks/restaurants.ts:78`.
+>
+> **Plan:** `.claude/plans/partitioned-weaving-feather.md`
+> **Files:** `src/db/seed-data.ts`, `src/db/seed.ts`
+
+### 11.1 Visible UI Fixes (restaurants showing in wrong places)
+
+- [x] 11.1.1: Fix Day 5 Dinner — assign Shibuya restaurants
+  - Restaurants: `nabezo-shibuya`, `katsukichi-shibuya`
+  - Change: Reassign from broken Day 4 to `day: 5, meal: 'dinner'` (Shibuya)
+  - Files: src/db/seed-data.ts (~lines 5568, 5594)
+  - Test: Day 5 dinner shows Nabezo as primary in schedule
+
+- [x] 11.1.2: Fix Day 6 Breakfast/Lunch — remove Odaiba restaurants
+  - Restaurants: `bills-odaiba`, `eggs-n-things-odaiba`, `gonpachi-odaiba`, `tsukiji-tamura-odaiba`
+  - Change: Unassign all 4 (empty assignedMeals, null dayNumber/meal)
+  - Files: src/db/seed-data.ts (~lines 5836, 5862, 5888, 5914)
+  - Test: Day 6 breakfast/lunch shows no Odaiba restaurants
+
+- [x] 11.1.3: Fix Day 3 Dinner — promote Maisen to primary
+  - Restaurant: `maisen-omotesando`
+  - Change: assignedMeals priority `'alternative'` → `'primary'`
+  - Files: src/db/seed-data.ts (~line 5424)
+  - Test: Day 3 dinner shows Maisen as primary
+
+- [x] 11.1.4: Fix Day 7 Lunch — swap Gora/Yumoto priorities
+  - Restaurants: `hatsuhana-soba` (→ alternative), `tamura-ginkatsuya` (→ primary)
+  - Change: Swap priorities in Day 7 lunch assignedMeals
+  - Files: src/db/seed-data.ts (~lines 6026, 6055)
+  - Test: Day 7 lunch shows Tamura Ginkatsuya (Gora) as primary
+
+- [x] 11.1.5: Fix Day 11 Breakfast — remove Fushimi, promote Inoda
+  - Restaurants: `vermillion-fushimi` (unassign), `inoda-coffee-honten` (Day 11 → primary)
+  - Change: Remove Vermillion from meal assignments; promote Inoda from alternative to primary
+  - Files: src/db/seed-data.ts (~lines 6464, 6390)
+  - Test: Day 11 breakfast shows Inoda Coffee as primary
+
+### 11.2 Data Cleanup (invisible but incorrect assignments)
+
+- [x] 11.2.1: Unassign Momo Paradise/Waigaya from Day 6 dinner
+  - Restaurants: `momo-paradise-shinjuku`, `waigaya-shinjuku`
+  - Change: Empty assignedMeals, null dayNumber/meal (Day 6 dinner is ryokan-included)
+  - Files: src/db/seed-data.ts (~lines 5940, 5966)
+
+- [x] 11.2.2: Unassign Day 4 breakfast restaurants (Tsukiji suppresses display)
+  - Restaurants: `bills-omotesando`, `world-breakfast-allday`, `andersen-akihabara`
+  - Change: Empty assignedMeals, null dayNumber/meal
+  - Files: src/db/seed-data.ts (~lines 5517, 5542, 5782)
+
+- [x] 11.2.3: Fix date metadata in assignedMeals
+  - Fix `inoda-coffee-honten`: Day 10 date → `'2026-03-16'`, Day 11 date → `'2026-03-17'`
+  - Fix `marufuku-coffee`: Day 12 date → `'2026-03-18'`, Day 13 date → `'2026-03-19'`
+  - Fix `soba-kanda-matsuya`: Day 5 date → `'2026-03-11'`
+  - Files: src/db/seed-data.ts
+
+- [x] 11.2.4: Increment DATA_VERSION and verify build
+  - Change: DATA_VERSION 24 → 25 in src/db/seed.ts
+  - Test: `npm run build` passes, `npm run lint` no new errors
+
+**Phase 11 Checkpoint:**
+
+- [x] Day 3 dinner shows Maisen Omotesando as primary
+- [x] Day 5 dinner shows Nabezo Shibuya as primary
+- [x] Day 6 breakfast/lunch no longer shows Odaiba restaurants
+- [x] Day 7 lunch shows Tamura Ginkatsuya (Gora) as primary
+- [x] Day 11 breakfast shows Inoda Coffee as primary
+- [x] No unassigned restaurants incorrectly show on any day
+- [x] `npm run build` passes
+- [x] Commit: "fix(restaurants): align restaurant assignments with restructured itinerary (Phase 11)"
+
+---
+
 ## Task Log
 
 | Task | Completed | Commit | Notes |
@@ -1265,3 +1340,4 @@
 | 5.2.4 | 2026-01-26 | - | Special instructions |
 | 5.3.1 | 2026-01-26 | - | BottomNav component |
 | 5.3.2 | 2026-01-26 | - | Active state nav items |
+| 11.1.1-11.2.4 | 2026-02-17 | - | Restaurant-schedule alignment fix (Phase 11) |
