@@ -26,7 +26,7 @@ import { PHRASES as phrases } from './seed-phrases';
  * Data version - increment this when seed data changes to trigger a reseed
  * This allows updating phrases/data without users needing to clear their browser data
  */
-export const DATA_VERSION = 14; // Mark Ghibli & Sumo tickets as purchased
+export const DATA_VERSION = 15; // Add Kinkaku-ji (Golden Pavilion) to Day 10
 const DATA_VERSION_KEY = 'ftc-nihon-data-version';
 
 /**
