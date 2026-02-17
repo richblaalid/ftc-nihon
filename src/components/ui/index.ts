@@ -4,3 +4,4 @@ export { BottomNav } from './BottomNav';
 export { PageTransition } from './PageTransition';
 export { DayStrip } from './DayStrip';
 export { PageHeader } from './PageHeader';
+export { NotificationPrompt } from './NotificationPrompt';
