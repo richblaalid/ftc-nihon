@@ -26,7 +26,7 @@ import { PHRASES as phrases } from './seed-phrases';
  * Data version - increment this when seed data changes to trigger a reseed
  * This allows updating phrases/data without users needing to clear their browser data
  */
-export const DATA_VERSION = 22; // Unified meal card - food activities integrated with meal slots
+export const DATA_VERSION = 25; // Fix restaurant-schedule alignment after itinerary restructuring
 const DATA_VERSION_KEY = 'ftc-nihon-data-version';
 
 /**
@@ -112,6 +112,16 @@ async function reseedTickets(): Promise<void> {
 }
 
 /**
+ * Reseed restaurants table (for Google Maps URL updates)
+ */
+async function reseedRestaurants(): Promise<void> {
+  console.log('[Seed] Reseeding restaurants due to data version change...');
+  await db.restaurants.clear();
+  await db.restaurants.bulkAdd(restaurants);
+  console.log(`[Seed] Reseeded ${restaurants.length} restaurants`);
+}
+
+/**
  * Check and update data if version changed
  */
 export async function checkDataVersion(): Promise<void> {
@@ -137,6 +147,9 @@ export async function checkDataVersion(): Promise<void> {
 
     // Reseed tickets (for purchase status updates)
     await reseedTickets();
+
+    // Reseed restaurants (for Google Maps URL updates)
+    await reseedRestaurants();
 
     // Update stored version
     setStoredDataVersion(DATA_VERSION);
