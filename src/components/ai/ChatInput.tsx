@@ -6,13 +6,15 @@ interface ChatInputProps {
   value: string;
   onChange: (value: string) => void;
   onSubmit: () => void;
+  onStop?: () => void;
+  isStreaming?: boolean;
   disabled?: boolean;
   placeholder?: string;
   autoFocus?: boolean;
 }
 
 /**
- * Chat input field with send button.
+ * Chat input field with send/stop button.
  * Supports large touch targets (44x44pt) for mobile use.
  * Users can use device's native voice input (keyboard microphone).
  */
@@ -20,6 +22,8 @@ export function ChatInput({
   value,
   onChange,
   onSubmit,
+  onStop,
+  isStreaming = false,
   disabled = false,
   placeholder = 'Ask a question...',
   autoFocus = true,
@@ -35,6 +39,10 @@ export function ChatInput({
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
+    if (isStreaming && onStop) {
+      onStop();
+      return;
+    }
     if (value.trim() && !disabled) {
       onSubmit();
     }
@@ -44,7 +52,7 @@ export function ChatInput({
     onChange(e.target.value);
   };
 
-  const canSubmit = value.trim().length > 0 && !disabled;
+  const canSubmit = value.trim().length > 0 && !disabled && !isStreaming;
 
   return (
     <div className="border-t border-border bg-background px-4 py-3 pb-safe">
@@ -59,35 +67,55 @@ export function ChatInput({
           value={value}
           onChange={handleChange}
           placeholder={placeholder}
-          disabled={disabled}
+          disabled={disabled || isStreaming}
           aria-label="Chat message input"
           data-testid="chat-input-field"
           className="flex-1 rounded-full bg-background-secondary px-4 py-3 text-sm text-foreground placeholder:text-foreground-tertiary focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50"
         />
 
-        {/* Send button */}
-        <button
-          type="submit"
-          disabled={!canSubmit}
-          aria-label="Send message"
-          data-testid="chat-send-button"
-          className="min-w-touch min-h-touch flex items-center justify-center rounded-full bg-primary text-white disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transition-transform"
-        >
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            aria-hidden="true"
+        {isStreaming ? (
+          /* Stop button */
+          <button
+            type="button"
+            onClick={onStop}
+            aria-label="Stop generating"
+            data-testid="chat-stop-button"
+            className="min-w-touch min-h-touch flex items-center justify-center rounded-full bg-red-500 dark:bg-red-600 text-white active:scale-95 transition-transform"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-            />
-          </svg>
-        </button>
+            <svg
+              className="w-5 h-5"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <rect x="6" y="6" width="12" height="12" rx="2" />
+            </svg>
+          </button>
+        ) : (
+          /* Send button */
+          <button
+            type="submit"
+            disabled={!canSubmit}
+            aria-label="Send message"
+            data-testid="chat-send-button"
+            className="min-w-touch min-h-touch flex items-center justify-center rounded-full bg-primary text-white disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transition-transform"
+          >
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+              />
+            </svg>
+          </button>
+        )}
       </form>
     </div>
   );

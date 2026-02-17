@@ -1,16 +1,20 @@
 'use client';
 
 import { memo } from 'react';
-
-export interface ChatMessageData {
-  id: string;
-  role: 'user' | 'assistant';
-  content: string;
-  timestamp: Date;
-}
+import type { UIMessage } from 'ai';
 
 interface ChatMessageProps {
-  message: ChatMessageData;
+  message: UIMessage;
+}
+
+/**
+ * Extract text content from a UIMessage's parts.
+ */
+function getMessageText(message: UIMessage): string {
+  return message.parts
+    .filter((part): part is Extract<typeof part, { type: 'text' }> => part.type === 'text')
+    .map((part) => part.text)
+    .join('');
 }
 
 /**
@@ -19,6 +23,9 @@ interface ChatMessageProps {
  */
 export const ChatMessage = memo(function ChatMessage({ message }: ChatMessageProps) {
   const isUser = message.role === 'user';
+  const text = getMessageText(message);
+
+  if (!text) return null;
 
   return (
     <div
@@ -32,14 +39,7 @@ export const ChatMessage = memo(function ChatMessage({ message }: ChatMessagePro
             : 'bg-background-secondary text-foreground rounded-bl-md'
         }`}
       >
-        <p className="text-sm whitespace-pre-wrap leading-relaxed">{message.content}</p>
-        <p
-          className={`text-xs mt-1.5 ${
-            isUser ? 'text-white/70' : 'text-foreground-tertiary'
-          }`}
-        >
-          {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-        </p>
+        <p className="text-sm whitespace-pre-wrap leading-relaxed">{text}</p>
       </div>
     </div>
   );

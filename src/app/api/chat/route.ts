@@ -1,12 +1,6 @@
 import { anthropic } from '@ai-sdk/anthropic';
-import { streamText } from 'ai';
+import { streamText, convertToModelMessages, type UIMessage } from 'ai';
 import { buildSystemPrompt, createEmptyContext, type TripContext } from '@/lib/ai';
-
-interface ChatMessage {
-  id: string;
-  role: 'user' | 'assistant';
-  content: string;
-}
 
 export const runtime = 'edge';
 
@@ -17,7 +11,7 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
     const { messages, tripContext } = body as {
-      messages: ChatMessage[];
+      messages: UIMessage[];
       tripContext?: TripContext;
     };
 
@@ -29,35 +23,23 @@ export async function POST(req: Request) {
       );
     }
 
-    console.log('[Chat API] Received messages:', JSON.stringify(messages, null, 2));
-
     // Build system prompt with trip context
     const systemPrompt = buildSystemPrompt(tripContext ?? createEmptyContext());
-
-    // Convert UI messages to model format manually (avoiding convertToModelMessages issues)
-    const modelMessages = messages.map((msg) => ({
-      role: msg.role as 'user' | 'assistant',
-      content: msg.content,
-    }));
 
     // Stream response from Claude
     const result = streamText({
       model: anthropic('claude-sonnet-4-20250514'),
       system: systemPrompt,
-      messages: modelMessages,
+      messages: await convertToModelMessages(messages),
     });
 
     return result.toUIMessageStreamResponse();
   } catch (error) {
     console.error('[Chat API] Error:', error);
 
-    // Extract error details
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    const errorDetails = error instanceof Error && 'cause' in error ? String(error.cause) : '';
+    console.error('[Chat API] Details:', errorMessage);
 
-    console.error('[Chat API] Details:', errorMessage, errorDetails);
-
-    // Return a user-friendly error with details in dev
     return new Response(
       JSON.stringify({
         error: process.env.NODE_ENV === 'development'
