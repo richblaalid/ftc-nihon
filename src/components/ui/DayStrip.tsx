@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 import { TRIP_START_DATE, TRIP_DAYS } from '@/types/database';
 
 interface DayStripProps {
-  selectedDay: number;
+  selectedDay: number | null;
   currentDay: number | null;
   onDayChange: (day: number) => void;
 }
@@ -188,14 +188,16 @@ export function DayStrip({ selectedDay, currentDay, onDayChange }: DayStripProps
         </div>
       </div>
 
-      {/* Progress indicator */}
-      <div className="mt-1 mx-4 h-1 rounded-full bg-background-secondary overflow-hidden">
-        <div
-          className="h-full bg-primary/60 transition-all duration-normal"
-          style={{ width: `${(selectedDay / TRIP_DAYS) * 100}%` }}
-          aria-hidden="true"
-        />
-      </div>
+      {/* Progress indicator - hide when no day is selected */}
+      {selectedDay !== null && (
+        <div className="mt-1 mx-4 h-1 rounded-full bg-background-secondary overflow-hidden">
+          <div
+            className="h-full bg-primary/60 transition-all duration-normal"
+            style={{ width: `${(selectedDay / TRIP_DAYS) * 100}%` }}
+            aria-hidden="true"
+          />
+        </div>
+      )}
     </div>
   );
 }
