@@ -164,14 +164,21 @@ const ACTIVITY_TO_TOUR_MAPPING: Record<string, string> = {
   'meiji jingu': 'meiji-shrine',
   'meiji jingu shrine': 'meiji-shrine',
   'teamlab borderless': 'teamlab-borderless',
-  'tokyo skytree & solamachi': 'tokyo-tower', // Skytree content could be added, using tower for now
+  'tokyo skytree & solamachi': 'tokyo-tower',
   'tokyo tower': 'tokyo-tower',
+  'imperial palace east gardens': 'imperial-palace',
+  'imperial palace': 'imperial-palace',
+  'imperial palace gardens': 'imperial-palace',
+  'shibuya crossing': 'shibuya-crossing',
+  'shibuya crossing & hachiko': 'shibuya-crossing',
+  'shibuya - hachiko & crossing': 'shibuya-crossing',
+  'hachiko statue': 'shibuya-crossing',
 
   // Hakone
   'hakone shrine': 'hakone-shrine',
   'owakudani (hell valley)': 'owakudani',
   'owakudani': 'owakudani',
-  'hakone circuit to lake ashi': 'hakone-shrine', // Show shrine content for Hakone activities
+  'hakone circuit to lake ashi': 'hakone-shrine',
 
   // Kyoto
   'kinkaku-ji (golden pavilion)': 'kinkaku-ji',
@@ -179,11 +186,23 @@ const ACTIVITY_TO_TOUR_MAPPING: Record<string, string> = {
   'golden pavilion': 'kinkaku-ji',
   'fushimi inari': 'fushimi-inari',
   'fushimi inari taisha': 'fushimi-inari',
-  'bamboo grove & tenryu-ji temple': 'arashiyama-bamboo',
+  'bamboo grove & tenryu-ji temple': 'tenryu-ji',
+  'tenryu-ji temple': 'tenryu-ji',
+  'tenryu-ji': 'tenryu-ji',
   'arashiyama bamboo grove': 'arashiyama-bamboo',
   'arashiyama': 'arashiyama-bamboo',
   'gion backstreets & nishiki market': 'gion',
   'gion': 'gion',
+  'kiyomizu-dera': 'kiyomizudera',
+  'kiyomizudera': 'kiyomizudera',
+  'kiyomizu-dera temple': 'kiyomizudera',
+
+  // Nara (day trip from Kyoto/Osaka)
+  'todai-ji temple': 'todai-ji',
+  'todai-ji': 'todai-ji',
+  'todaiji': 'todai-ji',
+  'nara park': 'nara-park',
+  'nara deer park': 'nara-park',
 
   // Osaka
   'dotonbori evening': 'dotonbori',

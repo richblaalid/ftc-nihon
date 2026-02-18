@@ -423,6 +423,8 @@ export interface TourContentEntry {
   city: string;
   highlights?: string[];
   etiquetteTips?: string[];
+  audioUrl?: string;
+  audioDurationSeconds?: number;
   createdAt?: string;
   updatedAt?: string;
 }
