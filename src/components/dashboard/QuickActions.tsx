@@ -3,16 +3,8 @@
 import Link from 'next/link';
 import { CurrencyConverter, useCurrencyConverter } from '@/components/ui/CurrencyConverter';
 
-// Google Translate web URL - opens in Safari from PWA
-const GOOGLE_TRANSLATE_WEB_URL = 'https://translate.google.com/?sl=en&tl=ja&op=translate';
-
-/**
- * Open Google Translate in Safari (external browser).
- * Using window.open with _blank opens in Safari from iOS PWA.
- */
-function openGoogleTranslate() {
-  window.open(GOOGLE_TRANSLATE_WEB_URL, '_blank');
-}
+// Google Translate web URL
+const GOOGLE_TRANSLATE_URL = 'https://translate.google.com/?sl=en&tl=ja&op=translate';
 
 /**
  * Utility widget button - matches card style of weather widget
@@ -118,7 +110,7 @@ export function QuickActions() {
         <UtilityWidget
           icon="話す"
           label="Translate"
-          onClick={openGoogleTranslate}
+          href={GOOGLE_TRANSLATE_URL}
           testId="quick-action-translate"
         />
       </div>

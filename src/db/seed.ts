@@ -26,7 +26,7 @@ import { PHRASES as phrases } from './seed-phrases';
  * Data version - increment this when seed data changes to trigger a reseed
  * This allows updating phrases/data without users needing to clear their browser data
  */
-export const DATA_VERSION = 31; // Add transit segment for Day 6 bus to Hakonemachi Port
+export const DATA_VERSION = 32; // Add tonkatsu.jp Omotesando as Day 5 dinner alternative
 const DATA_VERSION_KEY = 'ftc-nihon-data-version';
 
 /**
