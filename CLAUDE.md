@@ -1,404 +1,252 @@
-# FTC: Nihon - Claude Code Instructions
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Project Overview
 
-FTC: Nihon is an offline-first Progressive Web App (PWA) serving as a travel concierge for the Finer Things Club's Japan trip (March 6-21, 2026). The app provides real-time schedule management, navigation assistance, and trip information for 4 adults traveling with 3 children across Tokyo, Hakone, Kyoto, and Osaka. Launch deadline: March 1, 2026.
+FTC: Nihon is an offline-first PWA travel concierge for the Finer Things Club's Japan trip (March 6-21, 2026). 4 adults + 3 children across Tokyo, Hakone, Kyoto, and Osaka. Launch deadline: March 1, 2026.
 
-## Key Documents
-
-| Document | Purpose |
-| -------- | ------- |
-| [docs/plan.md](docs/plan.md) | Technical implementation plan |
-| [docs/tasks.md](docs/tasks.md) | Current task list and progress |
-| [Docs/AI_ITINERARY_EDITING_PROMPT.md](Docs/AI_ITINERARY_EDITING_PROMPT.md) | Rules for AI-assisted itinerary editing |
-| [Docs/product_docs/PRDs/FTC_Nihon_PRD.md](Docs/product_docs/PRDs/FTC_Nihon_PRD.md) | Product Requirements Document |
-| [Docs/product_docs/ADRs/FTC_Nihon_ADRs.md](Docs/product_docs/ADRs/FTC_Nihon_ADRs.md) | Architecture Decision Records (10 ADRs) |
-| [Docs/product_docs/FTC_Nihon_Design_System.md](Docs/product_docs/FTC_Nihon_Design_System.md) | Brand & Design System |
-| [Docs/product_docs/FTC_Nihon_Supabase_Schema.sql](Docs/product_docs/FTC_Nihon_Supabase_Schema.sql) | Supabase PostgreSQL schema (8 tables) |
-
-## Technology Stack
-
-| Layer | Technology | ADR |
-| ----- | ---------- | --- |
-| Runtime | Node.js 20+ | - |
-| Framework | Next.js 14 (App Router) | ADR-003 |
-| Language | TypeScript, strict mode | - |
-| Styling | Tailwind CSS | ADR-003 |
-| State | Zustand | ADR-003 |
-| Offline DB | Dexie.js (IndexedDB) - PRIMARY | ADR-007 |
-| Sync Layer | Supabase (PostgreSQL + real-time) | ADR-007 |
-| Auth | Supabase Auth (admin only) | ADR-010 |
-| Maps | Google Maps JavaScript API | ADR-004 |
-| PWA | Service Worker + Workbox | ADR-001, ADR-002 |
-| Hosting | Vercel | ADR-008 |
-
-## Project Structure
-
-```
-src/
-├── app/                    # Next.js App Router pages
-│   ├── layout.tsx          # Root layout with providers
-│   ├── page.tsx            # Dashboard home
-│   ├── schedule/           # Daily schedule views
-│   ├── restaurants/        # Restaurant selection pages
-│   ├── map/                # Map views
-│   ├── phrases/            # Japanese phrases
-│   ├── reservations/       # Accommodations
-│   └── manifest.ts         # PWA manifest
-├── components/
-│   ├── ui/                 # Primitive/shared components
-│   ├── dashboard/          # Dashboard widgets
-│   ├── schedule/           # ActivityCard, TransitCard, SimplifiedTransitCard, WalkIndicator
-│   ├── restaurants/        # RestaurantOptionsCard, RestaurantCard
-│   ├── maps/               # Map components
-│   └── reservations/       # Reservation components
-├── db/
-│   ├── database.ts         # Dexie.js database class
-│   ├── seed-data.ts        # Trip data (activities, restaurants, transit)
-│   └── hooks.ts            # React hooks for data access
-├── lib/
-│   ├── meal-slots.ts       # Meal slot determination logic
-│   ├── time-utils.ts       # Time parsing and formatting
-│   ├── json-utils.ts       # Safe JSON parsing (safeJsonParse)
-│   ├── supabase.ts         # Supabase client
-│   ├── sync.ts             # Sync service
-│   └── utils.ts            # General utilities
-├── stores/
-│   └── sync-store.ts       # Zustand stores
-└── types/
-    └── database.ts         # TypeScript types (Activity, TransitSegment, etc.)
-public/
-├── sw.js                   # Service worker
-├── icon-192x192.png        # PWA icons
-└── icon-512x512.png
-```
-
-## Available Commands
-
-### Development
+## Commands
 
 ```bash
-npm run dev        # Start dev server (localhost:4000)
-npm run build      # Production build
-npm run start      # Start production server
-npm run lint       # Run ESLint
-npm run format     # Format with Prettier
+npm run dev          # Dev server on localhost:4000
+npm run build        # Production build (also validates types)
+npm run lint         # ESLint with --max-warnings 0
+npm run typecheck    # TypeScript type checking only
+npm run format       # Prettier format all files
+npm run test:run     # Run Vitest once (use before commits)
+npm test             # Vitest in watch mode
+npm run test:e2e     # Playwright E2E tests (requires dev server on :4000)
 ```
 
-### Dev Server Restart (Port-Specific)
-
-**IMPORTANT:** This project runs on port 4000. To restart the dev server without affecting other projects:
-
+**Restart dev server** (port-specific, won't kill other Next.js servers):
 ```bash
 lsof -ti:4000 | xargs kill 2>/dev/null; npm run dev
 ```
 
-Never use `pkill -f "next dev"` as it kills ALL Next.js dev servers on the machine.
-
-### Database
-
+**Run a single test file:**
 ```bash
-# Supabase CLI (if installed)
-supabase start     # Start local Supabase
-supabase db reset  # Reset and seed database
+npx vitest run src/lib/time-utils.test.ts
 ```
 
-### Testing
-
-```bash
-npm test           # Run Vitest in watch mode (during development)
-npm run test:run   # Run tests once (use before commits)
-npm run test:coverage  # Run with coverage report
-npm run test:e2e   # Run Playwright E2E tests
-```
-
-**Test files:** Co-located with source files as `*.test.ts` or `*.test.tsx`
-**Coverage target:** ~11% current (configured in vitest.config.ts, increase as coverage grows)
-
-### Claude Code Skills
-
+**Claude Code skills:**
 ```
 /plan              # View/generate implementation plan
 /execute           # Execute next task from docs/tasks.md
 /execute 0.1.1     # Execute specific task
 ```
 
-## Design System
+## Technology Stack
 
-**Full spec:** [Docs/product_docs/FTC_Nihon_Design_System.md](Docs/product_docs/FTC_Nihon_Design_System.md)
+| Layer | Technology |
+| ----- | ---------- |
+| Framework | Next.js 16 (App Router), React 19 |
+| Language | TypeScript (strict, noUncheckedIndexedAccess) |
+| Styling | Tailwind CSS v4 (CSS-based config, no tailwind.config.ts) |
+| State | Zustand with localStorage persistence |
+| Offline DB | Dexie.js v4 (IndexedDB) — PRIMARY data source |
+| Sync Layer | Supabase (PostgreSQL + real-time) — sync only, never read directly |
+| AI Chat | Vercel AI SDK v6 (`ai`, `@ai-sdk/anthropic`, `@ai-sdk/react`) |
+| Animation | `motion` v12 (import from `motion/react`) |
+| PWA | Vanilla service worker (`public/sw.js`, no Workbox) |
+| Hosting | Vercel |
 
-### Brand Personality
-- Adventurous, Playful, Curious, Foodie
-- Balance point: 4/7 on playful ↔ polished scale
-- "Premium travel app with soul"
+**Path alias:** `@/*` → `./src/*`
 
-### Color Themes
+## Architecture
 
-**Light Mode - "Sunset Adventure"**
-- Background: `cream-50` (#FFFBF7) warm cream
-- Primary accent: `coral-500` (#F46B55)
-- Secondary: `amber-500` (#F5B800)
-- Text: `#2D2420` warm charcoal
+### Data Flow (Offline-First)
 
-**Dark Mode - "Bold & Spicy"**
-- Background: `indigo-950` (#0D1117) deep indigo-black
-- Primary accent: `vermillion-500` (#E53935)
-- Secondary: `orange-500` (#F58220)
-- Accent: `gold-500` (#FFD700)
-- Text: `#F5F5F5` off-white
-
-### Typography
-
-| Use | Font | Example Class |
-|-----|------|---------------|
-| Display/Headlines | Reggae One | `font-display text-display-md` |
-| Body/UI | Urbanist | `font-sans` (default) |
-| Code | Geist Mono | `font-mono` |
-
-**Reggae One rules:**
-- Use sparingly - splash screen, day headers, location titles
-- Never for body text or UI
-- Minimum size: 24px
-- Always uppercase or title case
-
-### Category Colors
-
-| Category | Light | Dark | Usage |
-|----------|-------|------|-------|
-| Food | coral-500 | vermillion-500 | `.pill-food`, `.text-category-food` |
-| Temple | purple (#7C3AED) | light purple | `.pill-temple` |
-| Shopping | amber-500 | gold-500 | `.pill-shopping` |
-| Transit | blue (#2563EB) | light blue | `.pill-transit` |
-| Activity | teal (#059669) | light teal | `.pill-activity` |
-| Hotel | violet (#8B5CF6) | light violet | `.pill-hotel` |
-
-### Component Classes
-
-```css
-/* Cards */
-.card                   /* Base card with shadow */
-.activity-card          /* Card with left color bar */
-
-/* Buttons */
-.btn-primary            /* Coral/Vermillion filled */
-.btn-secondary          /* Outlined */
-.btn-ghost              /* Text only */
-
-/* Pills/Tags */
-.pill                   /* Base pill */
-.pill-food, .pill-temple, etc.  /* Category-colored */
-
-/* Shadows */
-.shadow-theme-sm/md/lg  /* Mode-aware shadows */
+```
+Supabase (cloud) → Sync → Dexie.js (IndexedDB) → useLiveQuery hooks → React components
+                                                    ↑
+                            Seed data (seed-data.ts) fills on first load / version bump
 ```
 
-### Schedule Components
+**Critical rule:** Components NEVER read from Supabase directly. Always use Dexie hooks from `src/db/hooks/`.
 
-**Transit Rendering** - Activities with `transitRenderType` control how they appear in Timeline:
+### Dexie Database
 
-| Value | Renders As | Use Case |
-|-------|------------|----------|
-| `'full'` | TransitCard only | Train journeys with detailed steps |
-| `'simplified'` | SimplifiedTransitCard | Scenic transit (ropeway, cable car, pirate ship) |
-| `'walk'` | WalkIndicator | Short walking segments |
-| `'keep'` | ActivityCard | Buffer time, keep as activity |
-| `'flight'` | ActivityCard | Flight activities |
-| `null` | ActivityCard + TransitCard | Regular activity with transit info |
+- **Database class:** `src/db/database.ts` — singleton exported as `db`, 20 tables, currently schema v5
+- **Hooks directory:** `src/db/hooks/` — split into modules (`activities.ts`, `restaurants.ts`, `meal-selection.ts`, `accommodations.ts`, `trip.ts`, `utilities.ts`, `sync.ts`), re-exported from `src/db/hooks/index.ts`
+- **All hooks use** `useLiveQuery` from `dexie-react-hooks` with `syncVersion` dependency for manual cache invalidation via `useSyncStore.incrementSyncVersion()`
 
-**Key Components:**
-- `TransitCard` - Full transit with countdown, steps, Map/Phrases quick actions
-- `SimplifiedTransitCard` - Icons: 🚡 ropeway, 🚃 cable car, ⛵ pirate ship, 🚌 bus
-- `WalkIndicator` - Minimal "🚶 Walk to X (Ymin)"
-- `RestaurantOptionsCard` - Meal selection with primary/alternative options
+### Seed Data System
 
-### Animation Guidelines
-- Duration: 150ms (fast), 250ms (normal), 400ms (slow)
-- Easing: ease-out for enter, ease-in for exit
-- Respect `prefers-reduced-motion`
-- Card press: scale 0.98 for 100ms
+**When modifying `src/db/seed-data.ts` or any seed file, you MUST increment `DATA_VERSION` in `src/db/seed.ts`.**
 
-### Accessibility
-- Min touch target: 44x44pt (`.min-h-touch .min-w-touch`)
-- Min body text: 16px
-- WCAG 2.1 AA contrast (4.5:1 normal, 3:1 large)
-- Never rely on color alone for meaning
+```typescript
+// src/db/seed.ts — currently at version 32
+export const DATA_VERSION = 32;
+```
 
-## Design Principles
+- Stored in `localStorage` as `ftc-nihon-data-version`
+- `checkDataVersion()` runs on every app load from `providers.tsx`
+- Selective reseed: updates phrases, checklist, transit, activities, dayInfo, tickets, restaurants
+- `mealSelections` table is intentionally NEVER wiped during reseed (preserves user choices)
+- Dev reset: `indexedDB.deleteDatabase('ftc-nihon-db')` in browser console, or `window.reseedDatabase()` in dev mode
 
-1. **Offline-First** - Core features work with zero connectivity. Test in airplane mode.
-2. **Glanceable** - Answer "Where should I be?" in < 3 seconds. No scrolling for critical info.
-3. **Stress-Reducing** - Proactive alerts, generous buffers, no anxiety-inducing countdowns.
-4. **Better Than Paper** - If PDF is faster, the feature has failed.
-5. **Erin Test** - Validate UX against least tech-savvy user.
+### Zustand Stores
+
+| Store | localStorage key | State |
+|-------|-----------------|-------|
+| `useSyncStore` | `ftc-sync-state` | `isOnline`, `syncVersion` (only syncVersion persisted) |
+| `useAppStore` | `ftc-app-state` | `selectedDay`, `scheduleViewMode` (fully persisted) |
+
+### API Routes
+
+- `POST /api/chat` — Streams Claude responses via Vercel AI SDK. Edge runtime, 30s max.
+- `POST /api/notifications` — Web Push via `web-push` library. Requires VAPID env vars.
+
+### AI Chat (`/ai`)
+
+Uses Vercel AI SDK v6 patterns:
+- `useChat` from `@ai-sdk/react` with `DefaultChatTransport`
+- Messages use `parts` array (not `content` string): `message.parts.filter(p => p.type === 'text').map(p => p.text).join('')`
+- API route uses `streamText` + `convertToModelMessages` + `result.toUIMessageStreamResponse()`
+- Offline: falls back to pre-cached Q&A from `seed-ai-cache.ts` injected directly into state
+- Trip context (current activity, schedule, hotel) injected via `buildSystemPrompt()` in `src/lib/ai.ts`
+- Chat history persisted to IndexedDB `chatMessages` table
+
+### Tour Guide Feature
+
+3-layer content system for 22 locations:
+1. **Static content** — `src/db/seed-tour-content.ts` (rich narratives, city overviews)
+2. **Dynamic IndexedDB** — `db.tourContent` table for cached/AI-generated content
+3. **Audio** — Pre-generated MP3s in `/public/audio/tour-*.mp3` + `useAudioPlayer` hook
+
+Activity-to-tour mapping: `ACTIVITY_TO_TOUR_MAPPING` in `src/lib/tour-guide.ts` (hardcoded dictionary).
+
+### Service Worker
+
+- **File:** `public/sw.js` — vanilla JS, cache name `ftc-nihon-v6` (increment to bust cache)
+- **HTML requests:** Network-first, fallback to cache then `/`
+- **Assets:** Stale-while-revalidate
+- **Update flow:** `UpdateBanner.tsx` detects `registration.waiting` → user clicks Update → sends `SKIP_WAITING` message → reload
+- **Cache warmer:** `src/lib/cache-warmer.ts` prefetches routes + schedule/restaurant pages 2s after app init
+
+### Tailwind v4 Configuration
+
+All design tokens and utility classes are defined in `src/app/globals.css` using Tailwind v4's CSS-based config:
+- `@import 'tailwindcss'` — no `tailwind.config.ts`
+- `@custom-variant dark` — supports both `.dark` class AND `prefers-color-scheme`
+- `@theme {}` — custom color palettes (cream, coral, amber, indigo, vermillion, gold, etc.)
+- `@utility card {}`, `@utility btn-primary {}`, `@utility pill-food {}` — component classes as v4 utilities
+
+### Page Transitions
+
+`src/app/template.tsx` wraps all pages in `PageTransition` using `motion/react`:
+```tsx
+import { motion, AnimatePresence } from 'motion/react';
+```
+Subtle fade + 8px vertical slide, 150ms duration. All other animations use Tailwind CSS transitions.
+
+### Fonts
+
+Loaded in `layout.tsx`:
+- **Urbanist** — Google Fonts, body text (`font-sans`)
+- **Reggae One** — Local file (`src/app/fonts/ReggaeOne-Regular.ttf`), display only (`font-display`)
+- **Geist Mono** — Local file, monospace (`font-mono`)
+
+### Time / Trip Date Logic
+
+- `src/lib/trip-dates.ts` — `getTripDay()`, `isOnTrip()`, `getCityForDay()`, `TRIP_CITIES`
+- `src/lib/time-utils.ts` — `getJapanTimeString()`, `parseTimeToMinutes()`, `minutesToTimeString()`
+- `src/lib/utils.ts` — `getCurrentDate()`, `getJapanDateString()`
+- All dates/times are Japan-timezone-first
+
+## Key Documents
+
+| Document | Purpose |
+| -------- | ------- |
+| [docs/tasks.md](docs/tasks.md) | Current task list and progress |
+| [docs/plan.md](docs/plan.md) | Technical implementation plan |
+| [Docs/AI_ITINERARY_EDITING_PROMPT.md](Docs/AI_ITINERARY_EDITING_PROMPT.md) | Rules for AI-assisted itinerary editing |
+| [Docs/product_docs/FTC_Nihon_Design_System.md](Docs/product_docs/FTC_Nihon_Design_System.md) | Full brand & design system spec |
+| [Docs/product_docs/ADRs/FTC_Nihon_ADRs.md](Docs/product_docs/ADRs/FTC_Nihon_ADRs.md) | Architecture Decision Records |
+| [Docs/product_docs/PRDs/FTC_Nihon_PRD.md](Docs/product_docs/PRDs/FTC_Nihon_PRD.md) | Product Requirements Document |
+
+## Design System (Quick Reference)
+
+Full spec: [Docs/product_docs/FTC_Nihon_Design_System.md](Docs/product_docs/FTC_Nihon_Design_System.md)
+
+**Light Mode** — warm cream bg (#FFFBF7), coral accent (#F46B55), amber secondary (#F5B800)
+**Dark Mode** — deep indigo-black bg (#0D1117), vermillion accent (#E53935), gold (#FFD700)
+
+**Category colors:** Food=coral, Temple=purple, Shopping=amber, Transit=blue, Activity=teal, Hotel=violet
+
+**Transit rendering** via `transitRenderType` on activities:
+
+| Value | Component | Use Case |
+|-------|-----------|----------|
+| `'full'` | TransitCard | Train journeys with steps |
+| `'simplified'` | SimplifiedTransitCard | Scenic transit (ropeway, cable car, pirate ship, bus) |
+| `'walk'` | WalkIndicator | Short walks |
+| `'keep'` | ActivityCard | Buffer time |
+| `'flight'` | ActivityCard | Flights |
+| `null` | ActivityCard + TransitCard | Regular activity with transit |
+
+**Meal slot logic:** Meals show "included" when ryokan days (Day 6 dinner, Day 7 breakfast/dinner, Day 8 breakfast), plan note contains "included"/"ryokan"/"yoshimatsu", or hotel breakfast. Otherwise `RestaurantOptionsCard` shows restaurant options.
 
 ## Code Conventions
 
-### General
+- Named exports, no default exports
+- Early returns, max 300 lines per file
+- `type` for unions, `interface` for object shapes
+- Props interface: `{Component}Props`
+- Server Components by default; `'use client'` only when needed
+- Commit format: `type(scope): description` — types: feat, fix, refactor, test, docs, chore
 
-- Use ES modules (import/export)
-- Prefer named exports over default exports
-- Use early returns to reduce nesting
-- Maximum file length: 300 lines
+## Testing
 
-### TypeScript
-
-- Strict mode enabled - no `any` types
-- Define interfaces for all props and parameters
-- Use `type` for unions, `interface` for object shapes
-- Prefer `unknown` over `any`
-
-### React
-
-- Functional components only
-- Props interface named `{Component}Props`
-- Server Components by default (App Router)
-- Client Components marked with `'use client'`
-
-### Data Access
-
-- **NEVER read directly from Supabase in components**
-- Always use Dexie.js hooks (useActivities, etc.)
-- Supabase is sync layer only, not primary data source
-
-### Meal Slot Logic
-
-Meals show "included" (no restaurant options) when:
-- **Ryokan days hardcoded:** Day 6 dinner, Day 7 breakfast/dinner, Day 8 breakfast
-- **Plan note contains:** `"included"`, `"ryokan"`, or `"yoshimatsu"`
-- **Hotel breakfast:** Only if note says `"hotel breakfast"` or `"hotel"` + `"included"`
-
-Otherwise, RestaurantOptionsCard shows primary/alternative restaurant options.
-
-### Git
-
-- Commit after each completed task
-- Format: `type(scope): description (task-id)`
-- Types: feat, fix, refactor, test, docs, chore
-- Example: `feat(dashboard): add NOW widget (2.2.1)`
-
-## Architecture Decisions
-
-Key decisions documented in ADRs:
-
-- **ADR-001**: PWA over native → ADR-001
-- **ADR-002**: Offline-first architecture → ADR-002
-- **ADR-003**: Next.js 14 with App Router → ADR-003
-- **ADR-004**: Google Maps for mapping → ADR-004
-- **ADR-007**: Dexie.js + Supabase for data → ADR-007
-
-## Current Focus
-
-See [docs/tasks.md](docs/tasks.md) for current implementation status.
-
-**Current Phase:** Feature Complete (MVP)
-**Status:** Schedule, Restaurants, Transit, Checklist, Phrases all functional
-
-### Recent Completions
-- Transit refactor: TransitCard enhancements, SimplifiedTransitCard, WalkIndicator
-- Restaurant selection with meal slots
-- Checklist with confirmation modals
-- Timezone handling (Japan-first)
-
-## Session Protocol
-
-### Starting a Session
-
-1. Read this file (CLAUDE.md)
-2. Read docs/tasks.md to find next incomplete task
-3. State which task you'll work on
-4. State your implementation approach
-5. Wait for approval before writing code
-
-### During Implementation
-
-1. Work on ONE task at a time
-2. Write code following conventions above
-3. Run `npm run lint` and `npm run build`
-4. If errors occur, fix before continuing
-5. Mark task complete in docs/tasks.md immediately
-
-### Completing a Task
-
-1. Ensure tests and build pass (`npm run test:run && npm run build`)
-2. Mark task as complete in docs/tasks.md
-3. Update Task Log with date and commit hash
-4. Commit with descriptive message
-5. Stop and report what you did
-
-### If Uncertain
-
-- Ask clarifying questions before implementing
-- Reference ADRs for architectural guidance
-- When in doubt, prefer simpler solutions
-- Check docs/plan.md for phase goals
-
-## Do NOT
-
-- Modify multiple tasks without approval
-- Skip linting or type checking
-- Make architectural changes not covered by ADRs
-- Install new dependencies without discussing first
-- Create files outside the defined structure
-- Use `any` types in TypeScript
-- Read from Supabase directly in components (use Dexie hooks)
-- Write code that doesn't match existing patterns
+- **Unit tests:** Co-located as `*.test.ts(x)`, also in `tests/unit/`
+- **E2E tests:** `tests/audit/` directory, Playwright with iPhone 13 Pro viewport (390x844)
+- **Test environment:** jsdom, setup in `tests/setup.tsx` (mocks Next.js navigation, IntersectionObserver, etc.)
+- **Coverage thresholds:** branches 8%, functions 12%, lines 11%, statements 11%
 
 ## Environment Variables
 
-Required variables (create .env.local from .env.example):
-
+Required:
 ```
-NEXT_PUBLIC_SUPABASE_URL=        # Supabase project URL
-NEXT_PUBLIC_SUPABASE_ANON_KEY=   # Supabase anon/public key
-NEXT_PUBLIC_GOOGLE_MAPS_API_KEY= # Google Maps API key (Phase 4)
-```
-
-Optional variables:
-
-```
-NEXT_PUBLIC_WEATHER_API_KEY=     # Weather API key (Phase 2)
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=
 ```
 
-## Troubleshooting
-
-### PWA not installing on iOS
-
-- Ensure manifest.ts exports valid manifest
-- Check apple-mobile-web-app-capable meta tag
-- Test in Safari, not Chrome
-
-### Offline mode not working
-
-- Check Service Worker registration in DevTools
-- Verify IndexedDB has data
-- Test after initial sync completes
-
-### Data not syncing
-
-- Check Supabase real-time connection
-- Verify network connectivity
-- Check browser console for errors
-
-### Updating Seed Data (IMPORTANT)
-
-**When modifying `src/db/seed-data.ts`, you MUST increment `DATA_VERSION` in `src/db/seed.ts`.**
-
-```typescript
-// In src/db/seed.ts - increment this number:
-export const DATA_VERSION = 13; // Description of changes
+For push notifications:
+```
+NEXT_PUBLIC_VAPID_PUBLIC_KEY=
+VAPID_PRIVATE_KEY=
+VAPID_SUBJECT=
 ```
 
-This triggers automatic reseed on next app load via `checkDataVersion()`. Users don't need to clear their browser data.
-
-**Manual reset (development only):**
-```javascript
-// Run in browser DevTools console:
-indexedDB.deleteDatabase('ftc-nihon-db')
+Optional:
 ```
+NEXT_PUBLIC_WEATHER_API_KEY=
+```
+
+## Session Protocol
+
+1. Read this file, then `docs/tasks.md` for current status
+2. State which task you'll work on and your approach
+3. Wait for approval before writing code
+4. Work on ONE task at a time
+5. Run `npm run lint` and `npm run build` after changes
+6. Mark task complete in `docs/tasks.md`, commit with descriptive message
+
+## Do NOT
+
+- Read from Supabase directly in components (use Dexie hooks)
+- Use `any` types
+- Install dependencies without discussing first
+- Make architectural changes not covered by ADRs
+- Modify multiple tasks without approval
+- Skip linting or type checking
+- Use `pkill -f "next dev"` (kills ALL Next.js servers; use port-specific kill)
 
 ## Key Constraints
 
 - All users on iOS 16.4+ Safari
-- 44x44pt minimum touch targets
+- 44x44pt minimum touch targets, 16px minimum body text
 - ~50MB total cache size
 - Free tier limits: Supabase 500MB/50K req, Google Maps $200 credit
