@@ -114,7 +114,7 @@ export function QuickActions() {
           testId="quick-action-translate"
         />
       </div>
-      <CurrencyConverter isOpen={currencyConverter.isOpen} onClose={currencyConverter.close} />
+      <CurrencyConverter isOpen={currencyConverter.isOpen} onClose={currencyConverter.close} proxyInputRef={currencyConverter.proxyInputRef} />
     </>
   );
 }

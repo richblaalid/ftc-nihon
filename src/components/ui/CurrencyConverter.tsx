@@ -13,6 +13,8 @@ import {
 interface CurrencyConverterProps {
   isOpen: boolean;
   onClose: () => void;
+  /** Ref to hidden proxy input for iOS keyboard trigger */
+  proxyInputRef: React.RefObject<HTMLInputElement | null>;
 }
 
 type ConversionDirection = 'usd-to-jpy' | 'jpy-to-usd';
@@ -20,9 +22,10 @@ type ConversionDirection = 'usd-to-jpy' | 'jpy-to-usd';
 /**
  * Currency converter modal with two-way USD/JPY conversion
  */
-export function CurrencyConverter({ isOpen, onClose }: CurrencyConverterProps) {
+export function CurrencyConverter({ isOpen, onClose, proxyInputRef }: CurrencyConverterProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
   const [inputValue, setInputValue] = useState('');
   const [direction, setDirection] = useState<ConversionDirection>('jpy-to-usd');
   const [rate, setRate] = useState<number | null>(null);
@@ -143,13 +146,38 @@ export function CurrencyConverter({ isOpen, onClose }: CurrencyConverterProps) {
     setInputValue('');
   };
 
-  if (!isVisible) return null;
+  // Transfer focus from proxy input to real input once modal is visible
+  useEffect(() => {
+    if (isVisible && inputRef.current) {
+      // Small delay to ensure the modal DOM is painted before transferring focus
+      requestAnimationFrame(() => {
+        inputRef.current?.focus();
+      });
+    }
+  }, [isVisible]);
+
+  // Hidden proxy input is always in the DOM so iOS keyboard can be triggered
+  // synchronously from the tap gesture in open()
+  const proxyInput = (
+    <input
+      ref={proxyInputRef}
+      inputMode="decimal"
+      aria-hidden="true"
+      tabIndex={-1}
+      className="fixed -top-[9999px] left-0 opacity-0 pointer-events-none"
+      readOnly
+    />
+  );
+
+  if (!isVisible) return proxyInput;
 
   const fromCurrency = direction === 'usd-to-jpy' ? 'USD' : 'JPY';
   const toCurrency = direction === 'usd-to-jpy' ? 'JPY' : 'USD';
   const placeholder = direction === 'usd-to-jpy' ? '0.00' : '0';
 
   return (
+    <>
+    {proxyInput}
     <div
       ref={containerRef}
       className="fixed left-0 right-0 z-200 flex items-center justify-center px-4"
@@ -211,13 +239,13 @@ export function CurrencyConverter({ isOpen, onClose }: CurrencyConverterProps) {
                 {direction === 'usd-to-jpy' ? '$' : '¥'}
               </span>
               <input
+                ref={inputRef}
                 type="text"
                 inputMode="decimal"
                 value={inputValue}
                 onChange={handleInputChange}
                 placeholder={placeholder}
                 className="w-full pl-10 pr-12 py-4 text-2xl font-bold text-foreground bg-background-secondary dark:bg-background rounded-xl border border-foreground-tertiary/20 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-                autoFocus
               />
               {inputValue && (
                 <button
@@ -283,6 +311,7 @@ export function CurrencyConverter({ isOpen, onClose }: CurrencyConverterProps) {
         </div>
       </div>
     </div>
+    </>
   );
 }
 
@@ -291,9 +320,15 @@ export function CurrencyConverter({ isOpen, onClose }: CurrencyConverterProps) {
  */
 export function useCurrencyConverter() {
   const [isOpen, setIsOpen] = useState(false);
-  const open = useCallback(() => setIsOpen(true), []);
-  const close = useCallback(() => setIsOpen(false), []);
-  const toggle = useCallback(() => setIsOpen((prev) => !prev), []);
+  const proxyInputRef = useRef<HTMLInputElement>(null);
 
-  return { isOpen, open, close, toggle };
+  const open = useCallback(() => {
+    // Focus proxy input synchronously within tap gesture so iOS Safari shows the keyboard
+    proxyInputRef.current?.focus();
+    setIsOpen(true);
+  }, []);
+
+  const close = useCallback(() => setIsOpen(false), []);
+
+  return { isOpen, open, close, proxyInputRef };
 }
