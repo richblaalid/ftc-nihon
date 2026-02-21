@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import {
   getExchangeRate,
   usdToJpy,
@@ -30,6 +30,31 @@ export function CurrencyConverter({ isOpen, onClose }: CurrencyConverterProps) {
   const [isOffline, setIsOffline] = useState(false);
   const [isFallback, setIsFallback] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [viewportHeight, setViewportHeight] = useState<number | null>(null);
+  const [viewportOffset, setViewportOffset] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Track visual viewport to keep modal above the keyboard on iOS
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const vv = window.visualViewport;
+    if (!vv) return;
+
+    const update = () => {
+      setViewportHeight(vv.height);
+      setViewportOffset(vv.offsetTop);
+    };
+
+    vv.addEventListener('resize', update);
+    vv.addEventListener('scroll', update);
+    update();
+
+    return () => {
+      vv.removeEventListener('resize', update);
+      vv.removeEventListener('scroll', update);
+    };
+  }, [isOpen]);
 
   // Load exchange rate when modal opens
   useEffect(() => {
@@ -125,11 +150,19 @@ export function CurrencyConverter({ isOpen, onClose }: CurrencyConverterProps) {
   const placeholder = direction === 'usd-to-jpy' ? '0.00' : '0';
 
   return (
-    <div className="fixed inset-0 z-[200]">
+    <div
+      ref={containerRef}
+      className="fixed left-0 right-0 z-200 flex items-center justify-center px-4"
+      style={{
+        top: viewportOffset,
+        height: viewportHeight ?? '100%',
+        transition: 'height 0.1s ease-out, top 0.1s ease-out',
+      }}
+    >
       {/* Backdrop */}
       <div
         className={`
-          absolute inset-0 bg-black/60 backdrop-blur-sm
+          fixed inset-0 bg-black/60 backdrop-blur-sm
           transition-opacity duration-300
           ${isAnimating ? 'opacity-100' : 'opacity-0'}
         `}
@@ -143,12 +176,12 @@ export function CurrencyConverter({ isOpen, onClose }: CurrencyConverterProps) {
         aria-modal="true"
         aria-labelledby="currency-converter-title"
         className={`
-          absolute inset-x-4 top-1/2 -translate-y-1/2
+          relative w-full
           bg-background dark:bg-surface rounded-3xl
           shadow-2xl
           transform transition-all duration-300 ease-out
           ${isAnimating ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}
-          max-w-md mx-auto overflow-hidden
+          max-w-md overflow-hidden
         `}
       >
         {/* Header */}
