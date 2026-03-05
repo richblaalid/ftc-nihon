@@ -26,7 +26,7 @@ import { PHRASES as phrases } from './seed-phrases';
  * Data version - increment this when seed data changes to trigger a reseed
  * This allows updating phrases/data without users needing to clear their browser data
  */
-export const DATA_VERSION = 36; // Add Day 11 luggage drop-off at MIMARU Kyoto before Osaka transfer
+export const DATA_VERSION = 37; // Update MIMARU Osaka with new reservation details (2 rooms, new confirmation numbers)
 const DATA_VERSION_KEY = 'ftc-nihon-data-version';
 
 /**
