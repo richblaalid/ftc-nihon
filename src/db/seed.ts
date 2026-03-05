@@ -122,6 +122,16 @@ async function reseedRestaurants(): Promise<void> {
 }
 
 /**
+ * Reseed accommodations table (for updated reservation details)
+ */
+async function reseedAccommodations(): Promise<void> {
+  console.log('[Seed] Reseeding accommodations due to data version change...');
+  await db.accommodations.clear();
+  await db.accommodations.bulkAdd(accommodations);
+  console.log(`[Seed] Reseeded ${accommodations.length} accommodations`);
+}
+
+/**
  * Check and update data if version changed
  */
 export async function checkDataVersion(): Promise<void> {
@@ -150,6 +160,9 @@ export async function checkDataVersion(): Promise<void> {
 
     // Reseed restaurants (for Google Maps URL updates)
     await reseedRestaurants();
+
+    // Reseed accommodations (for updated reservation details)
+    await reseedAccommodations();
 
     // Update stored version
     setStoredDataVersion(DATA_VERSION);
